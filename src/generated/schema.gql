@@ -1,0 +1,71 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mutation {
+  createUsers(userNames: [String!]!): [User!]!
+  deleteUser(userId: String!): Boolean!
+  sendPasswordResetLink(userId: String!): Boolean!
+  testInsert: NebulrDemo!
+  updateTenant(locale: String!, name: String!): Tenant!
+  updateUser(user: UserInput!): User!
+}
+
+type NebulrDemo {
+  id: ID!
+
+  """A word is a composition of letters, nothing more..."""
+  word: String!
+}
+
+input NebulrDemoInput {
+  id: ID!
+
+  """A word is a composition of letters, nothing more..."""
+  word: String!
+}
+
+type Query {
+  getCustomerPortal: String!
+  getTenant: Tenant!
+  getTenantAnonymous: TenantAnonymous!
+  list: [NebulrDemo!]!
+  listUsers: [User!]!
+}
+
+type Tenant {
+  createdAt: DateTime
+  id: String!
+  locale: String
+  logo: String!
+  name: String!
+  plan: String
+}
+
+type TenantAnonymous {
+  id: String!
+  locale: String
+}
+
+type User {
+  createdAt: DateTime
+  email: String
+  enabled: Boolean
+  fullName: String
+  id: String
+  onboarded: Boolean
+  role: String
+  teams: [String!]
+  username: String
+}
+
+input UserInput {
+  enabled: Boolean
+  id: String!
+  role: String
+}

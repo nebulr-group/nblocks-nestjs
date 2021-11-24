@@ -1,0 +1,1 @@
+This folder holds all code that is necessary to start a nebular project from scratch

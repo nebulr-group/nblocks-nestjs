@@ -1,0 +1,24 @@
+{
+    "files.autoSave": "afterDelay",
+    "files.exclude": {
+    },
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "remote.containers.workspaceMountConsistency": "delegated",
+    "window.zoomLevel": 0,
+    "python.pythonPath": "/usr/bin/python3",
+    "editor.minimap.enabled": false,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "editor.acceptSuggestionOnCommitCharacter": false,
+    "editor.wordWrap": "on",
+    "workbench.iconTheme": "material-icon-theme",
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "workbench.editor.highlightModifiedTabs": true,
+    "eslint.alwaysShowStatus": true,
+    "eslint.run": "onSave",
+    "eslint.validate": [],
+    "git.showCommitInput": false,
+}

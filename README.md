@@ -20,6 +20,7 @@ npm i @nebulr-group/nblocks-nestjs
 ```
 
 ## Quick start
+Try this on a fresh Nestjs project (`nest new nblocks-nestjs-test`) or in your own project.
 
 1. From your project root, run
 
@@ -40,7 +41,25 @@ import { NBlocksModule } from '@nebulr-group/nblocks-nestjs';
 export class AppModule {}
 ```
 
-3. Start your app and expect it to work exactly the same as before!
+3. Add the current environment as a variable for each npm run script
+```json
+...
+"start:dev": "APP_ENV=dev nest start --watch",
+"start:debug": "APP_ENV=dev nest start --debug --watch",
+"start:prod": "APP_ENV=prod node dist/main",
+...
+```
+
+Enable CORS by modifying `main.ts`
+```
+const app = await NestFactory.create(AppModule);
+...
+app.enableCors();
+...
+await app.listen(3000);
+```
+
+4. Start your app and expect it to work exactly the same as before!
 
 ## Customizing
 

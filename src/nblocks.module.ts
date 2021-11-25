@@ -3,10 +3,13 @@ import { UserModule } from './user/user.module';
 import { TenantModule } from './tenant/tenant.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
 import { FileModule } from './file/file.module';
+import { NebulrConfigModule } from './nebulr/nebulr-config/nebulr-config.module';
+import { AuthModule } from './nebulr-auth/nebulr-auth.module';
 
-/** Combining all utils except Auth */
 @Module({
   imports: [
+    NebulrConfigModule.forRoot({ graphql: true }),
+    AuthModule,
     UserModule,
     TenantModule,
     FileModule,

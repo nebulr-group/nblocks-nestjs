@@ -41,19 +41,19 @@ import { NBlocksModule } from '@nebulr-group/nblocks-nestjs';
 export class AppModule {}
 ```
 
-3. Add the current environment as a variable for each npm run script
+3. Add the current environment as a variable (`APP_ENV=dev`) for each npm run script
 ```json
-...
+# Example
 "start:dev": "APP_ENV=dev nest start --watch",
 "start:debug": "APP_ENV=dev nest start --debug --watch",
 "start:prod": "APP_ENV=prod node dist/main",
-...
 ```
 
 Enable CORS by modifying `main.ts`
 ```
 const app = await NestFactory.create(AppModule);
 ...
+# This enables CORS
 app.enableCors();
 ...
 await app.listen(3000);

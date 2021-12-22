@@ -11,30 +11,14 @@ type Mutation {
   createUsers(userNames: [String!]!): [User!]!
   deleteUser(userId: String!): Boolean!
   sendPasswordResetLink(userId: String!): Boolean!
-  testInsert: NebulrDemo!
   updateTenant(locale: String!, name: String!): Tenant!
   updateUser(user: UserInput!): User!
-}
-
-type NebulrDemo {
-  id: ID!
-
-  """A word is a composition of letters, nothing more..."""
-  word: String!
-}
-
-input NebulrDemoInput {
-  id: ID!
-
-  """A word is a composition of letters, nothing more..."""
-  word: String!
 }
 
 type Query {
   getCustomerPortal: String!
   getTenant: Tenant!
   getTenantAnonymous: TenantAnonymous!
-  list: [NebulrDemo!]!
   listUsers: [User!]!
 }
 

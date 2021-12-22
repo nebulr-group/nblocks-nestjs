@@ -1,4 +1,4 @@
-import * as resourceMap from 'src/../../nebulr/config/resourceMappings.json'; // Use application resourceMappings.json and not plugin
+import * as resourceMap from 'src/../../nblocks/config/resourceMappings.json'; // Use application resourceMappings.json and not plugin
 import { Injectable } from '@nestjs/common';
 import { Debugger } from '../nebulr/debugger';
 import { ClientService } from '../shared/client/client.service';

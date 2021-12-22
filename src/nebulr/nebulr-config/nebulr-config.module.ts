@@ -26,12 +26,8 @@ export class NebulrConfigModule {
   }
 
   static forRoot(options: NebulrConfigModuleOptions): DynamicModule {
-    const ENV = process.env.APP_ENV;
-    if (!ENV) {
-      throw new Error(
-        'ENV is not set. application configs will not load properly',
-      );
-    }
+
+    const ENV = NebulrConfigService.parseEnvironmentFromProcess();
 
     const graphqlOptions: Partial<GqlModuleOptions> = {};
 
@@ -51,7 +47,7 @@ export class NebulrConfigModule {
 
     const imports = [
       ConfigModule.forRoot({
-        envFilePath: ['nebulr/config/main.env', `nebulr/config/${ENV}.env`],
+        envFilePath: ['nblocks/config/main.env', `nblocks/config/${ENV}.env`],
         expandVariables: true,
         isGlobal: true,
       }),

@@ -10,7 +10,7 @@ export class Setup {
 
     private readonly MAIN_ENV_FILE_NAME = `${this.DIR}/main.env`;
     private readonly MAIN_ENV_FILE_CONTENT = 'NBLOCKS_CORE_API_URL="https://account-api-stage.nebulr-core.com"\nNBLOCKS_API_KEY =';
-    private readonly MAIN_ENV_DEMO_KEY = '605b603cfeb49f00082686b6_b8c38307bfb6f68a586ad9f0b3548020ba6edf4c49640ab65bf6451bba05f587';
+    private readonly MAIN_ENV_DEMO_KEY = '61c462cd422c2300088d369d_8befe1319cd81f7a6a43e1a23ba5d4daf18202637710fe5511e57190f916dc41';
 
     private readonly RESOURCE_MAPPINGS_FILE_NAME = `${this.DIR}/resourceMappings.json`;
     private readonly RESOURCE_MAPPINGS_FILE_CONTENT = '{\n"graphql/**": "ANONYMOUS",\n"/**": "ANONYMOUS"\n}';

@@ -13,13 +13,7 @@ This plugin gives a plug-n-play experience for **NBlocks** on the **NestJS** pla
 - User management
 - Tenancy
 
-## Install
-
-```javascript
-npm i @nebulr-group/nblocks-nestjs
-```
-
-## Quick start
+## Installation and Quick start
 Try this on a fresh Nestjs project (`nest new nblocks-nestjs-test`) or in your own project.
 
 1. From your project root, run

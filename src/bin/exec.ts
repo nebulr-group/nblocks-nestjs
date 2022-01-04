@@ -1,13 +1,12 @@
-import { execSync } from "child_process";
-import { writeFileSync, readFileSync } from "fs";
+import { execSync } from 'child_process';
+import { writeFileSync, readFileSync } from 'fs';
 
 export class Exec {
     static run(cmd: string, verbose: boolean): boolean {
         try {
-            execSync(cmd, { stdio: 'inherit' });
+            execSync(cmd, { stdio: 'pipe' });
         } catch (error) {
-            if (verbose)
-                console.error(`Failed to run cmd: "${cmd}"`, error);
+            if (verbose) console.error(`Failed to run cmd: "${cmd}"`, error);
             return false;
         }
         return true;

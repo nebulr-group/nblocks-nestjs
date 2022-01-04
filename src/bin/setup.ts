@@ -1,6 +1,9 @@
 import { Exec } from "./exec";
 import * as chalk from "chalk";
 import { AppConfigurator } from "./configure-app";
+import * as ora from 'ora';
+import { MESSAGES } from './ui/messages';
+import { SPINNER } from './ui/spinner';
 
 /** This class setups the prerequisites for running the nblocks plugin the first time */
 export class Setup {
@@ -14,18 +17,35 @@ export class Setup {
 
     private readonly RESOURCE_MAPPINGS_FILE_NAME = `${this.DIR}/resourceMappings.json`;
     private readonly RESOURCE_MAPPINGS_FILE_CONTENT = '{\n"graphql/**": "ANONYMOUS",\n"/**": "ANONYMOUS"\n}';
+    // Dependency installation command templates
+    private readonly INSTALL_DEPENDENCY_CMD = 'npm i @nebulr-group/nblocks-nestjs --silent';
 
     run(): void {
+        const spinner = ora({
+            spinner: SPINNER,
+            text: MESSAGES.PACKAGE_MANAGER_INSTALLATION_IN_PROGRESS,
+        });
+
         try {
             console.log(chalk.green("Adding required configuration..."));
             this.checkCreateDir();
             this.addEnvFiles(this.MAIN_ENV_DEMO_KEY);
             this.addResourceMappingsFile();
-            new AppConfigurator().run(this).then(() => {
-                console.log(chalk.green("That's all! Get back to the readme"));
-            })
+            spinner.start();
+            this.installDependecies().then(() => {
+                spinner.succeed();
+                new AppConfigurator().run(this).then(() => {
+                    console.info(MESSAGES.PACKAGE_MANAGER_INSTALLATION_SUCCEED);
+                });
+            });
         } catch (error) {
-            console.error(chalk.red(`Oh oh! ${(error as Error).message}\nExiting...`));
+            spinner.fail();
+            console.error(
+                chalk.red(
+                    MESSAGES.PACKAGE_MANAGER_INSTALLATION_ERROR((error as Error).message),
+                ),
+            );
+            console.error(chalk.red(MESSAGES.PACKAGE_MANAGER_INSTALLATION_FAILED));
         }
     }
 
@@ -45,6 +65,14 @@ export class Setup {
 
     private addResourceMappingsFile(): void {
         Exec.writeFile(this.RESOURCE_MAPPINGS_FILE_NAME, this.RESOURCE_MAPPINGS_FILE_CONTENT);
+        return;
+    }
+
+    /**
+    * This will install peer dependencies on the base of project's @angular/core version available
+    */
+    private async installDependecies(): Promise<void> {
+        Exec.run(this.INSTALL_DEPENDENCY_CMD, true);
         return;
     }
 }

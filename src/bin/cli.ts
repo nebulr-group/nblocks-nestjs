@@ -2,12 +2,12 @@
 import * as chalk from "chalk";
 import { AppConfigurator } from "./configure-app";
 import { Setup } from "./setup";
+import { MESSAGES } from './ui/messages';
 
-console.log(chalk.green("##Welcome to NBlocks NPX scripts!##"))
+console.log(chalk.green(MESSAGES.WELCOME));
 switch (process.argv[2]) {
     case "setup":
     case "SETUP":
-        console.log(chalk.green("Running SETUP..."));
         new Setup().run();
         break;
 

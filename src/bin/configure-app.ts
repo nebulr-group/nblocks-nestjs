@@ -17,7 +17,7 @@ export class AppConfigurator {
         console.log(chalk.cyan("\n- Now you can create your brand new own App and get the new credentials. \n- Or you can choose to use our Demo App playground which is shared accross all testers."));
         const answer = await ui.ask("> Do you want to create your own App?", true, "y");
         if (answer === 'y') {
-            const appName = await ui.ask("> Give your new App a name. This name is what your users will see when NBlocks interacts with them through emails etc. App name can be changed later", true, "My App");
+            const appName = await ui.ask("> Give your new App a name.\n  This name is what your users will see when NBlocks interacts with them through emails etc.\n  App name can be changed later", true, "My App");
             const email = await ui.ask("> Enter your email. We'll send you an onboarding email for your first demo user", false);
             const proceed = await ui.ask(`> We'll create a new app named '${appName}' and will send onboarding email on '${email}'. Is that okey?`, true, 'y');
             if (proceed === 'y') {

@@ -1,4 +1,3 @@
-import { SendEmailRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/communication/models/send-email-request.dto';
 import { EMOJIS } from './emojis';
 
 export const MESSAGES = {

@@ -4,6 +4,9 @@ import { AppModel, PlatformClient } from "@nebulr-group/nblocks-ts-client";
 import { UserInterface } from "./user-interface";
 import axios from 'axios';
 import { Setup } from "./setup";
+import { MESSAGES } from './ui/messages';
+import * as ora from 'ora';
+import { SPINNER } from './ui/spinner';
 
 export class AppConfigurator {
     private readonly DIR = "nblocks/config";
@@ -13,37 +16,44 @@ export class AppConfigurator {
 
     async run(setup: Setup): Promise<void> {
         const ui = new UserInterface();
-        const answer = await ui.ask("Do you want to automatically create your own app?", "y");
+        console.log(chalk.cyan(MESSAGES.CREATE_APP_INSTRUCTION));
+        const answer = await ui.ask("> Do you want to create your own Nblocks app?", true, "y");
         if (answer === 'y') {
-            const appName = await ui.ask("Give your new app a name.", "My app");
-            const email = await ui.ask("Enter your email. We'll send you an onboarding email for your first demo tenant");
-            const proceed = await ui.ask(`We'll create a new app named '${appName}' and email '${email}'. Is that okey?`, 'y');
+            const appName = await ui.ask("> Give your new Nblocks app a name.\n  This name is what your users will see when Nblocks interacts with them through emails etc.\n  App name can be changed later", true, "My Nblocks App");
+            const email = await ui.ask("> Enter your email. We'll send you an onboarding email for your first demo user", false);
+            const proceed = await ui.ask(`> We'll create a new Nblocks app named '${appName}' and will send onboarding email to '${email}'.\n  Is that okey?`, true, 'y');
             if (proceed === 'y') {
-                console.log(chalk.green("Creating your app..."));
+                console.info('');
+                const spinner = this.getSpinner(MESSAGES.CREATING_APP);
+                spinner.start();
                 const newKey = await this.signup(appName, email);
+                spinner.succeed();
                 setup.addEnvFiles(newKey);
                 await this.getAppConfiguration();
+                console.info(chalk.cyan(MESSAGES.PACKAGE_MANAGER_INSTALLATION_EMAIL_SENT(email)));
             } else {
-                console.log(chalk.green("App creation aborted. Will use demo credentials"));
+                console.log(chalk.green("App creation aborted. Will use Demo Nblocks app credentials: \n- login: john.doe@example.com \n- password: helloworld"));
                 await this.getAppConfiguration();
             }
 
         } else {
-            console.log(chalk.green("Will use demo credentials"));
+            console.log(chalk.green("You choose to use Demo Nblocks app with the following credentials: \n- login: john.doe@example.com \n- password: helloworld"));
             await this.getAppConfiguration();
         }
         ui.close();
     }
 
     async getAppConfiguration(): Promise<void> {
-        console.log(chalk.green("Downloading app configuration..."));
+        const spinner = this.getSpinner(MESSAGES.DOWNLOADING_CONFIG);
+        spinner.start();
         const client = this.getPlatformClient();
         const model = await client.getApp();
         Exec.writeFile(this.APP_MODEL_FILE_NAME, JSON.stringify(model, null, "\t"));
+        spinner.succeed();
     }
 
     async pushAppConfiguration(): Promise<void> {
-        console.log(chalk.green("Pushing app model..."));
+        console.log(chalk.green("Pushing Nblocks app model..."));
         const client = this.getPlatformClient();
         const model: AppModel = JSON.parse(Exec.readFile(this.APP_MODEL_FILE_NAME));
         await client.updateApp(model);
@@ -83,6 +93,13 @@ export class AppConfigurator {
         });
 
         return credentials;
+    }
+
+    private getSpinner(message: string) {
+        return ora({
+            spinner: SPINNER,
+            text: message
+        })
     }
 }
 

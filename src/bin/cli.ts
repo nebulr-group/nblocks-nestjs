@@ -4,7 +4,7 @@ import { AppConfigurator } from "./configure-app";
 import { Setup } from "./setup";
 import { MESSAGES } from './ui/messages';
 
-console.log(chalk.green(MESSAGES.WELCOME));
+console.log(chalk.cyan(MESSAGES.WELCOME));
 switch (process.argv[2]) {
     case "setup":
     case "SETUP":

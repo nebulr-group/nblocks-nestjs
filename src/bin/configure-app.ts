@@ -5,6 +5,8 @@ import { UserInterface } from "./user-interface";
 import axios from 'axios';
 import { Setup } from "./setup";
 import { MESSAGES } from './ui/messages';
+import * as ora from 'ora';
+import { SPINNER } from './ui/spinner';
 
 export class AppConfigurator {
     private readonly DIR = "nblocks/config";
@@ -14,15 +16,18 @@ export class AppConfigurator {
 
     async run(setup: Setup): Promise<void> {
         const ui = new UserInterface();
-        console.log(chalk.cyan("\n- Now you can create your brand new own App and get the new credentials. \n- Or you can choose to use our Demo App playground which is shared accross all testers."));
-        const answer = await ui.ask("> Do you want to create your own App?", true, "y");
+        console.log(chalk.cyan(MESSAGES.CREATE_APP_INSTRUCTION));
+        const answer = await ui.ask("> Do you want to create your own Nblocks app?", true, "y");
         if (answer === 'y') {
-            const appName = await ui.ask("> Give your new App a name.\n  This name is what your users will see when NBlocks interacts with them through emails etc.\n  App name can be changed later", true, "My App");
-            const email = await ui.ask("> Enter your email. We'll send you an onboarding email for your first demo user", false);
-            const proceed = await ui.ask(`> We'll create a new app named '${appName}' and will send onboarding email on '${email}'. Is that okey?`, true, 'y');
+            const appName = await ui.ask("> Give your new Nblocks app a name.\n  This name is what your users will see when Nblocks interacts with them through emails etc.\n  App name can be changed later", true, "My Nblocks App");
+            const email = await ui.ask("> Enter your email. We'll send you an onboarding email for your first demo tenant", false);
+            const proceed = await ui.ask(`> We'll create a new Nblocks app named '${appName}' and will send onboarding email to '${email}'.\n  Is that okey?`, true, 'y');
             if (proceed === 'y') {
-                console.log(chalk.green("\nCreating your app..."));
+                console.info('');
+                const spinner = this.getSpinner(MESSAGES.CREATING_APP);
+                spinner.start();
                 const newKey = await this.signup(appName, email);
+                spinner.succeed();
                 setup.addEnvFiles(newKey);
                 await this.getAppConfiguration();
                 console.info(chalk.cyan(MESSAGES.PACKAGE_MANAGER_INSTALLATION_EMAIL_SENT(email)));
@@ -39,10 +44,12 @@ export class AppConfigurator {
     }
 
     async getAppConfiguration(): Promise<void> {
-        console.log(chalk.green("Downloading app configuration..."));
+        const spinner = this.getSpinner(MESSAGES.DOWNLOADING_CONFIG);
+        spinner.start();
         const client = this.getPlatformClient();
         const model = await client.getApp();
         Exec.writeFile(this.APP_MODEL_FILE_NAME, JSON.stringify(model, null, "\t"));
+        spinner.succeed();
     }
 
     async pushAppConfiguration(): Promise<void> {
@@ -86,6 +93,13 @@ export class AppConfigurator {
         });
 
         return credentials;
+    }
+
+    private getSpinner(message: string) {
+        return ora({
+            spinner: SPINNER,
+            text: message
+        })
     }
 }
 

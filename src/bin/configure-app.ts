@@ -20,7 +20,7 @@ export class AppConfigurator {
         const answer = await ui.ask("> Do you want to create your own Nblocks app?", true, "y");
         if (answer === 'y') {
             const appName = await ui.ask("> Give your new Nblocks app a name.\n  This name is what your users will see when Nblocks interacts with them through emails etc.\n  App name can be changed later", true, "My Nblocks App");
-            const email = await ui.ask("> Enter your email. We'll send you an onboarding email for your first demo tenant", false);
+            const email = await ui.ask("> Enter your email. We'll send you an onboarding email for your first demo user", false);
             const proceed = await ui.ask(`> We'll create a new Nblocks app named '${appName}' and will send onboarding email to '${email}'.\n  Is that okey?`, true, 'y');
             if (proceed === 'y') {
                 console.info('');
@@ -32,12 +32,12 @@ export class AppConfigurator {
                 await this.getAppConfiguration();
                 console.info(chalk.cyan(MESSAGES.PACKAGE_MANAGER_INSTALLATION_EMAIL_SENT(email)));
             } else {
-                console.log(chalk.green("App creation aborted. Will use Demo App credentials: \n- login: john.doe@example.com \n- password: helloworld"));
+                console.log(chalk.green("App creation aborted. Will use Demo Nblocks app credentials: \n- login: john.doe@example.com \n- password: helloworld"));
                 await this.getAppConfiguration();
             }
 
         } else {
-            console.log(chalk.green("You choose to use Demo app with the following credentials: \n- login: john.doe@example.com \n- password: helloworld"));
+            console.log(chalk.green("You choose to use Demo Nblocks app with the following credentials: \n- login: john.doe@example.com \n- password: helloworld"));
             await this.getAppConfiguration();
         }
         ui.close();
@@ -53,7 +53,7 @@ export class AppConfigurator {
     }
 
     async pushAppConfiguration(): Promise<void> {
-        console.log(chalk.green("Pushing app model..."));
+        console.log(chalk.green("Pushing Nblocks app model..."));
         const client = this.getPlatformClient();
         const model: AppModel = JSON.parse(Exec.readFile(this.APP_MODEL_FILE_NAME));
         await client.updateApp(model);

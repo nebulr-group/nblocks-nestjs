@@ -5,5 +5,7 @@ export const EMOJIS = {
   COFFEE: get('coffee'),
   SCREAM: get('scream_cat'),
   ROCKET: get('rocket'),
-  POINT_RIGHT: get('point_right')
+  POINT_RIGHT: get('point_right'),
+  MAILBOX_WITH_EMAIL: get('mailbox_with_mail'),
+  PRAY: get('pray'),
 };

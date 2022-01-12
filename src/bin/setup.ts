@@ -35,7 +35,8 @@ export class Setup {
             this.installDependecies().then(() => {
                 spinner.succeed();
                 new AppConfigurator().run(this).then(() => {
-                    console.info(MESSAGES.PACKAGE_MANAGER_INSTALLATION_SUCCEED);
+                    console.info(chalk.green(MESSAGES.PACKAGE_MANAGER_INSTALLATION_SUCCEED));
+                    console.info(chalk.yellow(MESSAGES.QUICKSTART_LINK_IMPORT_THE_MODULE));
                 });
             });
         } catch (error) {

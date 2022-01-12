@@ -1,3 +1,4 @@
+import { SendEmailRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/communication/models/send-email-request.dto';
 import { EMOJIS } from './emojis';
 
 export const MESSAGES = {
@@ -6,7 +7,9 @@ export const MESSAGES = {
   RUNNING_SETUP: 'Running SETUP...',
   PACKAGE_MANAGER_INSTALLATION_IN_PROGRESS: `Adding required dependencies... ${EMOJIS.COFFEE}`,
   PACKAGE_MANAGER_INSTALLATION_FAILED: `${EMOJIS.SCREAM} Packages installation failed, see above`,
-  PACKAGE_MANAGER_INSTALLATION_SUCCEED: `\n${EMOJIS.ROCKET} That\'s all! \n${EMOJIS.POINT_RIGHT} Get back to the readme`,
+  PACKAGE_MANAGER_INSTALLATION_EMAIL_SENT: (email: string) => `\n${EMOJIS.MAILBOX_WITH_EMAIL} You should get a new email containing an onboarding link to your local app. Please check your Inbox for ${email}`,
+  PACKAGE_MANAGER_INSTALLATION_SUCCEED: `\n${EMOJIS.ROCKET} That\'s all! \n${EMOJIS.PRAY} Thanks for installing NNlocks \n${EMOJIS.POINT_RIGHT} Get back to the Quickstart: `,
+  QUICKSTART_LINK_IMPORT_THE_MODULE: '> https://nebulr-group.github.io/nblocks-docs/docs/quickstart#3-import-the-module',
   PACKAGE_MANAGER_INSTALLATION_ERROR: (error: string) =>
     `\nOh oh! ${error}\nExiting...`,
   DIR_EXIST_MESSAGE: (directory: string) =>

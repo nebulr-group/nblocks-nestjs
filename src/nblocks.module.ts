@@ -5,6 +5,8 @@ import { WebhooksModule } from './webhooks/webhooks.module';
 import { FileModule } from './file/file.module';
 import { NebulrConfigModule } from './nebulr/nebulr-config/nebulr-config.module';
 import { AuthModule } from './nebulr-auth/nebulr-auth.module';
+import { ClientService } from './shared/client/client.service';
+import { NebulrAuthService } from './nebulr-auth/nebulr-auth.service';
 
 @Module({
   imports: [
@@ -13,9 +15,10 @@ import { AuthModule } from './nebulr-auth/nebulr-auth.module';
     UserModule,
     TenantModule,
     FileModule,
-    WebhooksModule
+    WebhooksModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [NebulrAuthService, ClientService],
+  exports: [NebulrAuthService, ClientService],
 })
 export class NBlocksModule { }

@@ -56,9 +56,7 @@ export class NebulrConfigService {
     }
 
     if (![ENVIRONMENT.PROD, ENVIRONMENT.STAGE, ENVIRONMENT.DEV, ENVIRONMENT.TEST].includes(ENV as ENVIRONMENT)) {
-      throw new Error(
-        `Unrecognized environment. Got ${ENV}. Application configs will not load properly`,
-      );
+      ENV = ENVIRONMENT.DEV;
     }
 
     return ENV as ENVIRONMENT;

@@ -16,6 +16,11 @@ export class TenantService {
     return resp;
   }
 
+  async listTenants(): Promise<TenantResponseDto[]> {
+    const resp = await this.clientService.client.tenants.list();
+    return resp;
+  }
+
   async updateTenant(name: string, locale: string): Promise<TenantResponseDto> {
     const tenantId = this.nebulrAuthService.getCurrentTenantId();
     const resp = await this.clientService.client.tenant(tenantId).update({

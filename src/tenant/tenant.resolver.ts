@@ -11,9 +11,14 @@ export class TenantResolver {
     private readonly nebulrAuthService: NebulrAuthService,
   ) { }
 
-  @Query((returns) => Tenant)
+  @Query((returns) => Tenant, { description: "Gets a single tenant" })
   async getTenant(): Promise<Tenant> {
     return this.tenantService.getTenant();
+  }
+
+  @Query((returns) => [Tenant], { description: "Lists all tenants" })
+  async listTenants(): Promise<Tenant[]> {
+    return this.tenantService.listTenants();
   }
 
   // TODO check if this actually strips sensitive data
@@ -28,7 +33,7 @@ export class TenantResolver {
     return this.tenantService.getTenant();
   }
 
-  @Query((returns) => String)
+  @Query((returns) => String, { description: "Obtain an short lived session url to redirect or present the user its Stripe subscription panel for updating payment or subscription data." })
   async getCustomerPortal(): Promise<string> {
     return this.tenantService.getCustomerPortal();
   }

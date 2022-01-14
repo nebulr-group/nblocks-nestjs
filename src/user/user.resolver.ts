@@ -6,12 +6,16 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(private userService: UserService) { }
 
-  @Query(returns => [User])
+  @Query(returns => [User], {
+    description: "List all users in this tenant."
+  })
   async listUsers(): Promise<User[]> {
     return this.userService.list();
   }
 
-  @Mutation(returns => [User])
+  @Mutation(returns => [User], {
+    description: "This will create a new user for a tenant."
+  })
   async createUsers(
     @Args({ name: 'userNames', type: () => [String] }) userNames: string[],
   ): Promise<User[]> {
@@ -33,7 +37,9 @@ export class UserResolver {
     return this.userService.deleteUser(userId);
   }
 
-  @Mutation(returns => User)
+  @Mutation(returns => User, {
+    description: "Update the user. You can change role, teams and also enable or disable the user from logging in."
+  })
   async updateUser(
     @Args({ name: 'user', type: () => UserInput }) user: UserInput,
   ): Promise<User> {

@@ -1,6 +1,6 @@
 {
   "name": "@nebulr-group/nblocks-nestjs",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Nebulr nblocks plug-n-play plugin for NestJS",
   "author": "Oscar Söderlund",
   "repository": {

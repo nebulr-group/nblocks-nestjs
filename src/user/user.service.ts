@@ -47,8 +47,7 @@ export class UserService {
     const promises: Promise<TenantUserResponseDto>[] = [];
     for (const userName of userNames) {
       const promise = this.clientService.client.tenant(this.nebulrAuthService.getCurrentTenantId()).users.create({
-        username: userName,
-        role: Role.OWNER, //TODO we should allow the developer to set the default role
+        username: userName
       });
       promises.push(promise);
     }

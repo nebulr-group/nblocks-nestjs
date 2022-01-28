@@ -93,7 +93,7 @@ export class NebulrConfigModule {
               message: errorObj.message || error.extensions?.exception?.response?.message,
               errorCode: errorObj.error.toUpperCase() || error.extensions?.code || "SERVER_ERROR"
             };
-            console.log(graphQLFormattedError);
+            console.error(graphQLFormattedError);
             return graphQLFormattedError;
           },
           playground: ENV != ENVIRONMENT.PROD ? true : false,

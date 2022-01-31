@@ -2,6 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GqlModuleOptions } from '@nestjs/graphql';
 import { GraphQLModule } from '@nestjs/graphql/dist/graphql.module';
+import { GraphQLError } from 'graphql';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 
 import { join } from 'path';
@@ -85,6 +86,16 @@ export class NebulrConfigModule {
       imports.push(
         GraphQLModule.forRoot({
           debug: true,
+          formatError: (error: GraphQLError) => {
+            const errorObj = JSON.parse(error.message);
+            const graphQLFormattedError = {
+              nblocksError: errorObj.statusCode || error.extensions?.code || error.name,
+              message: errorObj.message || error.extensions?.exception?.response?.message,
+              errorCode: errorObj.error.toUpperCase() || error.extensions?.code || "SERVER_ERROR"
+            };
+            console.error(graphQLFormattedError);
+            return graphQLFormattedError;
+          },
           playground: ENV != ENVIRONMENT.PROD ? true : false,
           sortSchema: true,
           context: ({ req }) => {

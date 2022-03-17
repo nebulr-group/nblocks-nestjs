@@ -8,17 +8,32 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Mutation {
+  """This will create a new user for a tenant."""
   createUsers(userNames: [String!]!): [User!]!
   deleteUser(userId: String!): Boolean!
   sendPasswordResetLink(userId: String!): Boolean!
   updateTenant(locale: String!, name: String!): Tenant!
+
+  """
+  Update the user. You can change role, teams and also enable or disable the user from logging in.
+  """
   updateUser(user: UserInput!): User!
 }
 
 type Query {
+  """
+  Obtain an short lived session url to redirect or present the user its Stripe subscription panel for updating payment or subscription data.
+  """
   getCustomerPortal: String!
+
+  """Gets a single tenant"""
   getTenant: Tenant!
   getTenantAnonymous: TenantAnonymous!
+
+  """Lists all tenants"""
+  listTenants: [Tenant!]!
+
+  """List all users in this tenant."""
   listUsers: [User!]!
 }
 

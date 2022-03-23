@@ -22,23 +22,36 @@ export class NebulrAuthProxyController {
   }
 
   @Post('commitMfaCode')
-  async commitMfaCode(@Body() request: CommitMfaCodeRequestDto): Promise<CommitMfaCodeResponseDto> {
-    return this.proxyService.commitMfaCode(request);
+  async commitMfaCode(
+    @Headers('x-auth-token') authToken: string,
+    @Body() request: Pick<CommitMfaCodeRequestDto, 'mfaCode'>
+  ): Promise<CommitMfaCodeResponseDto> {
+    const result = await this.proxyService.commitMfaCode({ mfaCode: request.mfaCode, authToken });
+    return result;
   }
 
   @Post('startMfaUserSetup')
-  async startMfaUserSetup(@Body() request: StartUserMfaSetupRequestDto): Promise<void> {
-    await this.proxyService.startMfaUserSetup(request);
+  async startMfaUserSetup(
+    @Headers('x-auth-token') authToken: string,
+    @Body() request: Pick<StartUserMfaSetupRequestDto, 'phoneNumber'>
+  ): Promise<void> {
+    await this.proxyService.startMfaUserSetup({ phoneNumber: request.phoneNumber, authToken });
   }
 
   @Post('finishMfaUserSetup')
-  async finishMfaUserSetup(@Body() request: FinishUserMfaSetupRequestDto): Promise<FinishUserMfaSetupResponseDto> {
-    return this.proxyService.finishMfaUserSetup(request);
+  async finishMfaUserSetup(
+    @Headers('x-auth-token') authToken: string,
+    @Body() request: Pick<FinishUserMfaSetupRequestDto, 'mfaCode'>
+  ): Promise<FinishUserMfaSetupResponseDto> {
+    return this.proxyService.finishMfaUserSetup({ mfaCode: request.mfaCode, authToken });
   }
 
   @Post('resetUserMfaSetup')
-  async resetUserMfaSetup(@Body() request: ResetUserMfaSetupRequestDto): Promise<void> {
-    return this.proxyService.resetUserMfaSetup(request);
+  async resetUserMfaSetup(
+    @Headers('x-auth-token') authToken: string,
+    @Body() request: Pick<ResetUserMfaSetupRequestDto, 'backupCode'>
+  ): Promise<void> {
+    await this.proxyService.resetUserMfaSetup({ backupCode: request.backupCode, authToken });
   }
 
   @Get('authenticated')

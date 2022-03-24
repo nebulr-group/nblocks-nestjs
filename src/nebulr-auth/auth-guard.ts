@@ -19,8 +19,13 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
 
+    // These are the Whitelisted auth paths
     const authPaths = [
       '/auth-proxy/authenticate',
+      '/auth-proxy/commitMfaCode',
+      '/auth-proxy/startMfaUserSetup',
+      '/auth-proxy/finishMfaUserSetup',
+      '/auth-proxy/resetUserMfaSetup',
       '/auth-proxy/authenticated',
       '/auth-proxy/deauthenticate',
       '/auth-proxy/password',

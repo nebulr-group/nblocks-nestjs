@@ -13,7 +13,7 @@ export class ClientService {
         this.client = new PlatformClient(
             nebulrConfigService.getNebulrPlatformApiKey(),
             1,
-            false,
+            process.env.NBLOCKS_DEBUG === '*' ? true : false,
             nebulrConfigService.getEnvironment() === ENVIRONMENT.DEV ? 'STAGE' : 'PROD'
         );
     }

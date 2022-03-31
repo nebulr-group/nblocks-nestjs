@@ -1,5 +1,5 @@
 import * as resourceMap from 'src/../../nblocks/config/resourceMappings.json'; // Use application resourceMappings.json and not plugin
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Debugger } from '../nebulr/debugger';
 import { ClientService } from '../shared/client/client.service';
 import { AuthorizeResponseDto, AuthTenantResponseDto, AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
@@ -46,7 +46,9 @@ export class AuthGuardService {
                     privilege
                 );
             } else {
-                return { granted: false, user: undefined }
+
+                throw new UnauthorizedException("Missing required variables");
+                //return { granted: false, user: undefined }
             }
         }
     }

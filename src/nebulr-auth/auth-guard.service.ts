@@ -61,6 +61,7 @@ export class AuthGuardService {
             username: AuthGuardService.ANONYMOUS,
             email: AuthGuardService.ANONYMOUS,
             onboarded: false,
+            consentsToPrivacyPolicy: false,
             tenant
         }
     }

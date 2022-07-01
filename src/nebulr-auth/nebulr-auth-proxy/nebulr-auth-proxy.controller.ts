@@ -69,7 +69,7 @@ export class NebulrAuthProxyController {
   }
 
   @Post('password')
-  async forgotPassword(
+  async sendResetPasswordLink(
     @Body() request: ForgotPasswordRequestDto,
   ): Promise<void> {
     await this.proxyService.forgotPassword(

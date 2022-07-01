@@ -6,6 +6,7 @@ import { FileModule } from './file/file.module';
 import { NebulrConfigModule } from './nebulr/nebulr-config/nebulr-config.module';
 import { AuthModule } from './nebulr-auth/nebulr-auth.module';
 import { SharedModule } from './shared/shared.module';
+import { AppModule } from './app/app.module';
 
 /**
  * Export every module that has providers we want should be automatically available and injectable for users without importing sub modules
@@ -16,6 +17,7 @@ import { SharedModule } from './shared/shared.module';
     AuthModule,
     UserModule,
     TenantModule,
+    AppModule,
     FileModule,
     WebhooksModule,
     SharedModule

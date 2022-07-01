@@ -6,6 +6,13 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(private userService: UserService) { }
 
+  @Query(returns => [String], {
+    description: "List all available user roles that the current user can assign others"
+  })
+  async listUserRoles(): Promise<string[]> {
+    return this.userService.listAvailableRoles();
+  }
+
   @Query(returns => [User], {
     description: "List all users in this tenant."
   })

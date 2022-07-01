@@ -1,9 +1,11 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { TenantResponseDto } from '@nebulr-group/nblocks-ts-client';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
 //TODO This is basically a carbon copy of TenantResponseDto. How can we leverage TS inheritage and annotations?
 @ObjectType()
-export class Tenant {
-  @Field(type => String, { nullable: false })
+export class Tenant implements TenantResponseDto {
+
+  @Field(type => String)
   id: string;
 
   @Field(type => String, { nullable: true })
@@ -18,15 +20,34 @@ export class Tenant {
   @Field(type => String, { nullable: false })
   logo?: string;
 
-  @Field(type => Date, { nullable: true })
+  @Field(type => Boolean, { nullable: true })
+  mfa: boolean;
+
+  @Field(type => String, { nullable: true })
   createdAt: Date;
 }
 
 @ObjectType()
 export class TenantAnonymous {
-  @Field(type => String, { nullable: false })
+  @Field(type => String)
   id: string;
 
   @Field(type => String, { nullable: true })
+  name?: string;
+
+  @Field(type => String, { nullable: true })
   locale: string;
+}
+
+@InputType()
+export class TenantInput {
+
+  @Field(type => String, { nullable: true })
+  name: string;
+
+  @Field(type => String, { nullable: true })
+  locale: string;
+
+  @Field(type => Boolean, { nullable: true })
+  mfa: boolean;
 }

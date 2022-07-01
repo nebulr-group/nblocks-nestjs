@@ -1,4 +1,5 @@
 import { TenantResponseDto } from '@nebulr-group/nblocks-ts-client';
+import { UpdateTenantRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/tenant/models/update-tenant-request.dto';
 import { Injectable } from '@nestjs/common';
 import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
 import { ClientService } from '../shared/client/client.service';
@@ -21,12 +22,9 @@ export class TenantService {
     return resp;
   }
 
-  async updateTenant(name: string, locale: string): Promise<TenantResponseDto> {
+  async updateTenant(args: UpdateTenantRequestDto): Promise<TenantResponseDto> {
     const tenantId = this.nebulrAuthService.getCurrentTenantId();
-    const resp = await this.clientService.client.tenant(tenantId).update({
-      name,
-      locale,
-    });
+    const resp = await this.clientService.client.tenant(tenantId).update(args);
     return resp;
   }
 

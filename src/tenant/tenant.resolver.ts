@@ -1,7 +1,7 @@
 import { ForbiddenException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
-import { Tenant, TenantAnonymous } from './tenant.graphql-model';
+import { Tenant, TenantAnonymous, TenantInput } from './tenant.graphql-model';
 import { TenantService } from './tenant.service';
 
 @Resolver((of) => Tenant)
@@ -40,9 +40,8 @@ export class TenantResolver {
 
   @Mutation((returns) => Tenant)
   async updateTenant(
-    @Args('name') name: string,
-    @Args('locale') locale: string,
+    @Args('tenant', { type: () => TenantInput }) tenant: TenantInput,
   ): Promise<Tenant> {
-    return this.tenantService.updateTenant(name, locale);
+    return this.tenantService.updateTenant(tenant);
   }
 }

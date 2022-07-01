@@ -4,9 +4,12 @@ import { GqlModuleOptions } from '@nestjs/graphql';
 import { GraphQLModule } from '@nestjs/graphql/dist/graphql.module';
 import { GraphQLError } from 'graphql';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
+import * as Sentry from '@sentry/serverless';
 
 import { join } from 'path';
 import { NebulrConfigService } from './nebulr-config.service';
+import { ForbiddenError, UnauthenticatedError } from '@nebulr-group/nblocks-ts-client';
+import { ClientError } from '@nebulr-group/nblocks-ts-client/dist/errors/ClientError';
 
 // Needed so that webpack bundles necessary packages
 require('apollo-server-express'); // Required by @nestjs/graphql
@@ -87,14 +90,14 @@ export class NebulrConfigModule {
         GraphQLModule.forRoot({
           debug: true,
           formatError: (error: GraphQLError) => {
-            const errorObj = JSON.parse(error.message);
-            const graphQLFormattedError = {
-              nblocksError: errorObj.statusCode || error.extensions?.code || error.name,
-              message: errorObj.message || error.extensions?.exception?.response?.message,
-              errorCode: errorObj.error.toUpperCase() || error.extensions?.code || "SERVER_ERROR"
-            };
-            console.error(graphQLFormattedError);
-            return graphQLFormattedError;
+
+            console.error(
+              `Gracefully handling graphql error with Sentry`,
+              error,
+            );
+            Sentry.captureException(error);
+
+            return error;
           },
           playground: ENV != ENVIRONMENT.PROD ? true : false,
           sortSchema: true,

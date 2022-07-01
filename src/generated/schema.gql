@@ -2,17 +2,21 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
+type App {
+  logo: String
+  name: String
+  privacyPolicyUrl: String
+  termsOfServiceUrl: String
+  uiUrl: String
+  websiteUrl: String
+}
 
 type Mutation {
   """This will create a new user for a tenant."""
   createUsers(userNames: [String!]!): [User!]!
   deleteUser(userId: String!): Boolean!
   sendPasswordResetLink(userId: String!): Boolean!
-  updateTenant(locale: String!, name: String!): Tenant!
+  updateTenant(tenant: TenantInput!): Tenant!
 
   """
   Update the user. You can change role, teams and also enable or disable the user from logging in.
@@ -21,6 +25,9 @@ type Mutation {
 }
 
 type Query {
+  """Gets useful App configs for the UI to consume"""
+  getApp: App!
+
   """
   Obtain an short lived session url to redirect or present the user its Stripe subscription panel for updating payment or subscription data.
   """
@@ -33,15 +40,19 @@ type Query {
   """Lists all tenants"""
   listTenants: [Tenant!]!
 
+  """List all available user roles that the current user can assign others"""
+  listUserRoles: [String!]!
+
   """List all users in this tenant."""
   listUsers: [User!]!
 }
 
 type Tenant {
-  createdAt: DateTime
+  createdAt: String
   id: String!
   locale: String
   logo: String!
+  mfa: Boolean
   name: String!
   plan: String
 }
@@ -49,14 +60,21 @@ type Tenant {
 type TenantAnonymous {
   id: String!
   locale: String
+  name: String
+}
+
+input TenantInput {
+  locale: String
+  mfa: Boolean
+  name: String
 }
 
 type User {
-  createdAt: DateTime
+  createdAt: String
   email: String
   enabled: Boolean
   fullName: String
-  id: String
+  id: String!
   onboarded: Boolean
   role: String
   teams: [String!]

@@ -4,7 +4,7 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 export class User {
 
-  @Field(type => String, { nullable: true })
+  @Field(type => String)
   id: string;
 
   @Field(type => String, { nullable: true })
@@ -28,7 +28,7 @@ export class User {
   @Field(type => [String], { nullable: true })
   teams: string[];
 
-  @Field(type => Date, { nullable: true })
+  @Field(type => String, { nullable: true })
   createdAt: Date;
 }
 

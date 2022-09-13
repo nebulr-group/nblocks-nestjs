@@ -1,23 +1,28 @@
 {
 	"name": "Node.js",
 	"build": {
-		"dockerfile": "Dockerfile",
+		"dockerfile": "../Dockerfile",
+		"target": "dev",
+		"context": ".."
 	},
 	"containerEnv": {},
 	"runArgs": [],
-	"settings": {
-		"terminal.integrated.shell.linux": "/bin/bash"
+	"customizations": {
+		"vscode": {
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"dbaeumer.vscode-eslint",
+				"kumar-harsh.graphql-for-vscode",
+				"pkief.material-icon-theme",
+				"esbenp.prettier-vscode",
+				"mikestead.dotenv",
+				"redhat.vscode-yaml"
+			],	
+			"settings": {
+				"terminal.integrated.profiles.shell.linux": "/bin/bash"
+			}
+		}
 	},
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"dbaeumer.vscode-eslint",
-		// "ms-vscode.vscode-typescript-tslint-plugin",
-		"kumar-harsh.graphql-for-vscode",
-		"pkief.material-icon-theme",
-		"esbenp.prettier-vscode",
-		"mikestead.dotenv",
-		"redhat.vscode-yaml"
-	],
 	//this improves container performance
 	"mounts": [
 		"target=${containerWorkspaceFolder}/node_modules,type=volume",

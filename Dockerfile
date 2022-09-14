@@ -17,6 +17,8 @@ FROM base as test
 RUN npm install
 # Copy rest of the projects source code to container env
 COPY . .
+# Change mode of "npm-config-setter" to executable
+RUN chmod -v +x npm-config-setter.sh
 # Run build with installed dep
 RUN npm run build
 
@@ -26,6 +28,8 @@ FROM base as dev
 RUN npm install
 # Copy rest of the projects source code to container env
 COPY . .
+# Change mode of "npm-config-setter" script to executable
+RUN chmod -v +x npm-config-setter.sh
 # Run build with installed dep
 RUN npm run build
 
@@ -36,5 +40,7 @@ FROM base as prod
 RUN npm install --production
 # Copy rest of the projects source code to container env
 COPY . .
+# Change mode of "npm-config-setter" script to executable
+RUN chmod -v +x npm-config-setter.sh
 # Run build with installed dep
 RUN npm run build

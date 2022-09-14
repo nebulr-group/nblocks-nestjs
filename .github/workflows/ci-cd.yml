@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - "*"
+env:
+  # BUILD_IMAGE_NAME => <owner>/<repository_name>
+  BUILD_IMAGE_NAME: ${{ github.repository }}
 # A workflow run is made up of one or more jobs that can run sequentially or parallel
 jobs:
   # The first job in this workflow is named build-image
@@ -22,9 +25,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: false
-          tags: ${{ BUILD_IMAGE_NAME }}:latest
+          tags: ${{ env.BUILD_IMAGE_NAME }}:latest
           target: test
-          outputs: type=docker,dest=/tmp/${{ BUILD_IMAGE_NAME }}.tar
+          outputs: type=docker,dest=/tmp/${{ env.BUILD_IMAGE_NAME }}.tar
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
@@ -33,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: nblocks-nestjs
-          path: /tmp/${{ BUILD_IMAGE_NAME }}.tar
+          path: /tmp/${{ env.BUILD_IMAGE_NAME }}.tar
   test:
     needs: build
     runs-on: ubuntu-latest
@@ -48,13 +51,13 @@ jobs:
       - name: Step 3 - Downloading Image Artifact
         uses: actions/download-artifact@v3
         with:
-          name: ${{ BUILD_IMAGE_NAME }}
+          name: ${{ env.BUILD_IMAGE_NAME }}
           path: /tmp
       # For Unit tests (npm test, etc)
       - name: Step 4 - Unit Testing in Docker
         run: |
-          docker load --input /tmp/${{ BUILD_IMAGE_NAME }}.tar
-          docker run --rm ${{ BUILD_IMAGE_NAME }}:latest npm run test
+          docker load --input /tmp/${{ env.BUILD_IMAGE_NAME }}.tar
+          docker run --rm ${{ env.BUILD_IMAGE_NAME }}:latest npm run test
   deploy:
     needs: [build, test]
     if: ${{ github.ref_name == 'master' && github.event_name == 'push' }}

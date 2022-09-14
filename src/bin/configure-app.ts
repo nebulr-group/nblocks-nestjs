@@ -21,7 +21,7 @@ export class AppConfigurator {
         if (answer === 'y') {
             const appName = await ui.ask("> Give your new Nblocks app a name.\n  This name is what your users will see when Nblocks interacts with them through emails etc.\n  App name can be changed later", true, "My Nblocks App");
             const email = await ui.ask("> Enter your email. We'll send you an onboarding email for your first demo user", false);
-            const proceed = await ui.ask(`> We'll create a new Nblocks app named '${appName}' and will send onboarding email to '${email}'.\n  Is that okey?`, true, 'y');
+            const proceed = await ui.ask(`> We'll create a new Nblocks app named '${appName}'.\n  Is that okey?`, true, 'y');
             if (proceed === 'y') {
                 console.info('');
                 const spinner = this.getSpinner(MESSAGES.CREATING_APP);

@@ -34,7 +34,7 @@ jobs:
       - name: Step 4 - Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: nblocks-nestjs
+          name: ${{ env.BUILD_IMAGE_NAME }}
           path: /tmp/${{ env.BUILD_IMAGE_NAME }}.tar
   test:
     needs: build

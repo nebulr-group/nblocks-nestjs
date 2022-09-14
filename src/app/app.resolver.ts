@@ -11,7 +11,7 @@ export class AppResolver {
   ) { }
 
   @Query((returns) => App, { description: "Gets useful App configs for the UI to consume" })
-  async getApp(): Promise<App> {
+  async getAppAnonymous(): Promise<App> {
     const app = await this.appService.getApp();
     return app;
   }

@@ -4,18 +4,26 @@ import { AppConfigurator } from "./configure-app";
 import * as ora from 'ora';
 import { MESSAGES } from './ui/messages';
 import { SPINNER } from './ui/spinner';
+import * as dotenv from 'dotenv';
 
 /** This class setups the prerequisites for running the nblocks plugin the first time */
 export class Setup {
-    private readonly DIR = "nblocks/config";
-    private readonly DIR_EXISTS_CMD = `test -d ${this.DIR}`;
-    private readonly CREATE_DIR_CMD = `mkdir -p ${this.DIR}`;
+    static readonly DIR = "nblocks/config";
+    private readonly DIR_EXISTS_CMD = `test -d ${Setup.DIR}`;
+    private readonly CREATE_DIR_CMD = `mkdir -p ${Setup.DIR}`;
 
-    private readonly MAIN_ENV_FILE_NAME = `${this.DIR}/main.env`;
-    private readonly MAIN_ENV_FILE_CONTENT = 'NBLOCKS_CORE_API_URL="https://account-api-stage.nebulr-core.com"\nNBLOCKS_API_KEY =';
-    private readonly MAIN_ENV_DEMO_KEY = '61c462cd422c2300088d369d_8befe1319cd81f7a6a43e1a23ba5d4daf18202637710fe5511e57190f916dc41';
+    static readonly MAIN_ENV_FILE_NAME = `${Setup.DIR}/main.env`;
 
-    private readonly RESOURCE_MAPPINGS_FILE_NAME = `${this.DIR}/resourceMappings.json`;
+    /**
+     * NBLOCKS_CORE_API_URL="http://account-api:3000" (NEW)
+     * NEBULR_PLATFORM_CORE_API_URL="http://account-api:3000" (OLD, should be migrated to NEW)
+     * NBLOCKS_API_KEY=
+     */
+    // private readonly MAIN_ENV_FILE_INITIAL_CONTENT = 'NBLOCKS_CORE_API_URL="https://account-api-stage.nebulr-core.com"\nNEBULR_PLATFORM_CORE_API_URL="https://account-api-stage.nebulr-core.com"\nNBLOCKS_API_KEY=';
+
+    private readonly MAIN_ENV_FILE_INITIAL_CONTENT = 'NBLOCKS_CORE_API_URL="http://account-api:3000"\nNEBULR_PLATFORM_CORE_API_URL="http://account-api:3000"\nNBLOCKS_API_KEY=';
+
+    private readonly RESOURCE_MAPPINGS_FILE_NAME = `${Setup.DIR}/resourceMappings.json`;
     private readonly RESOURCE_MAPPINGS_FILE_CONTENT = '{\n"graphql/**": "ANONYMOUS",\n"/**": "ANONYMOUS"\n}';
     // Dependency installation command templates
     private readonly INSTALL_DEPENDENCY_CMD = 'npm i @nebulr-group/nblocks-nestjs --silent';
@@ -29,12 +37,12 @@ export class Setup {
         try {
             console.log(chalk.green("Adding required configuration..."));
             this.checkCreateDir();
-            this.addEnvFiles(this.MAIN_ENV_DEMO_KEY);
             this.addResourceMappingsFile();
+            this.setEnvFileContent("EMPTY_KEY");
             spinner.start();
             this.installDependecies().then(() => {
                 spinner.succeed();
-                new AppConfigurator().run(this).then(() => {
+                new AppConfigurator().runSetup(this).then(() => {
                     console.info(chalk.green(MESSAGES.PACKAGE_MANAGER_INSTALLATION_SUCCEED));
                     console.info(chalk.yellow(MESSAGES.QUICKSTART_LINK_IMPORT_THE_MODULE));
                 });
@@ -52,14 +60,20 @@ export class Setup {
 
     private checkCreateDir(): void {
         if (Exec.run(this.DIR_EXISTS_CMD, false))
-            throw new Error(`Directory ${this.DIR} already exists. This project has probably already been setup!`)
+            throw new Error(`Directory ${Setup.DIR} already exists. This project has probably already been setup!`)
 
         Exec.run(this.CREATE_DIR_CMD, true);
     }
 
-    addEnvFiles(key: string): void {
-        const content = `${this.MAIN_ENV_FILE_CONTENT} ${key}`;
-        Exec.writeFile(this.MAIN_ENV_FILE_NAME, content);
+    setEnvFileContent(appKey: string): void {
+        const content = `${this.MAIN_ENV_FILE_INITIAL_CONTENT}${appKey}`;
+        Exec.writeFile(Setup.MAIN_ENV_FILE_NAME, content);
+        const result = dotenv.config({ path: Setup.MAIN_ENV_FILE_NAME });
+        if (result.parsed['NBLOCKS_API_KEY'] != process.env['NBLOCKS_API_KEY']) {
+            // Fixing overriding problem with dotenv
+            // https://github.com/motdotla/dotenv/issues/199
+            process.env['NBLOCKS_API_KEY'] = result.parsed['NBLOCKS_API_KEY'];
+        }
         console.log(chalk.green("Env file updated..."));
         return;
     }

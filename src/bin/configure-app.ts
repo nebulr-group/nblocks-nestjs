@@ -22,7 +22,7 @@ export class AppConfigurator {
         console.log(chalk.cyan(MESSAGES.CREATE_APP_INSTRUCTION));
         const answer = await this.ui.ask("> Do you want to create a new Nblocks app? Skip this if you alread have one.", true, "y");
         if (answer === 'y') {
-            await this.createApp(setup);
+            await this._createApp(setup);
         } else {
             console.log(chalk.red(`No app was created. Please make sure to add your existing credentials to the ENV file located: '${Setup.MAIN_ENV_FILE_NAME}' before you start the server`));
             //await this.getAppConfiguration();
@@ -31,7 +31,12 @@ export class AppConfigurator {
     }
 
     async runCreateApp(setup: Setup): Promise<void> {
-        await this.createApp(setup);
+        await this._createApp(setup);
+        this.ui.close();
+    }
+
+    async runCreateTenant(): Promise<void> {
+        await this._createTenant();
         this.ui.close();
     }
 
@@ -52,7 +57,7 @@ export class AppConfigurator {
         this.ui.close();
     }
 
-    private async createApp(setup: Setup): Promise<void> {
+    private async _createApp(setup: Setup): Promise<void> {
         const appName = await this.ui.ask("> Give your new app a name.\n  This name is what your users will see when Nblocks interacts with them through emails etc.\n  App name can be changed later", true, "My Nblocks App");
         const email = await this.ui.ask("> Enter your email", false);
         console.info('');
@@ -65,6 +70,10 @@ export class AppConfigurator {
         setup.setEnvFileContent(newKey);
         await this.getAppConfiguration();
         console.info(chalk.cyan(MESSAGES.PACKAGE_MANAGER_INSTALLATION_APP_CREATED(email)));
+    }
+
+    private async _createTenant(): Promise<void> {
+        return;
     }
 
     private getPlatformClient(): PlatformClient {

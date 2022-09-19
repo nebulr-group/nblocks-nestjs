@@ -19,12 +19,15 @@ export class Setup {
      * NEBULR_PLATFORM_CORE_API_URL="http://account-api:3000" (OLD, should be migrated to NEW)
      * NBLOCKS_API_KEY=
      */
-    // private readonly MAIN_ENV_FILE_INITIAL_CONTENT = 'NBLOCKS_CORE_API_URL="https://account-api-stage.nebulr-core.com"\nNEBULR_PLATFORM_CORE_API_URL="https://account-api-stage.nebulr-core.com"\nNBLOCKS_API_KEY=';
+    private readonly MAIN_ENV_FILE_INITIAL_CONTENT = 'NBLOCKS_CORE_API_URL="https://account-api-stage.nebulr-core.com"\nNEBULR_PLATFORM_CORE_API_URL="https://account-api-stage.nebulr-core.com"\nNBLOCKS_API_KEY=';
 
-    private readonly MAIN_ENV_FILE_INITIAL_CONTENT = 'NBLOCKS_CORE_API_URL="http://account-api:3000"\nNEBULR_PLATFORM_CORE_API_URL="http://account-api:3000"\nNBLOCKS_API_KEY=';
+    // private readonly MAIN_ENV_FILE_INITIAL_CONTENT = 'NBLOCKS_CORE_API_URL="http://account-api:3000"\nNEBULR_PLATFORM_CORE_API_URL="http://account-api:3000"\nNBLOCKS_API_KEY=';
 
     private readonly RESOURCE_MAPPINGS_FILE_NAME = `${Setup.DIR}/resourceMappings.json`;
+
+    //TODO FIX THIS
     private readonly RESOURCE_MAPPINGS_FILE_CONTENT = '{\n"graphql/**": "ANONYMOUS",\n"/**": "ANONYMOUS"\n}';
+
     // Dependency installation command templates
     private readonly INSTALL_DEPENDENCY_CMD = 'npm i @nebulr-group/nblocks-nestjs --silent';
 

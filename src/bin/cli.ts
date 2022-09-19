@@ -33,6 +33,12 @@ switch (process.argv[2]) {
         new AppConfigurator().runCreateApp(new Setup());
         break;
 
+    case "create-tenant":
+    case "create-workspace":
+        //console.log(chalk.green("Running PUSH-APP-CONFIGURATION..."));
+        new AppConfigurator().runCreateTenant();
+        break;
+
     case "help":
     default:
         console.log(chalk.green("Usage: npx @nebulr-group/nblocks-nestjs setup | get-app-configuration | push-app-configuration | create-app-configuration | help"));

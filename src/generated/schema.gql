@@ -11,7 +11,16 @@ type App {
   websiteUrl: String
 }
 
+input CreateTenantInput {
+  email: String!
+  logo: String
+  name: String
+  plan: String!
+}
+
 type Mutation {
+  createTenantAnonymous(tenant: CreateTenantInput!): Tenant!
+
   """This will create a new user for a tenant."""
   createUsers(userNames: [String!]!): [User!]!
   deleteUser(userId: String!): Boolean!
@@ -26,7 +35,7 @@ type Mutation {
 
 type Query {
   """Gets useful App configs for the UI to consume"""
-  getApp: App!
+  getAppAnonymous: App!
 
   """
   Obtain an short lived session url to redirect or present the user its Stripe subscription panel for updating payment or subscription data.

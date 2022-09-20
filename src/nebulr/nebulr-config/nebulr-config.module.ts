@@ -1,7 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { GqlModuleOptions } from '@nestjs/graphql';
-import { GraphQLModule } from '@nestjs/graphql/dist/graphql.module';
+import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 import * as Sentry from '@sentry/serverless';

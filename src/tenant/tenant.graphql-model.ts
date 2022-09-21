@@ -1,5 +1,5 @@
 import { TenantResponseDto } from '@nebulr-group/nblocks-ts-client';
-import { CreateTenantRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/tenant/models/create-tenant-request.dto';
+import { CreateTenantRequestDto, TenantOwnerRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/tenant/models/create-tenant-request.dto';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
 //TODO This is basically a carbon copy of TenantResponseDto. How can we leverage TS inheritage and annotations?
@@ -54,13 +54,26 @@ export class TenantInput {
 }
 
 @InputType()
+@ObjectType()
+export class TenantOwnerInput implements TenantOwnerRequestDto {
+  @Field(type => String)
+  email: string;
+
+  @Field(type => String, { nullable: true })
+  firstName?: string;
+
+  @Field(type => String, { nullable: true })
+  lastName?: string;
+}
+
+@InputType()
 export class CreateTenantInput implements CreateTenantRequestDto {
 
   @Field(type => String)
   plan: string;
 
-  @Field(type => String)
-  email: string;
+  @Field(type => TenantOwnerInput)
+  owner: TenantOwnerInput;
 
   @Field(type => String, { nullable: true })
   name?: string;

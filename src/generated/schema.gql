@@ -12,9 +12,9 @@ type App {
 }
 
 input CreateTenantInput {
+  email: String!
   logo: String
   name: String
-  owner: TenantOwnerInput!
   plan: String!
 }
 
@@ -76,12 +76,6 @@ input TenantInput {
   locale: String
   mfa: Boolean
   name: String
-}
-
-input TenantOwnerInput {
-  email: String!
-  firstName: String
-  lastName: String
 }
 
 type User {

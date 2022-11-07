@@ -11,7 +11,7 @@
     "graphql/createUsers": "USER_WRITE",
     "graphql/deleteUser": "USER_WRITE",
     "graphql/updateUser": "USER_WRITE",
-    "graphql/sendPasswordResetLink": "ANONYMOUS",
+    "graphql/sendPasswordResetLink": "USER_WRITE",
     "/file/prepareUploadAnonymous": "ANONYMOUS",
     "/file/prepareUpload": "AUTHENTICATED",
     "/auth/currentUser": "AUTHENTICATED",

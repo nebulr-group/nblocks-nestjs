@@ -12,10 +12,10 @@ type App {
 }
 
 input CreateTenantInput {
-  email: String!
   logo: String
   name: String
-  plan: String!
+  owner: TenantOwnerInput!
+  plan: String
 }
 
 type Mutation {
@@ -76,6 +76,13 @@ input TenantInput {
   locale: String
   mfa: Boolean
   name: String
+  plan: String
+}
+
+input TenantOwnerInput {
+  email: String!
+  firstName: String
+  lastName: String
 }
 
 type User {

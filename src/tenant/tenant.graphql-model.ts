@@ -10,7 +10,7 @@ export class Tenant implements TenantResponseDto {
   id: string;
 
   @Field(type => String, { nullable: true })
-  plan: string;
+  plan?: string;
 
   @Field(type => String, { nullable: true })
   locale: string;
@@ -47,6 +47,9 @@ export class TenantInput {
   name: string;
 
   @Field(type => String, { nullable: true })
+  plan?: string;
+
+  @Field(type => String, { nullable: true })
   locale: string;
 
   @Field(type => Boolean, { nullable: true })
@@ -69,8 +72,8 @@ export class TenantOwnerInput implements TenantOwnerRequestDto {
 @InputType()
 export class CreateTenantInput implements CreateTenantRequestDto {
 
-  @Field(type => String)
-  plan: string;
+  @Field(type => String, { nullable: true })
+  plan?: string;
 
   @Field(type => TenantOwnerInput)
   owner: TenantOwnerInput;

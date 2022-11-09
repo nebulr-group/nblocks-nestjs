@@ -11,6 +11,22 @@ type App {
   websiteUrl: String
 }
 
+type AppConfig {
+  apiUrl: String
+  defaultRole: String
+  emailSenderEmail: String
+  emailSenderName: String
+  id: String
+  logo: String
+  name: String
+  plans: [String!]
+  privacyPolicyUrl: String
+  roles: [String!]
+  termsOfServiceUrl: String
+  uiUrl: String
+  websiteUrl: String
+}
+
 input CreateTenantInput {
   logo: String
   name: String
@@ -36,6 +52,11 @@ type Mutation {
 type Query {
   """Gets useful App configs for the UI to consume"""
   getAppAnonymous: App!
+
+  """
+  A bunch of more secret properties to render for the app config screen used by developer during quickstart
+  """
+  getAppConfig: AppConfig!
 
   """
   Obtain an short lived session url to redirect or present the user its Stripe subscription panel for updating payment or subscription data.

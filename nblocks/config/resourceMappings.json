@@ -1,5 +1,6 @@
 {
     "graphql/getAppAnonymous": "ANONYMOUS",
+    "graphql/getAppConfig": "AUTHENTICATED",
     "graphql/getTenant": "TENANT_READ",
     "graphql/listTenants": "TENANT_READ",
     "graphql/getTenantAnonymous": "ANONYMOUS",

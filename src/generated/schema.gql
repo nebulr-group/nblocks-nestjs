@@ -13,18 +13,23 @@ type App {
 
 type AppConfig {
   apiUrl: String
+  businessModel: BusinessModelGraphql
   defaultRole: String
   emailSenderEmail: String
   emailSenderName: String
   id: String
   logo: String
   name: String
-  plans: [String!]
   privacyPolicyUrl: String
   roles: [String!]
   termsOfServiceUrl: String
   uiUrl: String
   websiteUrl: String
+}
+
+type BusinessModelGraphql {
+  plans: [PlanGraphql!]!
+  taxes: [TaxGraphql!]!
 }
 
 input CreateTenantInput {
@@ -47,6 +52,17 @@ type Mutation {
   Update the user. You can change role, teams and also enable or disable the user from logging in.
   """
   updateUser(user: UserInput!): User!
+}
+
+type PlanGraphql {
+  name: String!
+  prices: [PriceGraphql!]!
+}
+
+type PriceGraphql {
+  amount: Float!
+  currency: String!
+  region: String!
 }
 
 type Query {
@@ -75,6 +91,12 @@ type Query {
 
   """List all users in this tenant."""
   listUsers: [User!]!
+}
+
+type TaxGraphql {
+  name: String!
+  percentage: Float!
+  region: String!
 }
 
 type Tenant {

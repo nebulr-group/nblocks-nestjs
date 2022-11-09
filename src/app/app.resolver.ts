@@ -22,12 +22,11 @@ export class AppResolver {
     return app;
   }
 
-  // TODO make sure just the app owner can set this up.
-  // @Query((returns) => Boolean, { description: "" })
-  // async updateCredentials(
-  //   @Args({ name: 'credentials', type: () => UpdateCredentialsInput }) credentials: UpdateCredentialsInput,
-  // ): Promise<boolean> {
-  //   await this.appService.updateCredentials(credentials);
-  //   return true;
-  // }
+  @Query((returns) => Boolean, { description: "" })
+  async updateAppCredentials(
+    @Args({ name: 'credentials', type: () => UpdateCredentialsInput }) credentials: UpdateCredentialsInput,
+  ): Promise<boolean> {
+    await this.appService.updateCredentials(credentials);
+    return true;
+  }
 }

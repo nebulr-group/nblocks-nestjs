@@ -3,7 +3,6 @@
     "graphql/getAppConfig": "AUTHENTICATED",
     "graphql/updateAppCredentials": "AUTHENTICATED",
     "graphql/getTenant": "TENANT_READ",
-    "graphql/listTenants": "TENANT_READ",
     "graphql/getTenantAnonymous": "ANONYMOUS",
     "graphql/getCustomerPortal": "TENANT_WRITE",
     "graphql/updateTenant": "TENANT_WRITE",

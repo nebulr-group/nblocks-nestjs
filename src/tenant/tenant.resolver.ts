@@ -16,10 +16,11 @@ export class TenantResolver {
     return this.tenantService.getTenant();
   }
 
-  @Query((returns) => [Tenant], { description: "Lists all tenants" })
-  async listTenants(): Promise<Tenant[]> {
-    return this.tenantService.listTenants();
-  }
+  // @Query((returns) => [Tenant], { description: "Lists all tenants" })
+  // async listTenants(): Promise<Tenant[]> {
+  //   return this.tenantService.listTenants();
+
+  // }
 
   @Query((returns) => TenantAnonymous)
   async getTenantAnonymous(): Promise<TenantAnonymous> {

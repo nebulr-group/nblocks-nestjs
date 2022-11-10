@@ -23,6 +23,11 @@ export class TenantService {
     return resp;
   }
 
+  /**
+   * Updates a tenant. The tenant must have the same id as the tenant you currently belongs to
+   * @param args 
+   * @returns 
+   */
   async updateTenant(args: UpdateTenantRequestDto): Promise<TenantResponseDto> {
     const tenantId = this.nebulrAuthService.getCurrentTenantId();
     const resp = await this.clientService.client.tenant(tenantId).update(args);

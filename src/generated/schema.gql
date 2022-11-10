@@ -83,14 +83,14 @@ type Query {
   getTenant: Tenant!
   getTenantAnonymous: TenantAnonymous!
 
-  """Lists all tenants"""
-  listTenants: [Tenant!]!
-
   """List all available user roles that the current user can assign others"""
   listUserRoles: [String!]!
 
   """List all users in this tenant."""
   listUsers: [User!]!
+
+  """"""
+  updateAppCredentials(credentials: UpdateCredentialsInput!): Boolean!
 }
 
 type TaxGraphql {
@@ -126,6 +126,11 @@ input TenantOwnerInput {
   email: String!
   firstName: String
   lastName: String
+}
+
+input UpdateCredentialsInput {
+  stripePublicKey: String
+  stripeSecretKey: String
 }
 
 type User {

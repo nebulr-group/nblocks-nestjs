@@ -106,6 +106,8 @@ type Tenant {
   logo: String!
   mfa: Boolean
   name: String!
+  paymentsEnabled: Boolean
+  paymentsRequired: Boolean
   plan: String
 }
 

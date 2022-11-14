@@ -24,6 +24,12 @@ export class Tenant implements TenantResponseDto {
   @Field(type => Boolean, { nullable: true })
   mfa: boolean;
 
+  @Field(type => Boolean, { nullable: true })
+  paymentsEnabled: boolean;
+
+  @Field(type => Boolean, { nullable: true })
+  paymentsRequired: boolean;
+
   @Field(type => String, { nullable: true })
   createdAt: Date;
 }

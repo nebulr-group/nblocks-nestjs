@@ -1,5 +1,7 @@
 import { TenantResponseDto } from '@nebulr-group/nblocks-ts-client';
+import { CheckoutResponsetDto } from '@nebulr-group/nblocks-ts-client/dist/platform/tenant/models/checkout-response.dto';
 import { CreateTenantRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/tenant/models/create-tenant-request.dto';
+import { StripeTenantCheckoutIdRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/tenant/models/stripe-tenant-checkout-id-request.dto';
 import { UpdateTenantRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/tenant/models/update-tenant-request.dto';
 import { Injectable } from '@nestjs/common';
 import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
@@ -31,6 +33,12 @@ export class TenantService {
   async updateTenant(args: UpdateTenantRequestDto): Promise<TenantResponseDto> {
     const tenantId = this.nebulrAuthService.getCurrentTenantId();
     const resp = await this.clientService.client.tenant(tenantId).update(args);
+    return resp;
+  }
+
+  async createStripeCheckoutSession(args: StripeTenantCheckoutIdRequestDto): Promise<CheckoutResponsetDto> {
+    const tenantId = this.nebulrAuthService.getCurrentTenantId();
+    const resp = await this.clientService.client.tenant(tenantId).createStripeCheckoutSession(args);
     return resp;
   }
 

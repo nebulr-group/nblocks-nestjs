@@ -1,7 +1,7 @@
 import { ForbiddenException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
-import { CreateTenantInput, Tenant, TenantAnonymous, TenantInput } from './tenant.graphql-model';
+import { CheckoutResponse, CreateCheckoutSessionInput, CreateTenantInput, Tenant, TenantAnonymous, TenantInput } from './tenant.graphql-model';
 import { TenantService } from './tenant.service';
 
 @Resolver((of) => Tenant)
@@ -50,5 +50,13 @@ export class TenantResolver {
     @Args('tenant', { type: () => CreateTenantInput }) tenant: CreateTenantInput,
   ): Promise<Tenant> {
     return this.tenantService.createTenant(tenant);
+  }
+
+  @Mutation((returns) => CheckoutResponse)
+  async createCheckoutSession(
+    @Args('args', { type: () => CreateCheckoutSessionInput }) args: CreateCheckoutSessionInput,
+  ): Promise<CheckoutResponse> {
+    const response = this.tenantService.createStripeCheckoutSession(args);
+    return response;
   }
 }

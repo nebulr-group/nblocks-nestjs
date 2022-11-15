@@ -12,7 +12,7 @@ import { AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
 @Injectable()
 export class AuthGuard implements CanActivate {
   private debugger: Debugger;
-  constructor(private authGuardService: AuthGuardService) {
+  constructor(private readonly authGuardService: AuthGuardService) {
     this.debugger = new Debugger("AuthGuard", true);
     this.debugger.log("constructor");
   }
@@ -59,7 +59,11 @@ export class AuthGuard implements CanActivate {
 
     this.debugger.log(`canActivate isAuthorized`, authResponse);
     this.setAuthDataForRequest(parsedRequest, authResponse.user);
-    return authResponse.granted;
+
+    const hasRequiredPlan = this.authGuardService.hasRequiredPlan(authResponse.user.tenant.plan, parsedRequest.resource);
+    this.debugger.log(`canActivate hasRequiredPlan`, hasRequiredPlan);
+
+    return authResponse.granted && hasRequiredPlan;
   }
 
   private setAuthDataForRequest(parsedRequest: { graphql: boolean, request: any, resource: string }, user: AuthTenantUserResponseDto): void {

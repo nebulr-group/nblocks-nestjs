@@ -18,5 +18,9 @@
     "/file/prepareUploadAnonymous": "ANONYMOUS",
     "/file/prepareUpload": "AUTHENTICATED",
     "/auth/currentUser": "AUTHENTICATED",
+    "/super/feature": {
+        "privilege": "AUTHENTICATED",
+        "plans": ["PREMIUM", "ENTERPRICE"]
+    },
     "/webhook/incoming": "ANONYMOUS"
 }

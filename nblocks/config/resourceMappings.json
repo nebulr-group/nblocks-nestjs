@@ -20,7 +20,7 @@
     "/auth/currentUser": "AUTHENTICATED",
     "/super/feature": {
         "privilege": "AUTHENTICATED",
-        "plans": ["PREMIUM", "ENTERPRICE"]
+        "plans": ["PREMIUM", "ENTERPRISE"]
     },
     "/webhook/incoming": "ANONYMOUS"
 }

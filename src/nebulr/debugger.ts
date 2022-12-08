@@ -5,11 +5,11 @@ export class Debugger {
   private initiator: string;
   private silent: boolean;
 
-  constructor(initiator: string, silent = false) {
+  constructor(initiator: string, mute = false) {
     this.initiator = initiator
     this.threadId = Debugger.randomThreadId();
     this.start = new Date();
-    this.silent = silent;
+    this.silent = process.env.NBLOCKS_DEBUG === '*' ? true : false;
   }
 
   log(event: string, data: unknown = undefined) {

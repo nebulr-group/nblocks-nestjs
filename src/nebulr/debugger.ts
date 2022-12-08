@@ -3,17 +3,20 @@ export class Debugger {
   private threadId: string;
   private start: Date;
   private initiator: string;
-  private silent: boolean;
+  private verbose: boolean;
 
-  constructor(initiator: string, mute = false) {
+  constructor(initiator: string, forceMute = false) {
     this.initiator = initiator
     this.threadId = Debugger.randomThreadId();
     this.start = new Date();
-    this.silent = process.env.NBLOCKS_DEBUG === '*' ? true : false;
+    this.verbose = process.env.NBLOCKS_DEBUG === '*' ? true : false;
+    if (forceMute) {
+      this.verbose = false;
+    }
   }
 
   log(event: string, data: unknown = undefined) {
-    if (!this.silent)
+    if (this.verbose)
       if (data)
         console.log(`${new Date().toISOString()} ${this.threadId}`, new Date().getTime() - this.start.getTime(), `${this.initiator}.${event}`, data);
       else

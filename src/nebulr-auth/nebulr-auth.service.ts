@@ -14,7 +14,7 @@ export class NebulrAuthService {
   constructor(
     @Inject(REQUEST) private request: Request
   ) {
-    this.logger = new Debugger("NebulrAuthService", true);
+    this.logger = new Debugger("NebulrAuthService");
     this.logger.log("constructor");
   }
 
@@ -53,6 +53,10 @@ export class NebulrAuthService {
     } else {
       return user.tenant.id;
     }
+  }
+
+  static isAnonymousUser(user: AuthTenantUserResponseDto): boolean {
+    return user.role === AuthGuardService.ANONYMOUS;
   }
 
 }

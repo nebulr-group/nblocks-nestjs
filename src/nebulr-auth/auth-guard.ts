@@ -3,6 +3,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuardService } from './auth-guard.service';
 import { Debugger } from '../nebulr/debugger';
 import { AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
+import { NebulrAuthService } from './nebulr-auth.service';
 
 /**
  * The Nebulr AuthGuard will resolve the current provided credentials (via Platform API) into an AuthUser instance and make it available on the request object for other providers
@@ -11,31 +12,34 @@ import { AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
  */
 @Injectable()
 export class AuthGuard implements CanActivate {
-  private debugger: Debugger;
+
+  private _debugger: Debugger;
+
+  // These are the Whitelisted HTTP auth paths
+  // If a HTTP call is made to one of these, consider them to be put through / granted without evaluating resourceMappings.json
+  private readonly _authPaths = [
+    '/auth-proxy/authenticate',
+    '/auth-proxy/commitMfaCode',
+    '/auth-proxy/startMfaUserSetup',
+    '/auth-proxy/finishMfaUserSetup',
+    '/auth-proxy/resetUserMfaSetup',
+    '/auth-proxy/authenticated',
+    '/auth-proxy/deauthenticate',
+    '/auth-proxy/password',
+    '/auth-proxy/user',
+    '/auth-proxy/tenantUsers'
+  ];
+
   constructor(private readonly authGuardService: AuthGuardService) {
-    this.debugger = new Debugger("AuthGuard", true);
-    this.debugger.log("constructor");
+    this._debugger = new Debugger("AuthGuard");
+    this._debugger.log("constructor");
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
 
-    // These are the Whitelisted auth paths
-    const authPaths = [
-      '/auth-proxy/authenticate',
-      '/auth-proxy/commitMfaCode',
-      '/auth-proxy/startMfaUserSetup',
-      '/auth-proxy/finishMfaUserSetup',
-      '/auth-proxy/resetUserMfaSetup',
-      '/auth-proxy/authenticated',
-      '/auth-proxy/deauthenticate',
-      '/auth-proxy/password',
-      '/auth-proxy/user',
-      '/auth-proxy/tenantUsers'
-    ];
-
     const parsedRequest = this.parseRequest(context);
 
-    this.debugger.log(`canActivate for resource: ${parsedRequest.resource}`);
+    this._debugger.log(`canActivate for resource: ${parsedRequest.resource}`);
 
     const authToken = parsedRequest.request.get('x-auth-token');
     const tenantUserId = parsedRequest.request.get('x-tenant-user-id');
@@ -43,10 +47,11 @@ export class AuthGuard implements CanActivate {
       ? parsedRequest.request.get('x-tenant-id')
       : undefined;
 
-    if (!parsedRequest.graphql && authPaths.includes(parsedRequest.resource)) {
-      // Built in auth endpoints (REST) is granted by default
-      this.debugger.log(`canActivate request is part of whitelisted auth paths`);
-      this.setAuthDataForRequest(parsedRequest, await this.authGuardService.buildAnonymousUser(tenantId))
+    // Built in auth endpoints (REST) is granted by default
+    if (!parsedRequest.graphql && this._authPaths.includes(parsedRequest.resource)) {
+      this._debugger.log(`canActivate request is part of whitelisted auth paths. Granting`);
+      const anonymousUser = await this.authGuardService.buildAnonymousUser(tenantId)
+      this.setAuthDataForRequest(parsedRequest, anonymousUser);
       return true;
     }
 
@@ -57,13 +62,25 @@ export class AuthGuard implements CanActivate {
       parsedRequest.resource,
     );
 
-    this.debugger.log(`canActivate isAuthorized`, authResponse);
+    this._debugger.log(`canActivate isAuthorized`, authResponse);
     this.setAuthDataForRequest(parsedRequest, authResponse.user);
 
-    const hasRequiredPlan = this.authGuardService.hasRequiredPlan(authResponse.user.tenant.plan, parsedRequest.resource);
-    this.debugger.log(`canActivate hasRequiredPlan`, hasRequiredPlan);
+    // Decide if the call is not granted and return
+    if (!authResponse.granted) {
+      this._debugger.log(`canActivate return false`);
+      return false;
+    }
 
-    return authResponse.granted && hasRequiredPlan;
+    // If granted, check tenant plan before returning
+    if (NebulrAuthService.isAnonymousUser(authResponse.user)) {
+      this._debugger.log(`canActivate no need to do plan restriction since this is a ANONYMOUS user`);
+      return true;
+    } else {
+      const hasRequiredPlan = this.authGuardService.hasRequiredPlan(authResponse.user.tenant.plan, parsedRequest.resource);
+      this._debugger.log(`canActivate hasRequiredPlan`, hasRequiredPlan);
+
+      return hasRequiredPlan;
+    }
   }
 
   private setAuthDataForRequest(parsedRequest: { graphql: boolean, request: any, resource: string }, user: AuthTenantUserResponseDto): void {

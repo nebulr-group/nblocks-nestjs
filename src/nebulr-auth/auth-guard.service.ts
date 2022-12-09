@@ -17,7 +17,7 @@ export class AuthGuardService {
         private readonly clientService: ClientService,
         private readonly cacheService: CacheService
     ) {
-        this.logger = new Debugger("AuthGuardService", true);
+        this.logger = new Debugger("AuthGuardService");
         this.logger.log("constructor");
         this.resourceMap = resourceMap;
     }

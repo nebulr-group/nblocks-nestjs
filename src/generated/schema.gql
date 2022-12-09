@@ -22,6 +22,7 @@ type AppConfig {
   name: String
   privacyPolicyUrl: String
   roles: [String!]
+  stripeEnabled: Boolean
   termsOfServiceUrl: String
   uiUrl: String
   websiteUrl: String

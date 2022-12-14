@@ -7,6 +7,9 @@ import { Debugger } from '../nebulr/debugger';
 import { NebulrRequestData } from './auth-guard';
 import { AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
 
+/**
+ * This service is "request scoped". That means this provider and all providers injecting this provider will be reinstantiated and kept private for every individual request
+ */
 @Injectable({ scope: Scope.REQUEST })
 export class NebulrAuthService {
   private logger: Debugger;

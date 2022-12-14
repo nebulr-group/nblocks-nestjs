@@ -8,18 +8,18 @@ import { NebulrConfigService } from '../../nebulr/nebulr-config/nebulr-config.se
 export class ClientService {
 
     /** A ready made client instance loaded with your credentials */
-    readonly client: PlatformClient;
+    protected readonly _client: PlatformClient;
 
     constructor(private readonly nebulrConfigService: NebulrConfigService) {
-        this.client = new PlatformClient(
+        this._client = new PlatformClient(
             nebulrConfigService.getNebulrPlatformApiKey(),
             1,
             process.env.NBLOCKS_DEBUG === '*' ? true : false,
-            this.getEnvironment(nebulrConfigService)
+            this._getEnvironment(nebulrConfigService)
         );
     }
 
-    getEnvironment(nebulrConfigService: NebulrConfigService): Stage {
+    private _getEnvironment(nebulrConfigService: NebulrConfigService): Stage {
         switch (nebulrConfigService.getEnvironment()) {
             case ENVIRONMENT.DEV:
                 return process.env.NBLOCKS_FORCE_DEV ? 'DEV' : 'STAGE';
@@ -27,5 +27,10 @@ export class ClientService {
             default:
                 return 'PROD';
         }
+    }
+
+    getClient(): PlatformClient {
+        console.log("Hello from ClientService")
+        return this._client;
     }
 }

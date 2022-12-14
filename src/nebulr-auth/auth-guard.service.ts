@@ -149,7 +149,7 @@ export class AuthGuardService {
         if (cache.exists) {
             return cache.data;
         } else {
-            const authResponse = await this.clientService.client.auth.authorize(token, tenantUserId, privilege);
+            const authResponse = await this.clientService.getClient().auth.authorize(token, tenantUserId, privilege);
             await this.cacheService.set(type, cacheKeys, authResponse);
             return authResponse;
         }
@@ -167,7 +167,7 @@ export class AuthGuardService {
         if (cache.exists) {
             return cache.data;
         } else {
-            const authResponse = await this.clientService.client.tenant(tenantId).getLight();
+            const authResponse = await this.clientService.getClient().tenant(tenantId).getLight();
             await this.cacheService.set(type, cacheKeys, authResponse);
             return authResponse;
         }

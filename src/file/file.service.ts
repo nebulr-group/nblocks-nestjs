@@ -36,7 +36,7 @@ export class FileService {
     contentType: string,
     tenantId: string,
   ): Promise<PrepareUploadResponseDto> {
-    const data = await this.clientService.client.tenant(tenantId).fileClient.startUploadSession({
+    const data = await this.clientService.getClient().tenant(tenantId).fileClient.startUploadSession({
       fileName: name,
       contentType,
     });
@@ -54,7 +54,7 @@ export class FileService {
     uploadKey: string,
     tenantId: string,
   ): Promise<string> {
-    const remoteSignedGetUrl = await this.clientService.client.tenant(tenantId).fileClient.finishUploadSession({ key: uploadKey, persist: true });
+    const remoteSignedGetUrl = await this.clientService.getClient().tenant(tenantId).fileClient.finishUploadSession({ key: uploadKey, persist: true });
     return remoteSignedGetUrl;
   }
 }

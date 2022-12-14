@@ -13,7 +13,7 @@ export class UserService {
   ) { }
 
   async listRoles(): Promise<string[]> {
-    const roles = await this.clientService.client.getAppRoleNames();
+    const roles = await this.clientService.getClient().getAppRoleNames();
     return roles;
   }
 
@@ -26,7 +26,7 @@ export class UserService {
   }
 
   async list(): Promise<TenantUserResponseDto[]> {
-    const users = await this.clientService.client.tenant(this.nebulrAuthService.getCurrentTenantId()).users.list();
+    const users = await this.clientService.getClient().tenant(this.nebulrAuthService.getCurrentTenantId()).users.list();
     return users;
   }
 
@@ -59,7 +59,7 @@ export class UserService {
   async createUsers(userNames: string[]): Promise<TenantUserResponseDto[]> {
     const promises: Promise<TenantUserResponseDto>[] = [];
     for (const userName of userNames) {
-      const promise = this.clientService.client.tenant(this.nebulrAuthService.getCurrentTenantId()).users.create({
+      const promise = this.clientService.getClient().tenant(this.nebulrAuthService.getCurrentTenantId()).users.create({
         username: userName
       });
       promises.push(promise);
@@ -68,13 +68,13 @@ export class UserService {
   }
 
   async sendPasswordResetLink(userId: string): Promise<boolean> {
-    await this.clientService.client.tenant(this.nebulrAuthService.getCurrentTenantId()).user(userId).resetPassword();
+    await this.clientService.getClient().tenant(this.nebulrAuthService.getCurrentTenantId()).user(userId).resetPassword();
     return true;
   }
 
   async deleteUser(userId: string): Promise<boolean> {
     try {
-      await this.clientService.client.tenant(this.nebulrAuthService.getCurrentTenantId()).user(userId).delete();
+      await this.clientService.getClient().tenant(this.nebulrAuthService.getCurrentTenantId()).user(userId).delete();
       return true;
     } catch (error) {
       return false;
@@ -86,12 +86,12 @@ export class UserService {
     if (user.role === DefaultRoles.OWNER && authUser.role != DefaultRoles.OWNER)
       throw Error("Logged in user must be Owner to set another user to Owner");
 
-    const result = await this.clientService.client.tenant(this.nebulrAuthService.getCurrentTenantId()).user(user.id).update({ enabled: user.enabled, role: user.role });
+    const result = await this.clientService.getClient().tenant(this.nebulrAuthService.getCurrentTenantId()).user(user.id).update({ enabled: user.enabled, role: user.role });
     return { ...user, ...result };
   }
 
   private async updateUserTeams(user: User): Promise<User> {
-    const result = await this.clientService.client.tenant(this.nebulrAuthService.getCurrentTenantId()).user(user.id).update({ teams: user.teams });
+    const result = await this.clientService.getClient().tenant(this.nebulrAuthService.getCurrentTenantId()).user(user.id).update({ teams: user.teams });
     return { ...user, ...result };
   }
 

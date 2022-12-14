@@ -2,9 +2,8 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import { AuthGuardService } from './auth-guard.service';
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
-import { IncomingMessage } from 'http';
 import { Debugger } from '../nebulr/debugger';
-import { NebulrRequestData } from './auth-guard';
+import { AuthGuard, NebulrRequestData } from './auth-guard';
 import { AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
 
 /**
@@ -26,9 +25,7 @@ export class NebulrAuthService {
    * @returns 
    */
   getCurrentUser(): AuthTenantUserResponseDto {
-    const req: any = this.request instanceof IncomingMessage ? this.request : this.request['req'];
-    const data: NebulrRequestData = req.nebulr;
-
+    const data = this.getRequest();
     const requestExecution = new Date().getTime() - data.timestamp.getTime();
     if (requestExecution > NebulrAuthService.timeWarningMs)
       console.error(`WARNING: The request used to resolve this authentication data is ${requestExecution} ms old! Either you're debugging the code, the execution is extremely slow or something dangerous is happening like shared data between requests!`);
@@ -39,6 +36,10 @@ export class NebulrAuthService {
 
     this.logger.log("getUser", user);
     return user;
+  }
+
+  getRequest(): NebulrRequestData {
+    return AuthGuard.getAuthDataFromRequest(this.request);
   }
 
   /**

@@ -26,7 +26,7 @@ export class UserService {
   }
 
   async list(): Promise<TenantUserResponseDto[]> {
-    const users = await this.clientService.getClient().tenant(this.nebulrAuthService.getCurrentTenantId()).users.list();
+    const users = await this.clientService.getRequestLoadedClient(this.nebulrAuthService.getRequest()).tenant(this.nebulrAuthService.getCurrentTenantId()).users.list();
     return users;
   }
 

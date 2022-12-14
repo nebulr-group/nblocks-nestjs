@@ -4,6 +4,8 @@ import { AuthGuardService } from './auth-guard.service';
 import { Debugger } from '../nebulr/debugger';
 import { AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
 import { NebulrAuthService } from './nebulr-auth.service';
+import { IncomingMessage } from 'http';
+import { Request } from 'express';
 
 /**
  * The Nebulr AuthGuard will resolve the current provided credentials (via Platform API) into an AuthUser instance and make it available on the request object for other providers
@@ -51,7 +53,7 @@ export class AuthGuard implements CanActivate {
     if (!parsedRequest.graphql && this._authPaths.includes(parsedRequest.resource)) {
       this._debugger.log(`canActivate request is part of whitelisted auth paths. Granting`);
       const anonymousUser = await this.authGuardService.buildAnonymousUser(tenantId)
-      this.setAuthDataForRequest(parsedRequest, anonymousUser);
+      AuthGuard.setAuthDataForRequest(parsedRequest, anonymousUser);
       return true;
     }
 
@@ -63,7 +65,7 @@ export class AuthGuard implements CanActivate {
     );
 
     this._debugger.log(`canActivate isAuthorized`, authResponse);
-    this.setAuthDataForRequest(parsedRequest, authResponse.user);
+    AuthGuard.setAuthDataForRequest(parsedRequest, authResponse.user);
 
     // Decide if the call is not granted and return
     if (!authResponse.granted) {
@@ -83,7 +85,7 @@ export class AuthGuard implements CanActivate {
     }
   }
 
-  private setAuthDataForRequest(parsedRequest: { graphql: boolean, request: any, resource: string }, user: AuthTenantUserResponseDto): void {
+  private static setAuthDataForRequest(parsedRequest: { graphql: boolean, request: any, resource: string }, user: AuthTenantUserResponseDto): void {
     const requestData: NebulrRequestData = {
       timestamp: new Date(),
       graphql: parsedRequest.graphql,
@@ -98,6 +100,12 @@ export class AuthGuard implements CanActivate {
     // Store the same request data in RequestAwareNebulrAuthHelper
     // Since this way is deprecated and never proven, don't do it for now
     // RequestAwareNebulrAuthHelper.storeRequestData(requestData);
+  }
+
+  static getAuthDataFromRequest(request: Request): NebulrRequestData {
+    const req: any = request instanceof IncomingMessage ? request : request['req'];
+    const data: NebulrRequestData = req.nebulr;
+    return data;
   }
 
   private parseRequest(context: ExecutionContext): { graphql: boolean, request: any, resource: string } {

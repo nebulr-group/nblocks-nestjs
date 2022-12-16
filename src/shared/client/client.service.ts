@@ -44,7 +44,6 @@ export class ClientService {
     }
 
     getClient(): PlatformClient {
-        console.log("Hello from ClientService")
         return this._client;
     }
 
@@ -52,7 +51,7 @@ export class ClientService {
         if (!!this._interceptor) {
             return this._interceptor.intercept(this._client, data);
         } else {
-            throw new Error("There's no interceptor configured");
+            return this.getClient();
         }
     }
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth-guard';
 import { AuthController } from './auth.controller';
@@ -11,7 +11,7 @@ import { NBlocksErrorToExceptionFilter } from '../nebulr/nblocks-error-to-except
 @Module({
   imports: [
     SharedModule,
-    NebulrAuthProxyModule,
+    forwardRef(() => NebulrAuthProxyModule),
   ],
   providers: [
     {

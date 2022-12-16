@@ -4,13 +4,15 @@ import * as path from 'path';
 import { PrepareUploadResponseDto } from './dto/PrepareUploadResponse.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { ClientService } from '../shared/client/client.service';
+import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
 
 @Injectable()
 export class FileService {
 
   constructor(
     private readonly httpService: HttpService,
-    private readonly clientService: ClientService
+    private readonly clientService: ClientService,
+    private readonly authService: NebulrAuthService,
   ) {
   }
 
@@ -36,7 +38,7 @@ export class FileService {
     contentType: string,
     tenantId: string,
   ): Promise<PrepareUploadResponseDto> {
-    const data = await this.clientService.client.tenant(tenantId).fileClient.startUploadSession({
+    const data = await this.clientService.getInterceptedClient(this.authService.getRequest()).tenant(tenantId).fileClient.startUploadSession({
       fileName: name,
       contentType,
     });
@@ -54,7 +56,7 @@ export class FileService {
     uploadKey: string,
     tenantId: string,
   ): Promise<string> {
-    const remoteSignedGetUrl = await this.clientService.client.tenant(tenantId).fileClient.finishUploadSession({ key: uploadKey, persist: true });
+    const remoteSignedGetUrl = await this.clientService.getInterceptedClient(this.authService.getRequest()).tenant(tenantId).fileClient.finishUploadSession({ key: uploadKey, persist: true });
     return remoteSignedGetUrl;
   }
 }

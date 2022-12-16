@@ -16,12 +16,12 @@ export class TenantService {
 
   async getTenant(): Promise<TenantResponseDto> {
     const tenantId = this.nebulrAuthService.getCurrentTenantId();
-    const resp = await this.clientService.client.tenant(tenantId).get();
+    const resp = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).tenant(tenantId).get();
     return resp;
   }
 
   async listTenants(): Promise<TenantResponseDto[]> {
-    const resp = await this.clientService.client.tenants.list();
+    const resp = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).tenants.list();
     return resp;
   }
 
@@ -32,23 +32,23 @@ export class TenantService {
    */
   async updateTenant(args: UpdateTenantRequestDto): Promise<TenantResponseDto> {
     const tenantId = this.nebulrAuthService.getCurrentTenantId();
-    const resp = await this.clientService.client.tenant(tenantId).update(args);
+    const resp = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).tenant(tenantId).update(args);
     return resp;
   }
 
   async createStripeCheckoutSession(args: StripeTenantCheckoutIdRequestDto): Promise<CheckoutResponsetDto> {
     const tenantId = this.nebulrAuthService.getCurrentTenantId();
-    const resp = await this.clientService.client.tenant(tenantId).createStripeCheckoutSession(args);
+    const resp = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).tenant(tenantId).createStripeCheckoutSession(args);
     return resp;
   }
 
   async createTenant(args: CreateTenantRequestDto): Promise<TenantResponseDto> {
-    const resp = await this.clientService.client.tenants.create(args);
+    const resp = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).tenants.create(args);
     return resp;
   }
 
   async getCustomerPortal(): Promise<string> {
-    const resp = await this.clientService.client.tenant(this.nebulrAuthService.getCurrentTenantId()).getStripeCustomerPortalUrl();
+    const resp = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).tenant(this.nebulrAuthService.getCurrentTenantId()).getStripeCustomerPortalUrl();
     return resp.url;
   }
 }

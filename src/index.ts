@@ -6,7 +6,7 @@ import { TenantFilterPlugin } from './nebulr-auth/tenant-filter.plugin';
 import { UserFilterPlugin } from './nebulr-auth/user-filter.plugin';
 import { RequestAwareNebulrAuthHelper } from './nebulr-auth/request-aware-nebulr-auth-helper';
 import { MoongooseAuthUtils } from './nebulr-auth/mongoose-auth-utils';
-import { ClientService } from './shared/client/client.service';
+import { ClientService, ClientServiceInterceptor } from './shared/client/client.service';
 import { CacheService } from './shared/cache/cache.service';
 import { IUserFilter } from './nebulr-auth/user-filter';
 import { PlatformClient, AuthTenantResponseDto, AuthTenantUserResponseDto, TenantResponseDto, TenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
@@ -21,6 +21,7 @@ import { NBlocksModule } from './nblocks.module';
 import { FileService } from './file/file.service';
 import { TenantService } from './tenant/tenant.service';
 import { UserService } from './user/user.service';
+import { NebulrRequestData } from './nebulr-auth/auth-guard';
 
 //TODO should we really re expose stuff from @nebulr-group/nblocks-ts-client
 export {
@@ -38,6 +39,8 @@ export {
     MoongooseAuthUtils,
     SharedModule,
     ClientService,
+    ClientServiceInterceptor,
+    NebulrRequestData,
     CacheService,
     UserFilterPlugin,
     IUserFilter,

@@ -4,6 +4,7 @@ import { Debugger } from '../nebulr/debugger';
 import { ClientService } from '../shared/client/client.service';
 import { AuthorizeResponseDto, AuthTenantResponseDto, AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
 import { CacheService } from '../shared/cache/cache.service';
+import { AuthGuard } from './auth-guard';
 
 type ResourceAccessConfig = string | { privilege: string, plans: string[] };
 
@@ -29,6 +30,7 @@ export class AuthGuardService {
         tenantUserId: string,
         tenantId: string,
         resource: string,
+        appId?: string
     ): Promise<AuthorizeResponseDto> {
         let privilege: string;
         try {
@@ -45,7 +47,9 @@ export class AuthGuardService {
                 return this._cachedAuthorize(
                     token,
                     tenantUserId,
-                    privilege
+                    privilege,
+                    resource,
+                    appId
                 );
             } else {
 
@@ -142,6 +146,8 @@ export class AuthGuardService {
         token: string,
         tenantUserId: string,
         privilege: string,
+        resource: string,
+        appId?: string
     ): Promise<AuthorizeResponseDto> {
         const type = "AuthorizeResponse";
         const cacheKeys = { token, tenantUserId, privilege }
@@ -149,25 +155,7 @@ export class AuthGuardService {
         if (cache.exists) {
             return cache.data;
         } else {
-            const authResponse = await this.clientService.getClient().auth.authorize(token, tenantUserId, privilege);
-            await this.cacheService.set(type, cacheKeys, authResponse);
-            return authResponse;
-        }
-    }
-
-    /**
-     * Wraps a cache around calling the remote API
-     */
-    private async _cachedTenant(
-        tenantId: string
-    ): Promise<AuthTenantResponseDto> {
-        const type = "AuthTenantResponse";
-        const cacheKeys = { tenantId }
-        const cache = await this.cacheService.get<AuthTenantResponseDto>(type, cacheKeys);
-        if (cache.exists) {
-            return cache.data;
-        } else {
-            const authResponse = await this.clientService.getClient().tenant(tenantId).getLight();
+            const authResponse = await this.clientService.getInterceptedClient(AuthGuard._buildRequestData(resource, false, await this.buildAnonymousUser(), appId)).auth.authorize(token, tenantUserId, privilege);
             await this.cacheService.set(type, cacheKeys, authResponse);
             return authResponse;
         }

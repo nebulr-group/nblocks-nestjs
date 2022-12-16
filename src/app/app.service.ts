@@ -11,16 +11,16 @@ export class AppService {
   ) { }
 
   async getApp(): Promise<App> {
-    const { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl } = await this.clientService.getRequestLoadedClient(this.authService.getRequest()).getApp();
+    const { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl } = await this.clientService.getInterceptedClient(this.authService.getRequest()).getApp();
     return { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl }
   }
 
   async getAppConfig(): Promise<AppConfig> {
-    const { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl, apiUrl, businessModel, defaultRole, emailSenderEmail, emailSenderName, id, roles, stripeEnabled } = await this.clientService.getRequestLoadedClient(this.authService.getRequest()).getApp();
+    const { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl, apiUrl, businessModel, defaultRole, emailSenderEmail, emailSenderName, id, roles, stripeEnabled } = await this.clientService.getInterceptedClient(this.authService.getRequest()).getApp();
     return { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl, apiUrl, defaultRole, emailSenderEmail, emailSenderName, id, businessModel, roles: Object.keys(roles), stripeEnabled: stripeEnabled }
   }
 
   async updateCredentials(input: UpdateCredentialsInput): Promise<void> {
-    await this.clientService.getClient().updateAppCredentials(input);
+    await this.clientService.getInterceptedClient(this.authService.getRequest()).updateAppCredentials(input);
   }
 }

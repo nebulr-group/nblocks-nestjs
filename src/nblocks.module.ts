@@ -13,7 +13,6 @@ import { AppModule } from './app/app.module';
  */
 @Module({
   imports: [
-    //SharedModule.forRoot(BackendlessClientService),
     SharedModule,
     NebulrConfigModule.forRoot({ graphql: true }),
     AuthModule,

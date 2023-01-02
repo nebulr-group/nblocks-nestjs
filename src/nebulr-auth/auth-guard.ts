@@ -43,10 +43,21 @@ export class AuthGuard implements CanActivate {
 
     this._debugger.log(`canActivate for resource: ${parsedRequest.resource}`);
 
+    /** 
+     * This is the new JWT based access token that the user obtained from auth.nblocks.cloud 
+     * TODO implement the way of dissecting the JWT just like we've done elsewhere
+    */
+    const acessToken = parsedRequest.request.get('Authorization') || parsedRequest.request.get('authorization');
+
+    /** These are legacy headers and non JWT based auth token */
     const authToken = parsedRequest.request.get('x-auth-token');
     const tenantUserId = parsedRequest.request.get('x-tenant-user-id');
-    const tenantId: string = parsedRequest.request.get('x-tenant-id');
+
+    /** Only needed for anonymous calls or when using legacy non JWT auth tokens in a backendless context  */
     const appId: string = parsedRequest.request.get('x-app-id');
+
+    /** Only needed for anonymous calls that requires understanding of a certain tenant */
+    const tenantId: string = parsedRequest.request.get('x-tenant-id');
 
     // Built in auth endpoints (REST) is granted by default
     if (!parsedRequest.graphql && this._authPaths.includes(parsedRequest.resource)) {

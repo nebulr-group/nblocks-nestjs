@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { IncomingMessage } from 'http';
 import { Request } from 'express';
@@ -80,8 +80,6 @@ export class AuthGuard implements CanActivate {
         userScope = scope;
         userRole = role;
         tenantPlan = plan;
-
-
       } catch (error) {
         console.error(error);
         throw error;

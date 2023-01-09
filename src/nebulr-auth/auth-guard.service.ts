@@ -45,14 +45,14 @@ export class AuthGuardService {
                 const hasPrivilege = scope.split(' ').includes(privilege);
 
                 if (hasPrivilege && tenantUserId) {
-                    return { 
+                    return {
                         granted: true,
-                        authContext: { 
+                        authContext: {
                             userId: tenantUserId,
                             userRole,
                             tenantId,
-                            tenantPlan 
-                        } 
+                            tenantPlan
+                        }
                     };
                 } else {
                     throw new UnauthorizedException("Missing required variables");
@@ -173,13 +173,13 @@ export class AuthGuardService {
     }
 
     /**
-    * Wraps a cache around calling the remote API
-    * @throws UnauthorizedException
-    * @param token 
-    * @param tenantUserId 
-    * @param privilege 
-    * @returns 
-    */
+      * Wraps a cache around calling the remote API
+      * @throws UnauthorizedException
+      * @param token 
+      * @param tenantUserId 
+      * @param privilege 
+      * @returns  
+     */
     private async _cachedAuthorize(
         token: string,
         tenantId: string,

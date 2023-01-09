@@ -2,9 +2,8 @@ import * as resourceMap from 'src/../../nblocks/config/resourceMappings.json'; /
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Debugger } from '../nebulr/debugger';
 import { ClientService } from '../shared/client/client.service';
-import { AuthorizeResponseDto, AuthTenantResponseDto, AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
+import { AuthorizeResponseDto, AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
 import { CacheService } from '../shared/cache/cache.service';
-import { AuthGuard } from './auth-guard';
 
 type ResourceAccessConfig = string | { privilege: string, plans: string[] };
 
@@ -26,36 +25,33 @@ export class AuthGuardService {
     // Checks if current user is authorized for a given resource, also loads the user property
     // Called by AuthGuard when intercepting all HTTP/GraphQL calls
     async isAuthorized(
-        token: string,
         tenantUserId: string,
         tenantId: string,
         resource: string,
-        appId?: string
+        scope: string,
+        role: string,
+        plan: string
     ): Promise<AuthorizeResponseDto> {
         let privilege: string;
+
         try {
             privilege = this._getRequiredPrivileges(resource);
+
+            if (privilege == AuthGuardService.ANONYMOUS) {
+                const anonymousUser = await this.buildAnonymousUser(tenantId);
+                return { granted: true, user: anonymousUser };
+            } else {
+                const hasPrivilege = scope.split(' ').includes(privilege);
+
+                if (hasPrivilege && tenantUserId) {
+                    return { granted: true, user: { id: tenantUserId, role, tenant: { id: tenantId, plan } } };
+                } else {
+                    throw new UnauthorizedException("Missing required variables");
+                }
+
+            }
         } catch (error) {
             return { granted: false, user: undefined };
-        }
-
-        if (privilege == AuthGuardService.ANONYMOUS) {
-            const anonymousUser = await this.buildAnonymousUser(tenantId);
-            return { granted: true, user: anonymousUser };
-        } else {
-            if (token && tenantUserId && privilege) {
-                return this._cachedAuthorize(
-                    token,
-                    tenantUserId,
-                    privilege,
-                    resource,
-                    appId
-                );
-            } else {
-
-                throw new UnauthorizedException("Missing required variables");
-                //return { granted: false, user: undefined }
-            }
         }
     }
 
@@ -65,14 +61,10 @@ export class AuthGuardService {
     }
 
     async buildAnonymousUser(tenantId?: string): Promise<AuthTenantUserResponseDto> {
-        const tenant = { id: tenantId, name: "", locale: "" }; //await this._cachedTenant(tenantId);
+        const tenant = { id: tenantId, plan: '' }; //await this._cachedTenant(tenantId);
         return {
             id: undefined,
             role: AuthGuardService.ANONYMOUS,
-            username: AuthGuardService.ANONYMOUS,
-            email: AuthGuardService.ANONYMOUS,
-            onboarded: false,
-            consentsToPrivacyPolicy: false,
             tenant
         }
     }
@@ -131,33 +123,6 @@ export class AuthGuardService {
             } else {
                 return this._getAccessRight(newPath, false);
             }
-        }
-    }
-
-    /**
-     * Wraps a cache around calling the remote API
-     * @throws UnauthorizedException
-     * @param token 
-     * @param tenantUserId 
-     * @param privilege 
-     * @returns 
-     */
-    private async _cachedAuthorize(
-        token: string,
-        tenantUserId: string,
-        privilege: string,
-        resource: string,
-        appId?: string
-    ): Promise<AuthorizeResponseDto> {
-        const type = "AuthorizeResponse";
-        const cacheKeys = { token, tenantUserId, privilege }
-        const cache = await this.cacheService.get<AuthorizeResponseDto>(type, cacheKeys);
-        if (cache.exists) {
-            return cache.data;
-        } else {
-            const authResponse = await this.clientService.getInterceptedClient(AuthGuard._buildRequestData(resource, false, await this.buildAnonymousUser(), appId)).auth.authorize(token, tenantUserId, privilege);
-            await this.cacheService.set(type, cacheKeys, authResponse);
-            return authResponse;
         }
     }
 }

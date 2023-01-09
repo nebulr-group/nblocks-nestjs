@@ -1,9 +1,9 @@
-import { AuthTenantUserResponseDto } from "@nebulr-group/nblocks-ts-client";
 import { Query, Document } from "mongoose";
+import { AuthContextDto } from "./dto/auth-context.dto";
 
 export interface IUserFilter {
 
-  shouldApplyFilter(user: AuthTenantUserResponseDto, entityName: string): boolean;
+  shouldApplyFilter(authContext: AuthContextDto, entityName: string): boolean;
 
   /**
    * Apply filtering to the document being queried using query.where or something similar.
@@ -13,7 +13,7 @@ export interface IUserFilter {
    * @param user AuthUser
    * @param entityName String
    */
-  applyPreFilter(query: Query<any, any>, user: AuthTenantUserResponseDto, entityName: string): Promise<void>;
+  applyPreFilter(query: Query<any, any>, authContext: AuthContextDto, entityName: string): Promise<void>;
 
   /**
    * Apply filtering to the document being updated. Since this is POST query context, the document has already been fetched.
@@ -23,5 +23,5 @@ export interface IUserFilter {
    * @param user 
    * @param entityName 
    */
-  applyPostFilter(doc: Document<any>, user: AuthTenantUserResponseDto, entityName: string): Promise<void>;
+  applyPostFilter(doc: Document<any>, authContext: AuthContextDto, entityName: string): Promise<void>;
 }

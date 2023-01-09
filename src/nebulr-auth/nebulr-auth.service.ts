@@ -4,7 +4,7 @@ import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 import { Debugger } from '../nebulr/debugger';
 import { AuthGuard, NebulrRequestData } from './auth-guard';
-import { AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
+import { AuthContextDto } from './dto/auth-context.dto';
 
 /**
  * This service is "request scoped". That means this provider and all providers injecting this provider will be reinstantiated and kept private for every individual request
@@ -21,21 +21,22 @@ export class NebulrAuthService {
   }
 
   /**
-   * Gets the current authorized AuthUser from the current request. Request and Thread safe
+   * Gets the current AuthContext from the current request. Request and Thread safe
    * @returns 
    */
-  getCurrentUser(): AuthTenantUserResponseDto {
+  getCurrentAuthContext(): AuthContextDto {
     const data = this.getRequest();
     const requestExecution = new Date().getTime() - data.timestamp.getTime();
     if (requestExecution > NebulrAuthService.timeWarningMs)
       console.error(`WARNING: The request used to resolve this authentication data is ${requestExecution} ms old! Either you're debugging the code, the execution is extremely slow or something dangerous is happening like shared data between requests!`);
 
-    const user: AuthTenantUserResponseDto = data.auth.user;
-    if (!user)
-      throw new Error("User is Undefined. Either no auth guard has resolved the user yet or it has been reset prior to this call.");
+    const authContext: AuthContextDto = data.auth.authContext;
+    if (!authContext)
+      throw new Error("Auth Context is Undefined. Either no auth guard has resolved the auth context yet or it has been reset prior to this call.");
 
-    this.logger.log("getUser", user);
-    return user;
+    this.logger.log("getCurrentAuthContext", authContext);
+
+    return authContext;
   }
 
   getRequest(): NebulrRequestData {
@@ -47,20 +48,20 @@ export class NebulrAuthService {
    * Uses NebulrAuthService.getCurrentUser()
    */
   getCurrentTenantId(): string {
-    const user = this.getCurrentUser();
-    if (user.role == AuthGuardService.ANONYMOUS) {
-      if (user.tenant.id != null) {
-        return user.tenant.id;
+    const authContext = this.getCurrentAuthContext();
+    if (authContext.userRole == AuthGuardService.ANONYMOUS) {
+      if (authContext.tenantId != null) {
+        return authContext.tenantId;
       } else {
         throw new Error('x-tenant-id id not set for ANONYMOUS user');
       }
     } else {
-      return user.tenant.id;
+      return authContext.tenantId;
     }
   }
 
-  static isAnonymousUser(user: AuthTenantUserResponseDto): boolean {
-    return user.role === AuthGuardService.ANONYMOUS;
+  static isAnonymousUser(authContext: AuthContextDto): boolean {
+    return authContext.userRole === AuthGuardService.ANONYMOUS;
   }
 
 }

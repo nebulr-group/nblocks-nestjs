@@ -1,4 +1,4 @@
-import { AuthTenantUserResponseDto, TenantUserResponseDto, UpdateUserInfoRequestDto } from '@nebulr-group/nblocks-ts-client';
+import { TenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
 import { Injectable } from '@nestjs/common';
 import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
 import { ClientService } from '../shared/client/client.service';
@@ -20,7 +20,7 @@ export class UserService {
   /** Lists avaiable roles that the current user are authorized to assign another user (Role Hiarchy) */
   async listAvailableRoles(): Promise<string[]> {
     const allRoles = await this.listRoles();
-    const index = allRoles.findIndex(role => role === this.nebulrAuthService.getCurrentUser().role);
+    const index = allRoles.findIndex(role => role === this.nebulrAuthService.getCurrentAuthContext().userRole);
 
     return allRoles.splice(-(allRoles.length - index));
   }
@@ -82,8 +82,8 @@ export class UserService {
   }
 
   async updateUser(user: UserInput): Promise<TenantUserResponseDto> {
-    const authUser = this.nebulrAuthService.getCurrentUser();
-    if (user.role === DefaultRoles.OWNER && authUser.role != DefaultRoles.OWNER)
+    const authUser = this.nebulrAuthService.getCurrentAuthContext();
+    if (user.role === DefaultRoles.OWNER && authUser.userRole != DefaultRoles.OWNER)
       throw Error("Logged in user must be Owner to set another user to Owner");
 
     const result = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).tenant(this.nebulrAuthService.getCurrentTenantId()).user(user.id).update({ enabled: user.enabled, role: user.role });

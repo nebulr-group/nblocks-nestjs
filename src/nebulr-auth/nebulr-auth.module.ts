@@ -1,6 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
 
 import { AuthGuard } from './auth-guard';
 import { AuthController } from './auth.controller';
@@ -28,7 +27,6 @@ import { NBlocksErrorToExceptionFilter } from '../nebulr/nblocks-error-to-except
     NebulrAuthService,
     NebulrConfigService,
     AuthGuardService,
-    JwtService,
   ],
   exports: [NebulrAuthService],
   controllers: [AuthController]

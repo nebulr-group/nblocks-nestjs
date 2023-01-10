@@ -3,8 +3,11 @@ import { AuthGuardService } from './auth-guard.service';
 import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 import { Debugger } from '../nebulr/debugger';
-import { AuthGuard, NebulrRequestData } from './auth-guard';
+import { AuthGuard } from './auth-guard';
 import { AuthContextDto } from './dto/auth-context.dto';
+import { NebulrRequestData } from './dto/request-data';
+import { AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
+import { ClientService } from '../shared/client/client.service';
 
 /**
  * This service is "request scoped". That means this provider and all providers injecting this provider will be reinstantiated and kept private for every individual request
@@ -14,10 +17,39 @@ export class NebulrAuthService {
   private logger: Debugger;
   private static timeWarningMs = 5000;
   constructor(
-    @Inject(REQUEST) private request: Request
+    @Inject(REQUEST) private request: Request,
+    private readonly clientService: ClientService,
   ) {
     this.logger = new Debugger("NebulrAuthService");
     this.logger.log("constructor");
+  }
+
+
+  /**
+   * @deprecated Apps should build their current user experience around the OpenId token or getCurrentAuthContext(). This metehod is not efficient
+   * @param authToken 
+   * @param tenantUserId 
+   * @returns 
+   */
+  async getCurrentUser(): Promise<AuthTenantUserResponseDto> {
+    const authContext = this.getCurrentAuthContext();
+    const { id, role, email, username, fullName, onboarded, consentsToPrivacyPolicy, tenant } = await this.clientService.getInterceptedClient(this.getRequest()).tenant(authContext.tenantId).user(authContext.userId).get()
+    return {
+      id,
+      role,
+      email,
+      username,
+      fullName,
+      onboarded,
+      consentsToPrivacyPolicy,
+      tenant: {
+        id: tenant.id,
+        name: tenant.name,
+        plan: tenant.plan,
+        locale: tenant.locale,
+        logo: tenant.logo
+      }
+    }
   }
 
   /**
@@ -39,6 +71,10 @@ export class NebulrAuthService {
     return authContext;
   }
 
+  /**
+   * Gets auth contexts from current request
+   * @returns 
+   */
   getRequest(): NebulrRequestData {
     return AuthGuard.getAuthDataFromRequest(this.request);
   }
@@ -49,7 +85,7 @@ export class NebulrAuthService {
    */
   getCurrentTenantId(): string {
     const authContext = this.getCurrentAuthContext();
-    if (authContext.userRole == AuthGuardService.ANONYMOUS) {
+    if (NebulrAuthService.isAnonymousUser(authContext)) {
       if (authContext.tenantId != null) {
         return authContext.tenantId;
       } else {

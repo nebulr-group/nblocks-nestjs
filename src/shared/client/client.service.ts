@@ -1,7 +1,7 @@
 import { PlatformClient } from '@nebulr-group/nblocks-ts-client';
 import { Stage } from '@nebulr-group/nblocks-ts-client/dist/platform/platform-client';
 import { Injectable } from '@nestjs/common';
-import { NebulrRequestData } from '../../nebulr-auth/auth-guard';
+import { NebulrRequestData } from '../../nebulr-auth/dto/request-data';
 import { Debugger } from '../../nebulr/debugger';
 import { ENVIRONMENT } from '../../nebulr/nebulr-config/nebulr-config.module';
 import { NebulrConfigService } from '../../nebulr/nebulr-config/nebulr-config.service';

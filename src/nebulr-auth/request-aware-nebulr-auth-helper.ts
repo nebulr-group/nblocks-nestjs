@@ -1,7 +1,7 @@
 import * as ContextService from 'request-context'
-import { NebulrRequestData } from './auth-guard';
-import { AuthGuardService } from './auth-guard.service';
 import { AuthContextDto } from './dto/auth-context.dto';
+import { NebulrRequestData } from './dto/request-data';
+import { NebulrAuthService } from './nebulr-auth.service';
 
 /**
  * 
@@ -31,7 +31,7 @@ export class RequestAwareNebulrAuthHelper {
    */
   static getTenantId(): string {
     const authContext = this.getCurrenAuthContext();
-    if (authContext.userRole == AuthGuardService.ANONYMOUS) {
+    if (NebulrAuthService.isAnonymousUser(authContext)) {
       if (authContext.tenantId != null) {
         return authContext.tenantId;
       } else {

@@ -2,15 +2,15 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { IncomingMessage } from 'http';
 import { Request } from 'express';
-import * as jose from 'jose'
+import * as jose from 'jose';
 import { GetKeyFunction, JWSHeaderParameters, FlattenedJWSInput } from 'jose/dist/types/types';
-
 import { NebulrConfigService } from '../nebulr/nebulr-config/nebulr-config.service';
 import { AuthGuardService } from './auth-guard.service';
 import { Debugger } from '../nebulr/debugger';
 import { NebulrAuthService } from './nebulr-auth.service';
 import { AuthContextDto } from './dto/auth-context.dto';
 import { JWTPayloadtDto } from './dto/jwt-verify-payload.dto';
+import { NebulrRequestData } from './dto/request-data';
 
 
 /**
@@ -96,10 +96,10 @@ export class AuthGuard implements CanActivate {
       tenantId = parsedRequest.request.get('x-tenant-id');
     }
 
-    // Built in auth endpoints (REST) is granted by default
+    // Built in auth endpoints (only REST calls) is granted by default and the user is considered anonymous making these calls
     if (!parsedRequest.graphql && this._authPaths.includes(parsedRequest.resource)) {
       this._debugger.log('canActivate request is part of whitelisted auth paths. Granting');
-      const anonymousUser = await this.authGuardService.buildAnonymousAuthContext(tenantId)
+      const anonymousUser = this.authGuardService.buildAnonymousAuthContext(tenantId)
       AuthGuard._setAuthDataForRequest(parsedRequest, anonymousUser, appId);
 
       return true;
@@ -142,7 +142,37 @@ export class AuthGuard implements CanActivate {
     }
   }
 
-  static _buildRequestData(resource: string, graphql: boolean, authContext: AuthContextDto, appId?: string): NebulrRequestData {
+  /**
+   * Stores auth context data on the request object for future lookups
+   * @param parsedRequest 
+   * @param authContext 
+   * @param appId 
+   */
+  private static _setAuthDataForRequest(
+    parsedRequest: { graphql: boolean, request: any, resource: string },
+    authContext: AuthContextDto,
+    appId?: string
+  ): void {
+
+    const requestData = this.buildRequestData(parsedRequest.resource, parsedRequest.graphql, authContext, appId);
+
+    // Store the data on the request object
+    parsedRequest.request.nebulr = requestData;
+
+    // Store the same request data in RequestAwareNebulrAuthHelper
+    // Since this way is deprecated and never proven, don't do it for now
+    // RequestAwareNebulrAuthHelper.storeRequestData(requestData);
+  }
+
+  /**
+   * Builds a request data object according to our standard
+   * @param resource 
+   * @param graphql 
+   * @param authContext 
+   * @param appId 
+   * @returns NebulrRequestData
+   */
+  static buildRequestData(resource: string, graphql: boolean, authContext: AuthContextDto, appId?: string): NebulrRequestData {
     return {
       timestamp: new Date(),
       appId,
@@ -153,22 +183,11 @@ export class AuthGuard implements CanActivate {
     }
   }
 
-  private static _setAuthDataForRequest(
-    parsedRequest: { graphql: boolean, request: any, resource: string },
-    authContext: AuthContextDto,
-    appId?: string
-  ): void {
-
-    const requestData = this._buildRequestData(parsedRequest.resource, parsedRequest.graphql, authContext, appId);
-
-    // Store the data on the request object
-    parsedRequest.request.nebulr = requestData;
-
-    // Store the same request data in RequestAwareNebulrAuthHelper
-    // Since this way is deprecated and never proven, don't do it for now
-    // RequestAwareNebulrAuthHelper.storeRequestData(requestData);
-  }
-
+  /**
+   * Obtains previously stored auth context data from the request object
+   * @param request 
+   * @returns NebulrRequestData
+   */
   static getAuthDataFromRequest(request: Request): NebulrRequestData {
     const req: any = request instanceof IncomingMessage ? request : request['req'];
     const data: NebulrRequestData = req.nebulr;
@@ -179,21 +198,14 @@ export class AuthGuard implements CanActivate {
     if (context['contextType'] == 'graphql') {
       const graphqlCtx = GqlExecutionContext.create(context);
       const request = graphqlCtx.getContext().req;
-      return { graphql: true, request, resource: this.getGraphqlResource(graphqlCtx) }
+      return { graphql: true, request, resource: this._getGraphqlResource(graphqlCtx) }
     } else {
       const request = context.switchToHttp().getRequest();
       return { graphql: false, request, resource: request.url }
     }
   }
 
-  private getGraphqlResource(graphqlCtx: GqlExecutionContext): string {
+  private _getGraphqlResource(graphqlCtx: GqlExecutionContext): string {
     return `graphql/${graphqlCtx.getHandler().name}`;
   }
-}
-
-export class NebulrRequestData {
-  timestamp: Date;
-  graphql: boolean;
-  appId?: string;
-  auth: { authContext: AuthContextDto, resource: string }
 }

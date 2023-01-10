@@ -38,8 +38,9 @@ export class AuthGuardService {
         try {
             privilege = this._getRequiredPrivileges(resource);
 
+            // Is this endpoint for Anonymous users? If so we turn the user into anonymous even though we might have valid tokens
             if (privilege == AuthGuardService.ANONYMOUS) {
-                const anonymousAuthContext = await this.buildAnonymousAuthContext(tenantId);
+                const anonymousAuthContext = this.buildAnonymousAuthContext(tenantId);
                 return { granted: true, authContext: anonymousAuthContext };
             } else {
                 const hasPrivilege = scope.split(' ').includes(privilege);
@@ -80,8 +81,9 @@ export class AuthGuardService {
             return { granted: false, authContext: undefined };
         }
 
+        // Is this endpoint for Anonymous users? If so we turn the user into anonymous even though we might have valid tokens
         if (privilege == AuthGuardService.ANONYMOUS) {
-            const anonymousAuthContext = await this.buildAnonymousAuthContext(tenantId);
+            const anonymousAuthContext = this.buildAnonymousAuthContext(tenantId);
             return { granted: true, authContext: anonymousAuthContext };
         } else {
             if (token && tenantUserId && privilege) {
@@ -101,12 +103,18 @@ export class AuthGuardService {
         }
     }
 
+    /**
+     * Check wether a given resource from resource mapping requires a plan and if the current plan matches this requirement
+     * @param currentPlan 
+     * @param resource 
+     * @returns 
+     */
     hasRequiredPlan(currentPlan: string, resource: string): boolean {
         const requiredPlans = this._getRequiredPlans(resource);
         return requiredPlans.length === 0 ? true : requiredPlans.includes(currentPlan);
     }
 
-    async buildAnonymousAuthContext(tenantId?: string): Promise<AuthContextDto> {
+    buildAnonymousAuthContext(tenantId?: string): AuthContextDto {
         return {
             userId: undefined,
             tenantId,
@@ -194,7 +202,7 @@ export class AuthGuardService {
         if (cache.exists) {
             return cache.data;
         } else {
-            const authRawResponse = await this.clientService.getInterceptedClient(AuthGuard._buildRequestData(resource, false, await this.buildAnonymousAuthContext(tenantId), appId)).auth.authorize(token, tenantUserId, privilege);
+            const authRawResponse = await this.clientService.getInterceptedClient(AuthGuard.buildRequestData(resource, false, this.buildAnonymousAuthContext(tenantId), appId)).auth.authorize(token, tenantUserId, privilege);
             const authResponse = {
                 granted: authRawResponse.granted,
                 authContext: {

@@ -26,8 +26,8 @@ export class UserFilterPlugin {
         try {
           const entityName = this['model']['modelName'];
           const nebulrAuthService = MoongooseAuthUtils.resolveAuthServiceFromQuery(this);
-          if (handler.shouldApplyFilter(nebulrAuthService.getCurrentUser(), entityName)) {
-            await handler.applyPreFilter(this, nebulrAuthService.getCurrentUser(), entityName);
+          if (handler.shouldApplyFilter(nebulrAuthService.getCurrentAuthContext(), entityName)) {
+            await handler.applyPreFilter(this, nebulrAuthService.getCurrentAuthContext(), entityName);
           }
         } catch (error) {
           console.error(error);

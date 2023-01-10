@@ -17,14 +17,14 @@ export class TenantPlanGuard implements CanActivate {
     canActivate(
         context: ExecutionContext,
     ): boolean | Promise<boolean> | Observable<boolean> {
-        const user = this.authService.getCurrentUser();
+        const authContext = this.authService.getCurrentAuthContext();
         const plans = this.reflector.get<string[]>(TenantPlanGuard.REQUIRED_PLANS_CONTEXT_VARIABLE, context.getHandler());
-        console.log("TenantPlanGuard", user, plans);
+        console.log("TenantPlanGuard", authContext, plans);
         if (!plans) {
             return true;
         }
 
-        if (plans.includes(user.tenant.plan))
+        if (plans.includes(authContext.tenantPlan))
             return true;
         else
             throw new ForbiddenException(ErrorMessage.FEATURE_FORBIDDEN_EXCEPTION.message, ErrorMessage.FEATURE_FORBIDDEN_EXCEPTION.nblocksCode);

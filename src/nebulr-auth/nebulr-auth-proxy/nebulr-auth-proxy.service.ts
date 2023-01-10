@@ -60,37 +60,37 @@ export class NebulrAuthProxyService {
     return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.resetUserMfaSetup(args);
   }
 
-  public async authenticated(
+  async authenticated(
     authToken: string,
   ): Promise<AuthenticatedResponse> {
     return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.authenticated(authToken);
   }
 
-  public async deauthenticate(authToken: string): Promise<DeauthenticateResponse> {
+  async deauthenticate(authToken: string): Promise<DeauthenticateResponse> {
     return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.deauthenticate(authToken);
   }
 
-  public async forgotPassword(
+  async forgotPassword(
     username: string,
   ): Promise<void> {
     await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.forgotPassword(username);
   }
 
-  public async updatePassword(
+  async updatePassword(
     request: UpdatePasswordRequestDto,
   ): Promise<void> {
     await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.updatePassword(request)
   }
 
-  public async updateUser(
+  async updateUser(
     request: UpdateUserInfoRequestDto
   ): Promise<void> {
     await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.updateMe(request)
   }
 
-  public async listMyTenantUsers(
+  async listMyTenantUsers(
     authToken: string,
   ): Promise<AuthTenantUserResponseDto[]> {
-    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.listMyTenantUsers(authToken);
+    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.listTenantUsers(authToken);
   }
 }

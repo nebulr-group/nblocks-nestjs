@@ -1,7 +1,7 @@
-import { AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
 import * as ContextService from 'request-context'
-import { NebulrRequestData } from './auth-guard';
-import { AuthGuardService } from './auth-guard.service';
+import { AuthContextDto } from './dto/auth-context.dto';
+import { NebulrRequestData } from './dto/request-data';
+import { NebulrAuthService } from './nebulr-auth.service';
 
 /**
  * 
@@ -18,11 +18,11 @@ export class RequestAwareNebulrAuthHelper {
   private static readonly timeWarningMs = 5000;
 
   /**
-   * A request scoped AuthUser variable resolved by the AuthGuard.
+   * A request scoped AuthContext variable resolved by the AuthGuard.
    * @returns AuthUser
    */
-  static getCurrentUser(): AuthTenantUserResponseDto {
-    return this.getRequestData().auth.user
+  static getCurrenAuthContext(): AuthContextDto {
+    return this.getRequestData().auth.authContext
   }
 
   /**
@@ -30,15 +30,15 @@ export class RequestAwareNebulrAuthHelper {
    * @returns TenantId
    */
   static getTenantId(): string {
-    const user = this.getCurrentUser();
-    if (user.role == AuthGuardService.ANONYMOUS) {
-      if (user.tenant.id != null) {
-        return user.tenant.id;
+    const authContext = this.getCurrenAuthContext();
+    if (NebulrAuthService.isAnonymousUser(authContext)) {
+      if (authContext.tenantId != null) {
+        return authContext.tenantId;
       } else {
         throw new Error('x-tenant-id id not set for ANONYMOUS user');
       }
     } else {
-      return user.tenant.id;
+      return authContext.tenantId;
     }
   }
 

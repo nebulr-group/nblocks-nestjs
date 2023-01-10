@@ -7,8 +7,6 @@ import * as Sentry from '@sentry/serverless';
 
 import { join } from 'path';
 import { NebulrConfigService } from './nebulr-config.service';
-import { ForbiddenError, UnauthenticatedError } from '@nebulr-group/nblocks-ts-client';
-import { ClientError } from '@nebulr-group/nblocks-ts-client/dist/errors/ClientError';
 
 // Needed so that webpack bundles necessary packages
 require('apollo-server-express'); // Required by @nestjs/graphql

@@ -6,6 +6,7 @@ import { CacheService } from '../shared/cache/cache.service';
 import { AuthContextDto } from './dto/auth-context.dto';
 import { AuthGuard } from './auth-guard';
 import { AuthResponseDto } from './dto/auth-response.dto';
+import { NebulrConfigService } from '../nebulr/nebulr-config/nebulr-config.service';
 
 type ResourceAccessConfig = string | { privilege: string, plans: string[] };
 
@@ -17,7 +18,9 @@ export class AuthGuardService {
 
     constructor(
         private readonly clientService: ClientService,
-        private readonly cacheService: CacheService
+        private readonly cacheService: CacheService,
+        // Importing NebulrConfigService directly into AuthGuard yields circular dependency error. Therefore this fix to expose it from this service
+        readonly nebulrConfigService: NebulrConfigService
     ) {
         this.logger = new Debugger("AuthGuardService");
         this.logger.log("constructor");

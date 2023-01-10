@@ -4,7 +4,6 @@ import { IncomingMessage } from 'http';
 import { Request } from 'express';
 import * as jose from 'jose';
 import { GetKeyFunction, JWSHeaderParameters, FlattenedJWSInput } from 'jose/dist/types/types';
-import { NebulrConfigService } from '../nebulr/nebulr-config/nebulr-config.service';
 import { AuthGuardService } from './auth-guard.service';
 import { Debugger } from '../nebulr/debugger';
 import { NebulrAuthService } from './nebulr-auth.service';
@@ -42,12 +41,12 @@ export class AuthGuard implements CanActivate {
 
   constructor(
     private readonly authGuardService: AuthGuardService,
-    private readonly nebulrConfigService: NebulrConfigService
   ) {
     this._debugger = new Debugger("AuthGuard");
     this._debugger.log("constructor");
 
-    this._jwksClient = jose.createRemoteJWKSet(new URL(this.nebulrConfigService.getJwksUrl()));
+    // Importing NebulrConfigService directly into this class yields circular dependency error. Therefore this fix to expose it from the AuthGuardService
+    this._jwksClient = jose.createRemoteJWKSet(new URL(this.authGuardService.nebulrConfigService.getJwksUrl()));
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

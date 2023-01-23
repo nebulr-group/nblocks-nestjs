@@ -46,7 +46,7 @@
     }
   },
   "dependencies": {
-    "@nebulr-group/nblocks-ts-client": "1.2.9",
+    "@nebulr-group/nblocks-ts-client": "1.2.10",
     "@nestjs/common": "^7.0.0 || ^8.1.2",
     "@nestjs/config": "^0.5.0 || ^1.0.2",
     "@nestjs/core": "^7.0.0 || ^8.1.2",

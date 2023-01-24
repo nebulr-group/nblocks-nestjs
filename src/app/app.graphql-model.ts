@@ -1,5 +1,6 @@
 import { AppModel } from '@nebulr-group/nblocks-ts-client';
 import { BusinessModel } from '@nebulr-group/nblocks-ts-client/dist/platform/models/business-model';
+import { OnboardingFlow } from '@nebulr-group/nblocks-ts-client/dist/platform/models/onboarding-flow';
 import { Plan } from '@nebulr-group/nblocks-ts-client/dist/platform/models/plan';
 import { Price } from '@nebulr-group/nblocks-ts-client/dist/platform/models/price';
 import { Tax } from '@nebulr-group/nblocks-ts-client/dist/platform/models/tax';
@@ -8,7 +9,7 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
 /** A bunch of safe to render app properties for the UI to consume */
 @ObjectType()
-export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl'> {
+export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'onboardingFlow'> {
   @Field(type => String, { nullable: true })
   name: string;
 
@@ -27,6 +28,8 @@ export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteU
   @Field(type => String, { nullable: true })
   termsOfServiceUrl: string;
 
+  @Field(type => String, { nullable: true })
+  onboardingFlow: OnboardingFlow;
 }
 
 /** A bunch of more secret properties to render for the app config screen used by developer during quickstart */

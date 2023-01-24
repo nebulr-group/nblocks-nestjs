@@ -5,6 +5,7 @@
 type App {
   logo: String
   name: String
+  onboardingFlow: String
   privacyPolicyUrl: String
   termsOfServiceUrl: String
   uiUrl: String
@@ -20,6 +21,7 @@ type AppConfig {
   id: String
   logo: String
   name: String
+  onboardingFlow: String
   privacyPolicyUrl: String
   roles: [String!]
   stripeEnabled: Boolean
@@ -133,6 +135,7 @@ type Tenant {
   logo: String!
   mfa: Boolean
   name: String!
+  onboarded: Boolean
   paymentsEnabled: Boolean
   paymentsRequired: Boolean
   plan: String

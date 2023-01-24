@@ -30,7 +30,7 @@ export class NebulrConfigService {
     return this.getConfig('NBLOCKS_API_KEY');
   }
 
-  public getConfig(parameter): string {
+  public getConfig(parameter: string): string {
     const config = this.configService.get<string>(parameter);
     if (!config) {
       throw new NebulrConfigNotFoundError(

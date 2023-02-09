@@ -22,7 +22,6 @@ import { FileService } from './file/file.service';
 import { TenantService } from './tenant/tenant.service';
 import { UserService } from './user/user.service';
 import { NebulrRequestData } from './nebulr-auth/dto/request-data';
-import { AuthContextDto } from './nebulr-auth/dto/auth-context.dto';
 
 //TODO should we really re expose stuff from @nebulr-group/nblocks-ts-client
 export {
@@ -42,7 +41,6 @@ export {
     ClientService,
     ClientServiceInterceptor,
     NebulrRequestData,
-    AuthContextDto,
     CacheService,
     UserFilterPlugin,
     IUserFilter,

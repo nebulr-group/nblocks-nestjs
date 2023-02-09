@@ -2,14 +2,12 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { IncomingMessage } from 'http';
 import { Request } from 'express';
-import * as jose from 'jose';
-import { GetKeyFunction, JWSHeaderParameters, FlattenedJWSInput } from 'jose/dist/types/types';
 import { AuthGuardService } from './auth-guard.service';
 import { Debugger } from '../nebulr/debugger';
 import { NebulrAuthService } from './nebulr-auth.service';
-import { AuthContextDto } from './dto/auth-context.dto';
-import { JWTPayloadtDto } from './dto/jwt-verify-payload.dto';
 import { NebulrRequestData } from './dto/request-data';
+import { ClientService } from '../shared/client/client.service';
+import { AuthContext } from '@nebulr-group/nblocks-ts-client';
 
 
 /**
@@ -21,8 +19,6 @@ import { NebulrRequestData } from './dto/request-data';
 export class AuthGuard implements CanActivate {
 
   private _debugger: Debugger;
-
-  private _jwksClient: GetKeyFunction<JWSHeaderParameters, FlattenedJWSInput>;
 
   // These are the Whitelisted HTTP auth paths
   // If a HTTP call is made to one of these, consider them to be put through / granted without evaluating resourceMappings.json
@@ -41,25 +37,23 @@ export class AuthGuard implements CanActivate {
 
   constructor(
     private readonly authGuardService: AuthGuardService,
+    private readonly clientService: ClientService
   ) {
     this._debugger = new Debugger("AuthGuard");
     this._debugger.log("constructor");
-
-    // Importing NebulrConfigService directly into this class yields circular dependency error. Therefore this fix to expose it from the AuthGuardService
-    this._jwksClient = jose.createRemoteJWKSet(new URL(this.authGuardService.nebulrConfigService.getJwksUrl()));
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const parsedRequest = this.parseRequest(context);
     this._debugger.log(`canActivate parsedRequest resource`, parsedRequest.resource);
     let isJwtAvailable = false;
+
     let authToken = '',
       tenantId = '',
       appId = '',
-      tenantUserId = '',
-      userScope = '',
-      userRole = '',
-      tenantPlan = '';
+      tenantUserId = '';
+
+    let authContext: AuthContext;
 
     /** 
      * This is the new JWT based access token that the user obtained from auth.nblocks.cloud 
@@ -70,15 +64,12 @@ export class AuthGuard implements CanActivate {
       const acessToken = acessRawToken.substring(7, acessRawToken.length);
 
       try {
-        const { payload } = await jose.jwtVerify(acessToken, this._jwksClient);
-        this._debugger.log('canActivate token verification result: ', payload)
-        const { tid, aid, sub, scope, role, plan } = payload as JWTPayloadtDto;
-        appId = aid;
-        tenantId = tid;
-        tenantUserId = sub;
-        userScope = scope;
-        userRole = role;
-        tenantPlan = plan;
+        // We do not need to get the intercepted client since we're only going to use AuthContext helper
+        authContext = await this.clientService.getClient().authContextHelper.getAuthContext(acessToken);
+        this._debugger.log('canActivate token verification result: ', authContext)
+        appId = authContext.appId;
+        tenantId = authContext.tenantId;
+        tenantUserId = authContext.userId;
       } catch (error) {
         console.error(error);
         throw error;
@@ -98,7 +89,7 @@ export class AuthGuard implements CanActivate {
     // Built in auth endpoints (only REST calls) is granted by default and the user is considered anonymous making these calls
     if (!parsedRequest.graphql && this._authPaths.includes(parsedRequest.resource)) {
       this._debugger.log('canActivate request is part of whitelisted auth paths. Granting');
-      const anonymousUser = this.authGuardService.buildAnonymousAuthContext(tenantId)
+      const anonymousUser = this.authGuardService.buildAnonymousAuthContext(appId, tenantId)
       AuthGuard._setAuthDataForRequest(parsedRequest, anonymousUser, appId);
 
       return true;
@@ -106,12 +97,8 @@ export class AuthGuard implements CanActivate {
 
     const authResponse = isJwtAvailable
       ? await this.authGuardService.isAuthorized(
-        tenantUserId,
-        tenantId,
+        authContext,
         parsedRequest.resource,
-        userScope,
-        userRole,
-        tenantPlan,
       ) : await this.authGuardService.isAuthorizedLegacy(
         authToken,
         tenantUserId,
@@ -149,7 +136,7 @@ export class AuthGuard implements CanActivate {
    */
   private static _setAuthDataForRequest(
     parsedRequest: { graphql: boolean, request: any, resource: string },
-    authContext: AuthContextDto,
+    authContext: AuthContext,
     appId?: string
   ): void {
 
@@ -171,7 +158,7 @@ export class AuthGuard implements CanActivate {
    * @param appId 
    * @returns NebulrRequestData
    */
-  static buildRequestData(resource: string, graphql: boolean, authContext: AuthContextDto, appId?: string): NebulrRequestData {
+  static buildRequestData(resource: string, graphql: boolean, authContext: AuthContext, appId?: string): NebulrRequestData {
     return {
       timestamp: new Date(),
       appId,

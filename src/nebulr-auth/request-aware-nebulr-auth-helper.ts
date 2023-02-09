@@ -1,5 +1,5 @@
-import * as ContextService from 'request-context'
-import { AuthContextDto } from './dto/auth-context.dto';
+import { AuthContext } from '@nebulr-group/nblocks-ts-client';
+import * as ContextService from 'request-context';
 import { NebulrRequestData } from './dto/request-data';
 import { NebulrAuthService } from './nebulr-auth.service';
 
@@ -21,7 +21,7 @@ export class RequestAwareNebulrAuthHelper {
    * A request scoped AuthContext variable resolved by the AuthGuard.
    * @returns AuthUser
    */
-  static getCurrenAuthContext(): AuthContextDto {
+  static getCurrenAuthContext(): AuthContext {
     return this.getRequestData().auth.authContext
   }
 

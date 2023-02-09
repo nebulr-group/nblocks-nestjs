@@ -3,10 +3,9 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Debugger } from '../nebulr/debugger';
 import { ClientService } from '../shared/client/client.service';
 import { CacheService } from '../shared/cache/cache.service';
-import { AuthContextDto } from './dto/auth-context.dto';
 import { AuthGuard } from './auth-guard';
 import { AuthResponseDto } from './dto/auth-response.dto';
-import { NebulrConfigService } from '../nebulr/nebulr-config/nebulr-config.service';
+import { AuthContext } from '@nebulr-group/nblocks-ts-client';
 
 type ResourceAccessConfig = string | { privilege: string, plans: string[] };
 
@@ -19,8 +18,6 @@ export class AuthGuardService {
     constructor(
         private readonly clientService: ClientService,
         private readonly cacheService: CacheService,
-        // Importing NebulrConfigService directly into AuthGuard yields circular dependency error. Therefore this fix to expose it from this service
-        readonly nebulrConfigService: NebulrConfigService
     ) {
         this.logger = new Debugger("AuthGuardService");
         this.logger.log("constructor");
@@ -29,12 +26,8 @@ export class AuthGuardService {
 
     // Checks if current user is authorized for a given resource
     async isAuthorized(
-        tenantUserId: string,
-        tenantId: string,
+        authContext: AuthContext,
         resource: string,
-        scope: string,
-        userRole: string,
-        tenantPlan: string
     ): Promise<AuthResponseDto> {
         let privilege: string;
 
@@ -43,24 +36,15 @@ export class AuthGuardService {
 
             // Is this endpoint for Anonymous users? If so we turn the user into anonymous even though we might have valid tokens
             if (privilege == AuthGuardService.ANONYMOUS) {
-                const anonymousAuthContext = this.buildAnonymousAuthContext(tenantId);
+                const anonymousAuthContext = this.buildAnonymousAuthContext(authContext.appId, authContext.tenantId);
                 return { granted: true, authContext: anonymousAuthContext };
             } else {
-                const hasPrivilege = scope.split(' ').includes(privilege);
+                const hasPrivilege = authContext.privileges.includes(privilege);
 
-                if (hasPrivilege && tenantUserId) {
-                    return {
-                        granted: true,
-                        authContext: {
-                            userId: tenantUserId,
-                            userRole,
-                            tenantId,
-                            tenantPlan
-                        }
-                    };
-                } else {
-                    throw new UnauthorizedException("Missing required variables");
-                }
+                return {
+                    granted: hasPrivilege,
+                    authContext
+                };
 
             }
         } catch (error) {
@@ -86,7 +70,7 @@ export class AuthGuardService {
 
         // Is this endpoint for Anonymous users? If so we turn the user into anonymous even though we might have valid tokens
         if (privilege == AuthGuardService.ANONYMOUS) {
-            const anonymousAuthContext = this.buildAnonymousAuthContext(tenantId);
+            const anonymousAuthContext = this.buildAnonymousAuthContext(appId, tenantId);
             return { granted: true, authContext: anonymousAuthContext };
         } else {
             if (token && tenantUserId && privilege) {
@@ -117,11 +101,13 @@ export class AuthGuardService {
         return requiredPlans.length === 0 ? true : requiredPlans.includes(currentPlan);
     }
 
-    buildAnonymousAuthContext(tenantId?: string): AuthContextDto {
+    buildAnonymousAuthContext(appId?: string, tenantId?: string): AuthContext {
         return {
+            appId,
             userId: undefined,
             tenantId,
             tenantPlan: '',
+            privileges: [],
             userRole: AuthGuardService.ANONYMOUS,
         }
     }
@@ -205,7 +191,7 @@ export class AuthGuardService {
         if (cache.exists) {
             return cache.data;
         } else {
-            const authRawResponse = await this.clientService.getInterceptedClient(AuthGuard.buildRequestData(resource, false, this.buildAnonymousAuthContext(tenantId), appId)).auth.authorize(token, tenantUserId, privilege);
+            const authRawResponse = await this.clientService.getInterceptedClient(AuthGuard.buildRequestData(resource, false, this.buildAnonymousAuthContext(appId, tenantId), appId)).auth.authorize(token, tenantUserId, privilege);
             const authResponse = {
                 granted: authRawResponse.granted,
                 authContext: {

@@ -4,9 +4,8 @@ import { REQUEST } from '@nestjs/core';
 import { Request } from 'express';
 import { Debugger } from '../nebulr/debugger';
 import { AuthGuard } from './auth-guard';
-import { AuthContextDto } from './dto/auth-context.dto';
 import { NebulrRequestData } from './dto/request-data';
-import { AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
+import { AuthContext, AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
 import { ClientService } from '../shared/client/client.service';
 
 /**
@@ -56,13 +55,13 @@ export class NebulrAuthService {
    * Gets the current AuthContext from the current request. Request and Thread safe
    * @returns 
    */
-  getCurrentAuthContext(): AuthContextDto {
+  getCurrentAuthContext(): AuthContext {
     const data = this.getRequest();
     const requestExecution = new Date().getTime() - data.timestamp.getTime();
     if (requestExecution > NebulrAuthService.timeWarningMs)
       console.error(`WARNING: The request used to resolve this authentication data is ${requestExecution} ms old! Either you're debugging the code, the execution is extremely slow or something dangerous is happening like shared data between requests!`);
 
-    const authContext: AuthContextDto = data.auth.authContext;
+    const authContext: AuthContext = data.auth.authContext;
     if (!authContext)
       throw new Error("Auth Context is Undefined. Either no auth guard has resolved the auth context yet or it has been reset prior to this call.");
 
@@ -96,7 +95,7 @@ export class NebulrAuthService {
     }
   }
 
-  static isAnonymousUser(authContext: AuthContextDto): boolean {
+  static isAnonymousUser(authContext: AuthContext): boolean {
     return authContext.userRole === AuthGuardService.ANONYMOUS;
   }
 

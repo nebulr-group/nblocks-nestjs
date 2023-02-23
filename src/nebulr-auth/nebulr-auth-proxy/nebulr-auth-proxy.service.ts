@@ -23,7 +23,7 @@ export class NebulrAuthProxyService {
     request: AuthenticateRequestDto,
     userAgent: string
   ): Promise<AuthenticateResponseDto> {
-    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.authenticate(request, userAgent);
+    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).authLegacy.authenticate(request, userAgent);
   }
 
   /**
@@ -32,7 +32,7 @@ export class NebulrAuthProxyService {
      * @returns `CommitMfaCodeResponseDto` including MFA token to be used in future calls
      */
   async commitMfaCode(args: CommitMfaCodeRequestDto): Promise<CommitMfaCodeResponseDto> {
-    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.commitMfaCode(args);
+    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).authLegacy.commitMfaCode(args);
   }
 
   /**
@@ -40,7 +40,7 @@ export class NebulrAuthProxyService {
    * @param args `StartUserMfaSetupRequestDto`
    */
   async startMfaUserSetup(args: StartUserMfaSetupRequestDto): Promise<void> {
-    await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.startMfaUserSetup(args);
+    await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).authLegacy.startMfaUserSetup(args);
   }
 
   /**
@@ -49,7 +49,7 @@ export class NebulrAuthProxyService {
    * @returns `FinishUserMfaSetupResponseDto` including MFA token to be used in future calls and the backup code that can be used to reset the MFA in the future. The backup code should be stored safely
    */
   async finishMfaUserSetup(args: FinishUserMfaSetupRequestDto): Promise<FinishUserMfaSetupResponseDto> {
-    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.finishMfaUserSetup(args);
+    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).authLegacy.finishMfaUserSetup(args);
   }
 
   /**
@@ -57,40 +57,40 @@ export class NebulrAuthProxyService {
    * @param args `ResetUserMfaSetupRequestDto`
    */
   async resetUserMfaSetup(args: ResetUserMfaSetupRequestDto): Promise<void> {
-    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.resetUserMfaSetup(args);
+    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).authLegacy.resetUserMfaSetup(args);
   }
 
   async authenticated(
     authToken: string,
   ): Promise<AuthenticatedResponse> {
-    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.authenticated(authToken);
+    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).authLegacy.authenticated(authToken);
   }
 
   async deauthenticate(authToken: string): Promise<DeauthenticateResponse> {
-    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.deauthenticate(authToken);
+    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).authLegacy.deauthenticate(authToken);
   }
 
   async forgotPassword(
     username: string,
   ): Promise<void> {
-    await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.forgotPassword(username);
+    await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).authLegacy.forgotPassword(username);
   }
 
   async updatePassword(
     request: UpdatePasswordRequestDto,
   ): Promise<void> {
-    await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.updatePassword(request)
+    await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).authLegacy.updatePassword(request)
   }
 
   async updateUser(
     request: UpdateUserInfoRequestDto
   ): Promise<void> {
-    await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.updateMe(request)
+    await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).authLegacy.updateMe(request)
   }
 
   async listMyTenantUsers(
     authToken: string,
   ): Promise<AuthTenantUserResponseDto[]> {
-    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).auth.listTenantUsers(authToken);
+    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).authLegacy.listTenantUsers(authToken);
   }
 }

@@ -191,7 +191,7 @@ export class AuthGuardService {
         if (cache.exists) {
             return cache.data;
         } else {
-            const authRawResponse = await this.clientService.getInterceptedClient(AuthGuard.buildRequestData(resource, false, this.buildAnonymousAuthContext(appId, tenantId), appId)).auth.authorize(token, tenantUserId, privilege);
+            const authRawResponse = await this.clientService.getInterceptedClient(AuthGuard.buildRequestData(resource, false, this.buildAnonymousAuthContext(appId, tenantId), appId)).authLegacy.authorize(token, tenantUserId, privilege);
             const authResponse = {
                 granted: authRawResponse.granted,
                 authContext: {

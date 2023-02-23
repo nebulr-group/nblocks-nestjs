@@ -13,7 +13,7 @@ export class UserService {
   ) { }
 
   async listRoles(): Promise<string[]> {
-    const roles = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).getAppRoleNames();
+    const roles = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).config.getAppRoleNames();
     return roles;
   }
 

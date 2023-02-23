@@ -9,7 +9,7 @@ import { MoongooseAuthUtils } from './nebulr-auth/mongoose-auth-utils';
 import { ClientService, ClientServiceInterceptor } from './shared/client/client.service';
 import { CacheService } from './shared/cache/cache.service';
 import { IUserFilter } from './nebulr-auth/user-filter';
-import { PlatformClient, AuthTenantResponseDto, AuthTenantUserResponseDto, TenantResponseDto, TenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
+import { NblocksClient, AuthTenantResponseDto, AuthTenantUserResponseDto, TenantResponseDto, TenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
 import { SharedModule } from './shared/shared.module';
 import { ENVIRONMENT, NebulrConfigModule } from './nebulr/nebulr-config/nebulr-config.module';
 import { NebulrConfigService } from './nebulr/nebulr-config/nebulr-config.service';
@@ -44,7 +44,7 @@ export {
     CacheService,
     UserFilterPlugin,
     IUserFilter,
-    PlatformClient,
+    NblocksClient,
     FileModule,
     FileService,
     TenantModule,

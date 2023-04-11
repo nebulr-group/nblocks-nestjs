@@ -54,7 +54,7 @@ export class AuthGuardService {
     }
 
     async buildAnonymousUser(tenantId?: string): Promise<AuthTenantUserResponseDto> {
-        const tenant = { id: tenantId, name: "", locale: "" }; //await this._cachedTenant(tenantId);
+        const tenant = { id: tenantId, name: "", locale: "", onboarded: false }; //await this._cachedTenant(tenantId);
         return {
             id: undefined,
             role: AuthGuardService.ANONYMOUS,

@@ -9,7 +9,7 @@ export class Tenant implements TenantResponseDto {
   id: string;
 
   @Field(type => String, { nullable: true })
-  plan: string;
+  plan?: string;
 
   @Field(type => String, { nullable: true })
   locale: string;
@@ -25,6 +25,15 @@ export class Tenant implements TenantResponseDto {
 
   @Field(type => String, { nullable: true })
   createdAt: Date;
+
+  @Field(type => Boolean, { nullable: true })
+  paymentsEnabled: boolean;
+
+  @Field(type => Boolean, { nullable: true })
+  paymentsRequired: boolean;
+
+  @Field(type => Boolean, { nullable: true })
+  onboarded: boolean;
 }
 
 @ObjectType()

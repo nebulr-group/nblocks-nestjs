@@ -1,7 +1,7 @@
 import { ForbiddenException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
-import { Tenant, TenantAnonymous, TenantInput } from './tenant.graphql-model';
+import { CheckoutResponse, CreateCheckoutSessionInput, CreateTenantInput, Tenant, TenantAnonymous, TenantInput } from './tenant.graphql-model';
 import { TenantService } from './tenant.service';
 
 @Resolver((of) => Tenant)
@@ -16,12 +16,12 @@ export class TenantResolver {
     return this.tenantService.getTenant();
   }
 
-  @Query((returns) => [Tenant], { description: "Lists all tenants" })
-  async listTenants(): Promise<Tenant[]> {
-    return this.tenantService.listTenants();
-  }
+  // @Query((returns) => [Tenant], { description: "Lists all tenants" })
+  // async listTenants(): Promise<Tenant[]> {
+  //   return this.tenantService.listTenants();
 
-  // TODO check if this actually strips sensitive data
+  // }
+
   @Query((returns) => TenantAnonymous)
   async getTenantAnonymous(): Promise<TenantAnonymous> {
     try {
@@ -43,5 +43,20 @@ export class TenantResolver {
     @Args('tenant', { type: () => TenantInput }) tenant: TenantInput,
   ): Promise<Tenant> {
     return this.tenantService.updateTenant(tenant);
+  }
+
+  @Mutation((returns) => Tenant)
+  async createTenantAnonymous(
+    @Args('tenant', { type: () => CreateTenantInput }) tenant: CreateTenantInput,
+  ): Promise<Tenant> {
+    return this.tenantService.createTenant(tenant);
+  }
+
+  @Mutation((returns) => CheckoutResponse)
+  async createCheckoutSession(
+    @Args('args', { type: () => CreateCheckoutSessionInput }) args: CreateCheckoutSessionInput,
+  ): Promise<CheckoutResponse> {
+    const response = this.tenantService.createStripeCheckoutSession(args);
+    return response;
   }
 }

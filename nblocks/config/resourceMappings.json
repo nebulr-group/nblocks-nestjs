@@ -1,5 +1,26 @@
 {
-"graphql/getApp": "ANONYMOUS",
-"graphql/**": "ANONYMOUS",
-"/**": "ANONYMOUS"
+    "graphql/getAppAnonymous": "ANONYMOUS",
+    "graphql/updateAppCredentials": "TENANT_WRITE",
+    "graphql/getAppConfig": "TENANT_WRITE",
+    "graphql/getAppPlans": "AUTHENTICATED",
+    "graphql/getTenant": "TENANT_READ",
+    "graphql/getTenantAnonymous": "ANONYMOUS",
+    "graphql/getCustomerPortal": "TENANT_WRITE",
+    "graphql/createCheckoutSession": "TENANT_WRITE",
+    "graphql/updateTenant": "TENANT_WRITE",
+    "graphql/createTenantAnonymous": "ANONYMOUS",
+    "graphql/listUserRoles": "USER_READ",
+    "graphql/listUsers": "USER_READ",
+    "graphql/createUsers": "USER_WRITE",
+    "graphql/deleteUser": "USER_WRITE",
+    "graphql/updateUser": "USER_WRITE",
+    "graphql/sendPasswordResetLink": "USER_WRITE",
+    "/file/prepareUploadAnonymous": "ANONYMOUS",
+    "/file/prepareUpload": "AUTHENTICATED",
+    "/auth/currentUser": "AUTHENTICATED",
+    "/super/feature": {
+        "privilege": "AUTHENTICATED",
+        "plans": ["PREMIUM", "ENTERPRISE"]
+    },
+    "/webhook/incoming": "ANONYMOUS"
 }

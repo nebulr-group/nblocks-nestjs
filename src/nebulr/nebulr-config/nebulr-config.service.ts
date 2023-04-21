@@ -22,11 +22,15 @@ export class NebulrConfigService {
     return this.getConfig('NBLOCKS_CORE_API_URL');
   }
 
+  getJwksUrl(): string {
+    return this.getConfig('NBLOCKS_JWKS_URL');
+  }
+
   getNebulrPlatformApiKey(): string {
     return this.getConfig('NBLOCKS_API_KEY');
   }
 
-  public getConfig(parameter): string {
+  public getConfig(parameter: string): string {
     const config = this.configService.get<string>(parameter);
     if (!config) {
       throw new NebulrConfigNotFoundError(

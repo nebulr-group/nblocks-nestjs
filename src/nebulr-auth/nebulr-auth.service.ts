@@ -46,7 +46,8 @@ export class NebulrAuthService {
         name: tenant.name,
         plan: tenant.plan,
         locale: tenant.locale,
-        logo: tenant.logo
+        logo: tenant.logo,
+        onboarded: tenant.onboarded
       }
     }
   }

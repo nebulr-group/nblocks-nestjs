@@ -34,7 +34,7 @@ export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteU
 
 /** A bunch of more secret properties to render for the app config screen used by developer during quickstart */
 @ObjectType()
-export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'uiUrl' | 'apiUrl' | 'defaultRole' | 'businessModel' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'emailSenderName' | 'emailSenderEmail' | "stripeEnabled"> {
+export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'uiUrl' | 'apiUrl' | 'defaultRole' | 'businessModel' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'emailSenderName' | 'emailSenderEmail' | "stripeEnabled" | "azureMarketplaceEnabled"> {
 
   @Field(type => String, { nullable: true })
   id: string;
@@ -59,6 +59,9 @@ export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'ui
 
   @Field(type => Boolean, { nullable: true })
   stripeEnabled: boolean;
+
+  @Field(type => Boolean, { nullable: true })
+  azureMarketplaceEnabled: boolean;
 }
 
 // Only purpose is to att Graphql fields on the existing Business model
@@ -81,6 +84,9 @@ export class PriceGraphql implements Price {
 export class PlanGraphql implements Plan {
   @Field()
   name: string;
+
+  @Field(() => Number, { nullable: true })
+  trialDays?: number;
 
   @Field(() => [PriceGraphql])
   prices: Price[];
@@ -116,4 +122,22 @@ export class UpdateCredentialsInput implements UpdateCredentials {
 
   @Field(type => String, { nullable: true })
   stripePublicKey?: string;
+
+  @Field(type => String, { nullable: true })
+  microsoftAzureMarketplaceClientId?: string;
+
+  @Field(type => String, { nullable: true })
+  microsoftAzureMarketplaceClientSecret?: string;
+
+  @Field(type => String, { nullable: true })
+  microsoftAzureMarketplaceTenantId?: string;
+
+  @Field(type => String, { nullable: true })
+  microsoftAzureADClientId?: string;
+
+  @Field(type => String, { nullable: true })
+  microsoftAzureADClientSecret?: string;
+
+  @Field(type => String, { nullable: true })
+  microsoftAzureADTenantId?: string;
 }

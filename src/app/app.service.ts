@@ -16,8 +16,8 @@ export class AppService {
   }
 
   async getAppConfig(): Promise<AppConfig> {
-    const { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl, apiUrl, businessModel, defaultRole, emailSenderEmail, emailSenderName, id, roles, stripeEnabled, onboardingFlow } = await this.clientService.getInterceptedClient(this.authService.getRequest()).config.getAppProfile();
-    return { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl, apiUrl, defaultRole, emailSenderEmail, emailSenderName, id, businessModel, roles: Object.keys(roles), stripeEnabled, onboardingFlow }
+    const { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl, apiUrl, businessModel, defaultRole, emailSenderEmail, emailSenderName, id, roles, stripeEnabled, azureMarketplaceEnabled, onboardingFlow } = await this.clientService.getInterceptedClient(this.authService.getRequest()).config.getAppProfile();
+    return { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl, apiUrl, defaultRole, emailSenderEmail, emailSenderName, id, businessModel, roles: Object.keys(roles), stripeEnabled, azureMarketplaceEnabled, onboardingFlow }
   }
 
   async updateCredentials(input: UpdateCredentialsInput): Promise<void> {

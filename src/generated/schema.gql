@@ -14,6 +14,7 @@ type App {
 
 type AppConfig {
   apiUrl: String
+  azureMarketplaceEnabled: Boolean
   businessModel: BusinessModelGraphql
   defaultRole: String
   emailSenderEmail: String
@@ -84,6 +85,7 @@ type Mutation {
 type PlanGraphql {
   name: String!
   prices: [PriceGraphql!]!
+  trialDays: Float
 }
 
 type PriceGraphql {
@@ -161,6 +163,12 @@ input TenantOwnerInput {
 }
 
 input UpdateCredentialsInput {
+  microsoftAzureADClientId: String
+  microsoftAzureADClientSecret: String
+  microsoftAzureADTenantId: String
+  microsoftAzureMarketplaceClientId: String
+  microsoftAzureMarketplaceClientSecret: String
+  microsoftAzureMarketplaceTenantId: String
   stripePublicKey: String
   stripeSecretKey: String
 }

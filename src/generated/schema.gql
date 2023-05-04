@@ -16,6 +16,7 @@ type AppConfig {
   apiUrl: String
   azureMarketplaceEnabled: Boolean
   businessModel: BusinessModelGraphql
+  defaultCallbackUri: String
   defaultRole: String
   emailSenderEmail: String
   emailSenderName: String
@@ -24,6 +25,7 @@ type AppConfig {
   name: String
   onboardingFlow: String
   privacyPolicyUrl: String
+  redirectUris: [String!]
   roles: [String!]
   stripeEnabled: Boolean
   termsOfServiceUrl: String

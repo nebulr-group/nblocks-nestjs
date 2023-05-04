@@ -11,16 +11,76 @@ export class AppService {
   ) { }
 
   async getApp(): Promise<App> {
-    const { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl, onboardingFlow } = await this.clientService.getInterceptedClient(this.authService.getRequest()).config.getAppProfile();
-    return { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl, onboardingFlow }
+    const {
+      uiUrl,
+      websiteUrl,
+      logo,
+      name,
+      privacyPolicyUrl,
+      termsOfServiceUrl,
+      onboardingFlow,
+    } = await this.clientService
+      .getInterceptedClient(this.authService.getRequest())
+      .config.getAppProfile();
+    return {
+      uiUrl,
+      websiteUrl,
+      logo,
+      name,
+      privacyPolicyUrl,
+      termsOfServiceUrl,
+      onboardingFlow,
+    };
   }
 
   async getAppConfig(): Promise<AppConfig> {
-    const { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl, apiUrl, businessModel, defaultRole, emailSenderEmail, emailSenderName, id, roles, stripeEnabled, azureMarketplaceEnabled, onboardingFlow } = await this.clientService.getInterceptedClient(this.authService.getRequest()).config.getAppProfile();
-    return { uiUrl, websiteUrl, logo, name, privacyPolicyUrl, termsOfServiceUrl, apiUrl, defaultRole, emailSenderEmail, emailSenderName, id, businessModel, roles: Object.keys(roles), stripeEnabled, azureMarketplaceEnabled, onboardingFlow }
+    const {
+      uiUrl,
+      websiteUrl,
+      logo,
+      name,
+      privacyPolicyUrl,
+      termsOfServiceUrl,
+      apiUrl,
+      businessModel,
+      defaultRole,
+      emailSenderEmail,
+      emailSenderName,
+      id,
+      roles,
+      stripeEnabled,
+      azureMarketplaceEnabled,
+      onboardingFlow,
+      redirectUris,
+      defaultCallbackUri,
+    } = await this.clientService
+      .getInterceptedClient(this.authService.getRequest())
+      .config.getAppProfile();
+    return {
+      uiUrl,
+      websiteUrl,
+      logo,
+      name,
+      privacyPolicyUrl,
+      termsOfServiceUrl,
+      apiUrl,
+      defaultRole,
+      emailSenderEmail,
+      emailSenderName,
+      id,
+      businessModel,
+      roles: Object.keys(roles),
+      stripeEnabled,
+      azureMarketplaceEnabled,
+      onboardingFlow,
+      redirectUris,
+      defaultCallbackUri,
+    };
   }
 
   async updateCredentials(input: UpdateCredentialsInput): Promise<void> {
-    await this.clientService.getInterceptedClient(this.authService.getRequest()).config.updateCredentials(input);
+    await this.clientService
+      .getInterceptedClient(this.authService.getRequest())
+      .config.updateCredentials(input);
   }
 }

@@ -34,7 +34,7 @@ export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteU
 
 /** A bunch of more secret properties to render for the app config screen used by developer during quickstart */
 @ObjectType()
-export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'uiUrl' | 'apiUrl' | 'defaultRole' | 'businessModel' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'emailSenderName' | 'emailSenderEmail' | "stripeEnabled" | "azureMarketplaceEnabled"> {
+export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'uiUrl' | 'apiUrl' | 'defaultRole' | 'businessModel' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'emailSenderName' | 'emailSenderEmail' | "stripeEnabled" | "azureMarketplaceEnabled" | "defaultCallbackUri" | "redirectUris"> {
 
   @Field(type => String, { nullable: true })
   id: string;
@@ -62,6 +62,12 @@ export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'ui
 
   @Field(type => Boolean, { nullable: true })
   azureMarketplaceEnabled: boolean;
+
+  @Field(type => [String], { nullable: true })
+  redirectUris: string[];
+
+  @Field(type => String, { nullable: true })
+  defaultCallbackUri: string;
 }
 
 // Only purpose is to att Graphql fields on the existing Business model

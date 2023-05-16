@@ -10,6 +10,10 @@ export class AppService {
     private readonly authService: NebulrAuthService,
   ) { }
 
+  /**
+   * Gets app. Used by getAppAnonymous so no sensitive information is added
+   * @returns 
+   */
   async getApp(): Promise<App> {
     const {
       uiUrl,
@@ -19,6 +23,7 @@ export class AppService {
       privacyPolicyUrl,
       termsOfServiceUrl,
       onboardingFlow,
+      azureAdSsoEnabled
     } = await this.clientService
       .getInterceptedClient(this.authService.getRequest())
       .config.getAppProfile();
@@ -30,6 +35,7 @@ export class AppService {
       privacyPolicyUrl,
       termsOfServiceUrl,
       onboardingFlow,
+      azureAdSsoEnabled
     };
   }
 
@@ -49,6 +55,7 @@ export class AppService {
       id,
       roles,
       stripeEnabled,
+      azureAdSsoEnabled,
       azureMarketplaceEnabled,
       onboardingFlow,
       redirectUris,
@@ -71,6 +78,7 @@ export class AppService {
       businessModel,
       roles: Object.keys(roles),
       stripeEnabled,
+      azureAdSsoEnabled,
       azureMarketplaceEnabled,
       onboardingFlow,
       redirectUris,

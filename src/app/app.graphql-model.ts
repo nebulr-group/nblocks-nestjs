@@ -9,7 +9,8 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
 /** A bunch of safe to render app properties for the UI to consume */
 @ObjectType()
-export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'onboardingFlow'> {
+export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'onboardingFlow' | 'azureAdSsoEnabled'> {
+
   @Field(type => String, { nullable: true })
   name: string;
 
@@ -30,11 +31,14 @@ export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteU
 
   @Field(type => String, { nullable: true })
   onboardingFlow: OnboardingFlow;
+
+  @Field(type => String, { nullable: true })
+  azureAdSsoEnabled: boolean;
 }
 
 /** A bunch of more secret properties to render for the app config screen used by developer during quickstart */
 @ObjectType()
-export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'uiUrl' | 'apiUrl' | 'defaultRole' | 'businessModel' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'emailSenderName' | 'emailSenderEmail' | "stripeEnabled" | "azureMarketplaceEnabled" | "defaultCallbackUri" | "redirectUris"> {
+export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'uiUrl' | 'apiUrl' | 'defaultRole' | 'businessModel' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'emailSenderName' | 'emailSenderEmail' | "stripeEnabled" | "azureAdSsoEnabled" | "azureMarketplaceEnabled" | "defaultCallbackUri" | "redirectUris"> {
 
   @Field(type => String, { nullable: true })
   id: string;
@@ -59,6 +63,9 @@ export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'ui
 
   @Field(type => Boolean, { nullable: true })
   stripeEnabled: boolean;
+
+  @Field(type => Boolean, { nullable: true })
+  azureAdSsoEnabled: boolean;
 
   @Field(type => Boolean, { nullable: true })
   azureMarketplaceEnabled: boolean;

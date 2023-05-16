@@ -48,7 +48,7 @@ export class TenantService {
   }
 
   async getCustomerPortal(): Promise<string> {
-    const resp = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).tenant(this.nebulrAuthService.getCurrentTenantId()).getStripeCustomerPortalUrl();
+    const resp = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest()).tenant(this.nebulrAuthService.getCurrentTenantId()).getSubscriptionPortalUrl()
     return resp.url;
   }
 }

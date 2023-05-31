@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type App {
-  azureAdSsoEnabled: String
+  azureAdSsoEnabled: Boolean
   logo: String
   name: String
   onboardingFlow: String

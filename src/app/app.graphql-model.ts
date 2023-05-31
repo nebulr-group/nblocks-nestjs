@@ -32,7 +32,7 @@ export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteU
   @Field(type => String, { nullable: true })
   onboardingFlow: OnboardingFlow;
 
-  @Field(type => String, { nullable: true })
+  @Field(type => Boolean, { nullable: true })
   azureAdSsoEnabled: boolean;
 }
 

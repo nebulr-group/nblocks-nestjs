@@ -23,7 +23,8 @@ export class AppService {
       privacyPolicyUrl,
       termsOfServiceUrl,
       onboardingFlow,
-      azureAdSsoEnabled
+      azureAdSsoEnabled,
+      googleSsoEnabled
     } = await this.clientService
       .getInterceptedClient(this.authService.getRequest())
       .config.getAppProfile();
@@ -35,7 +36,8 @@ export class AppService {
       privacyPolicyUrl,
       termsOfServiceUrl,
       onboardingFlow,
-      azureAdSsoEnabled
+      azureAdSsoEnabled,
+      googleSsoEnabled
     };
   }
 
@@ -56,6 +58,7 @@ export class AppService {
       roles,
       stripeEnabled,
       azureAdSsoEnabled,
+      googleSsoEnabled,
       azureMarketplaceEnabled,
       onboardingFlow,
       redirectUris,
@@ -79,6 +82,7 @@ export class AppService {
       roles: Object.keys(roles),
       stripeEnabled,
       azureAdSsoEnabled,
+      googleSsoEnabled,
       azureMarketplaceEnabled,
       onboardingFlow,
       redirectUris,

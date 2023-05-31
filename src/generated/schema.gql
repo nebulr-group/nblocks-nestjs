@@ -4,6 +4,7 @@
 
 type App {
   azureAdSsoEnabled: Boolean
+  googleSsoEnabled: Boolean
   logo: String
   name: String
   onboardingFlow: String
@@ -22,6 +23,7 @@ type AppConfig {
   defaultRole: String
   emailSenderEmail: String
   emailSenderName: String
+  googleSsoEnabled: Boolean
   id: String
   logo: String
   name: String

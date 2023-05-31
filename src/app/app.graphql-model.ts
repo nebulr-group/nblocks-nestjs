@@ -34,11 +34,14 @@ export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteU
 
   @Field(type => Boolean, { nullable: true })
   azureAdSsoEnabled: boolean;
+
+  @Field(type => Boolean, { nullable: true })
+  googleSsoEnabled: boolean;
 }
 
 /** A bunch of more secret properties to render for the app config screen used by developer during quickstart */
 @ObjectType()
-export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'uiUrl' | 'apiUrl' | 'defaultRole' | 'businessModel' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'emailSenderName' | 'emailSenderEmail' | "stripeEnabled" | "azureAdSsoEnabled" | "azureMarketplaceEnabled" | "defaultCallbackUri" | "redirectUris"> {
+export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'uiUrl' | 'apiUrl' | 'defaultRole' | 'businessModel' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'emailSenderName' | 'emailSenderEmail' | "stripeEnabled" | "googleSsoEnabled" | "azureAdSsoEnabled" | "azureMarketplaceEnabled" | "defaultCallbackUri" | "redirectUris"> {
 
   @Field(type => String, { nullable: true })
   id: string;
@@ -63,6 +66,9 @@ export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'ui
 
   @Field(type => Boolean, { nullable: true })
   stripeEnabled: boolean;
+
+  @Field(type => Boolean, { nullable: true })
+  googleSsoEnabled: boolean;
 
   @Field(type => Boolean, { nullable: true })
   azureAdSsoEnabled: boolean;

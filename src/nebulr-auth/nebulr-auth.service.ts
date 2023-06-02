@@ -32,7 +32,7 @@ export class NebulrAuthService {
    */
   async getCurrentUser(): Promise<AuthTenantUserResponseDto> {
     const authContext = this.getCurrentAuthContext();
-    const { id, role, email, username, fullName, onboarded, consentsToPrivacyPolicy, tenant } = await this.clientService.getInterceptedClient(this.getRequest()).tenant(authContext.tenantId).user(authContext.userId).get()
+    const { id, role, email, username, fullName, onboarded, consentsToPrivacyPolicy, tenant } = await this.clientService.getInterceptedClient(this.getRequest(), this.getOriginalRequest()).tenant(authContext.tenantId).user(authContext.userId).get()
     return {
       id,
       role,
@@ -77,6 +77,10 @@ export class NebulrAuthService {
    */
   getRequest(): NebulrRequestData {
     return AuthGuard.getAuthDataFromRequest(this.request);
+  }
+
+  getOriginalRequest(): Request {
+    return this.request;
   }
 
   /**

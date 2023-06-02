@@ -6,6 +6,7 @@ import { CacheService } from '../shared/cache/cache.service';
 import { AuthGuard } from './auth-guard';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { AuthContext } from '@nebulr-group/nblocks-ts-client';
+import { Request } from 'express';
 
 type ResourceAccessConfig = string | { privilege: string, plans: string[] };
 
@@ -59,7 +60,8 @@ export class AuthGuardService {
         tenantUserId: string,
         tenantId: string,
         resource: string,
-        appId?: string
+        request: Request,
+        appId?: string,
     ): Promise<AuthResponseDto> {
         let privilege: string;
         try {
@@ -80,6 +82,7 @@ export class AuthGuardService {
                     tenantUserId,
                     privilege,
                     resource,
+                    request,
                     appId
                 );
             } else {
@@ -183,6 +186,7 @@ export class AuthGuardService {
         tenantUserId: string,
         privilege: string,
         resource: string,
+        request: Request,
         appId?: string
     ): Promise<AuthResponseDto> {
         const type = "AuthorizeResponse";
@@ -191,7 +195,7 @@ export class AuthGuardService {
         if (cache.exists) {
             return cache.data;
         } else {
-            const authRawResponse = await this.clientService.getInterceptedClient(AuthGuard.buildRequestData(resource, false, this.buildAnonymousAuthContext(appId, tenantId), appId)).authLegacy.authorize(token, tenantUserId, privilege);
+            const authRawResponse = await this.clientService.getInterceptedClient(AuthGuard.buildRequestData(resource, false, this.buildAnonymousAuthContext(appId, tenantId), appId), request).authLegacy.authorize(token, tenantUserId, privilege);
             const authResponse = {
                 granted: authRawResponse.granted,
                 authContext: {

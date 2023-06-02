@@ -104,6 +104,7 @@ export class AuthGuard implements CanActivate {
         tenantUserId,
         tenantId,
         parsedRequest.resource,
+        parsedRequest.request,
         appId
       );
 
@@ -180,7 +181,7 @@ export class AuthGuard implements CanActivate {
     return data;
   }
 
-  private parseRequest(context: ExecutionContext): { graphql: boolean, request: any, resource: string } {
+  private parseRequest(context: ExecutionContext): { graphql: boolean, request: Request, resource: string } {
     if (context['contextType'] == 'graphql') {
       const graphqlCtx = GqlExecutionContext.create(context);
       const request = graphqlCtx.getContext().req;

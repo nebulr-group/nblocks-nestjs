@@ -26,7 +26,7 @@ export class AppService {
       azureAdSsoEnabled,
       googleSsoEnabled
     } = await this.clientService
-      .getInterceptedClient(this.authService.getRequest())
+      .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
       .config.getAppProfile();
     return {
       uiUrl,
@@ -64,7 +64,7 @@ export class AppService {
       redirectUris,
       defaultCallbackUri,
     } = await this.clientService
-      .getInterceptedClient(this.authService.getRequest())
+      .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
       .config.getAppProfile();
     return {
       uiUrl,
@@ -92,7 +92,7 @@ export class AppService {
 
   async updateCredentials(input: UpdateCredentialsInput): Promise<void> {
     await this.clientService
-      .getInterceptedClient(this.authService.getRequest())
+      .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
       .config.updateCredentials(input);
   }
 }

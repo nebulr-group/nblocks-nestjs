@@ -5,9 +5,10 @@ import { NebulrRequestData } from '../../nebulr-auth/dto/request-data';
 import { Debugger } from '../../nebulr/debugger';
 import { ENVIRONMENT } from '../../nebulr/nebulr-config/nebulr-config.module';
 import { NebulrConfigService } from '../../nebulr/nebulr-config/nebulr-config.service';
+import { Request } from 'express';
 
 export interface ClientServiceInterceptor {
-    intercept(client: NblocksClient, data: NebulrRequestData): NblocksClient;
+    intercept(client: NblocksClient, data: NebulrRequestData, request: Request): NblocksClient;
 }
 
 @Injectable()
@@ -47,9 +48,9 @@ export class ClientService {
         return this._client;
     }
 
-    getInterceptedClient(data: NebulrRequestData): NblocksClient {
+    getInterceptedClient(data: NebulrRequestData, request: Request): NblocksClient {
         if (!!this._interceptor) {
-            return this._interceptor.intercept(this._client, data);
+            return this._interceptor.intercept(this._client, data, request);
         } else {
             return this.getClient();
         }

@@ -7,6 +7,7 @@ import { AuthGuard } from './auth-guard';
 import { NebulrRequestData } from './dto/request-data';
 import { AuthContext, AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
 import { ClientService } from '../shared/client/client.service';
+import { IncomingMessage } from 'http';
 
 /**
  * This service is "request scoped". That means this provider and all providers injecting this provider will be reinstantiated and kept private for every individual request
@@ -16,7 +17,7 @@ export class NebulrAuthService {
   private logger: Debugger;
   private static timeWarningMs = 5000;
   constructor(
-    @Inject(REQUEST) private request: Request,
+    @Inject(REQUEST) private readonly request: Request | { req: Request },
     private readonly clientService: ClientService,
   ) {
     this.logger = new Debugger("NebulrAuthService");
@@ -76,11 +77,13 @@ export class NebulrAuthService {
    * @returns 
    */
   getRequest(): NebulrRequestData {
-    return AuthGuard.getAuthDataFromRequest(this.request);
+    return AuthGuard.getAuthDataFromRequest(this.getOriginalRequest());
   }
 
   getOriginalRequest(): Request {
-    return this.request;
+    // Still a problem between graphql and http
+    // https://github.com/nestjs/nest/issues/1884
+    return this.request instanceof IncomingMessage ? this.request : this.request['req'];
   }
 
   /**

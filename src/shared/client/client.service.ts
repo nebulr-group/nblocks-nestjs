@@ -24,6 +24,7 @@ export class ClientService {
         this.logger.log("constructor");
         this._client = new NblocksClient(
             {
+                appId: nebulrConfigService.getNblocksAppId(),
                 apiKey: nebulrConfigService.getNebulrPlatformApiKey(),
                 debug: process.env.NBLOCKS_DEBUG === '*' ? true : false,
                 stage: this._getEnvironment(nebulrConfigService)

@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { IncomingMessage } from 'http';
 import { Request } from 'express';
 import { AuthGuardService } from './auth-guard.service';
 import { Debugger } from '../nebulr/debugger';
@@ -176,8 +175,7 @@ export class AuthGuard implements CanActivate {
    * @returns NebulrRequestData
    */
   static getAuthDataFromRequest(request: Request): NebulrRequestData {
-    const req: any = request instanceof IncomingMessage ? request : request['req'];
-    const data: NebulrRequestData = req.nebulr;
+    const data: NebulrRequestData = request['nebulr'];
     return data;
   }
 

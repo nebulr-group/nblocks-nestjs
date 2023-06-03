@@ -26,6 +26,10 @@ export class NebulrConfigService {
     return this.getConfig('NBLOCKS_API_KEY');
   }
 
+  getNblocksAppId(): string {
+    return this.getConfig('NBLOCKS_APP_ID');
+  }
+
   public getConfig(parameter: string): string {
     const config = this.configService.get<string>(parameter);
     if (!config) {

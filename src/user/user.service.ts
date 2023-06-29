@@ -30,6 +30,12 @@ export class UserService {
     return users;
   }
 
+  async getMe(): Promise<TenantUserResponseDto> {
+    const currentUserId = this.nebulrAuthService.getCurrentAuthContext().userId;
+    const users = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest(), this.nebulrAuthService.getOriginalRequest()).tenant(this.nebulrAuthService.getCurrentTenantId()).users.list();
+    return users.find(tu => tu.id === currentUserId);
+  }
+
   async setGroupMembers(groupId: string, users: User[]): Promise<TenantUserResponseDto[]> {
     const oldUsers = await this.list();
     const promises: Promise<User>[] = [];
@@ -85,6 +91,16 @@ export class UserService {
     const authUser = this.nebulrAuthService.getCurrentAuthContext();
     if (user.role === DefaultRoles.OWNER && authUser.userRole != DefaultRoles.OWNER)
       throw Error("Logged in user must be Owner to set another user to Owner");
+
+    const result = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest(), this.nebulrAuthService.getOriginalRequest()).tenant(this.nebulrAuthService.getCurrentTenantId()).user(user.id).update({ enabled: user.enabled, role: user.role });
+    return { ...user, ...result };
+  }
+
+  async updateMe(user: UserInput): Promise<TenantUserResponseDto> {
+    const currentUserId = this.nebulrAuthService.getCurrentAuthContext().userId;
+
+    if (user.id != currentUserId)
+      throw Error("Trying to update me for another user");
 
     const result = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest(), this.nebulrAuthService.getOriginalRequest()).tenant(this.nebulrAuthService.getCurrentTenantId()).user(user.id).update({ enabled: user.enabled, role: user.role });
     return { ...user, ...result };

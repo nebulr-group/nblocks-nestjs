@@ -12,6 +12,9 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'onboardingFlow' | 'azureAdSsoEnabled'> {
 
   @Field(type => String, { nullable: true })
+  id: string;
+
+  @Field(type => String, { nullable: true })
   name: string;
 
   @Field(type => String, { nullable: true })
@@ -83,7 +86,7 @@ export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'ui
   defaultCallbackUri: string;
 }
 
-// Only purpose is to att Graphql fields on the existing Business model
+// Only purpose is to add Graphql fields on the existing Business model
 @ObjectType()
 export class PriceGraphql implements Price {
   @Field()
@@ -98,7 +101,7 @@ export class PriceGraphql implements Price {
   recurrenceInterval: 'day' | 'month' | 'week' | 'year';
 }
 
-// Only purpose is to att Graphql fields on the existing Business model
+// Only purpose is to add Graphql fields on the existing Business model
 @ObjectType()
 export class PlanGraphql implements Plan {
   @Field()
@@ -111,7 +114,7 @@ export class PlanGraphql implements Plan {
   prices: Price[];
 }
 
-// Only purpose is to att Graphql fields on the existing Business model
+// Only purpose is to add Graphql fields on the existing Business model
 @ObjectType()
 export class TaxGraphql implements Tax {
   @Field()
@@ -124,7 +127,7 @@ export class TaxGraphql implements Tax {
   percentage: number;
 }
 
-// Only purpose is to att Graphql fields on the existing Business model
+// Only purpose is to add Graphql fields on the existing Business model
 @ObjectType()
 export class BusinessModelGraphql implements BusinessModel {
   @Field(() => [PlanGraphql])

@@ -16,6 +16,7 @@ export class AppService {
    */
   async getApp(): Promise<App> {
     const {
+      id,
       uiUrl,
       websiteUrl,
       logo,
@@ -29,6 +30,7 @@ export class AppService {
       .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
       .config.getAppProfile();
     return {
+      id,
       uiUrl,
       websiteUrl,
       logo,

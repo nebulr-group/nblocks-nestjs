@@ -5,6 +5,7 @@
 type App {
   azureAdSsoEnabled: Boolean
   googleSsoEnabled: Boolean
+  id: String
   logo: String
   name: String
   onboardingFlow: String
@@ -80,6 +81,9 @@ type Mutation {
 
   """"""
   updateAppCredentials(credentials: UpdateCredentialsInput!): Boolean!
+
+  """Update current user"""
+  updateMe(user: UserInput!): User!
   updateTenant(tenant: TenantInput!): Tenant!
 
   """
@@ -118,6 +122,9 @@ type Query {
   Obtain an short lived session url to redirect or present the user its Stripe subscription panel for updating payment or subscription data.
   """
   getCustomerPortal: String!
+
+  """Get current user"""
+  getMe: User!
 
   """Gets a single tenant"""
   getTenant: Tenant!

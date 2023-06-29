@@ -9,6 +9,8 @@
     "graphql/createCheckoutSession": "TENANT_WRITE",
     "graphql/updateTenant": "TENANT_WRITE",
     "graphql/createTenantAnonymous": "ANONYMOUS",
+    "graphql/getMe": "AUTHENTICATED",
+    "graphql/updateMe": "AUTHENTICATED",
     "graphql/listUserRoles": "USER_READ",
     "graphql/listUsers": "USER_READ",
     "graphql/createUsers": "USER_WRITE",

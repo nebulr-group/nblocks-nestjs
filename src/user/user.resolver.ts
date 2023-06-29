@@ -13,6 +13,15 @@ export class UserResolver {
     return this.userService.listAvailableRoles();
   }
 
+
+  @Query(returns => User, {
+    description: "Get current user"
+  })
+  async getMe(): Promise<User> {
+    const result = await this.userService.getMe();
+    return result;
+  }
+
   @Query(returns => [User], {
     description: "List all users in this tenant."
   })
@@ -51,6 +60,15 @@ export class UserResolver {
     @Args({ name: 'user', type: () => UserInput }) user: UserInput,
   ): Promise<User> {
     return this.userService.updateUser(user);
+  }
+
+  @Mutation(returns => User, {
+    description: "Update current user"
+  })
+  async updateMe(
+    @Args({ name: 'user', type: () => UserInput }) user: UserInput,
+  ): Promise<User> {
+    return this.userService.updateMe(user);
   }
 
   @Mutation(returns => Boolean)

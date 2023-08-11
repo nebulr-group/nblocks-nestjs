@@ -44,13 +44,16 @@ export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteU
 
 /** A bunch of more secret properties to render for the app config screen used by developer during quickstart */
 @ObjectType()
-export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'uiUrl' | 'apiUrl' | 'defaultRole' | 'businessModel' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'emailSenderName' | 'emailSenderEmail' | "stripeEnabled" | "googleSsoEnabled" | "azureAdSsoEnabled" | "azureMarketplaceEnabled" | "defaultCallbackUri" | "redirectUris"> {
+export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'uiUrl' | 'apiUrl' | 'webhookUrl' | 'defaultRole' | 'businessModel' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'emailSenderName' | 'emailSenderEmail' | "stripeEnabled" | "googleSsoEnabled" | "azureAdSsoEnabled" | "azureMarketplaceEnabled" | "defaultCallbackUri" | "redirectUris"> {
 
   @Field(type => String, { nullable: true })
   id: string;
 
   @Field(type => String, { nullable: true })
   apiUrl: string;
+
+  @Field(type => String, { nullable: true })
+  webhookUrl: string;
 
   @Field(type => String, { nullable: true })
   defaultRole: string;

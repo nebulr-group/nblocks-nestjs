@@ -35,6 +35,7 @@ type AppConfig {
   stripeEnabled: Boolean
   termsOfServiceUrl: String
   uiUrl: String
+  webhookUrl: String
   websiteUrl: String
 }
 
@@ -190,8 +191,10 @@ type User {
   createdAt: String
   email: String
   enabled: Boolean
+  firstName: String
   fullName: String
   id: String!
+  lastName: String
   onboarded: Boolean
   role: String
   teams: [String!]

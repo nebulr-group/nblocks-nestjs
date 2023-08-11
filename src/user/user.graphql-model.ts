@@ -17,6 +17,12 @@ export class User {
   username: string;
 
   @Field({ nullable: true })
+  firstName: string;
+
+  @Field({ nullable: true })
+  lastName: string;
+
+  @Field({ nullable: true })
   fullName: string;
 
   @Field(type => Boolean, { nullable: true })

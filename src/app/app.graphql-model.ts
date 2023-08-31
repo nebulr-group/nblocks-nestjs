@@ -9,7 +9,7 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
 /** A bunch of safe to render app properties for the UI to consume */
 @ObjectType()
-export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'onboardingFlow' | 'azureAdSsoEnabled'> {
+export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'onboardingFlow' | 'passkeysEnabled' | 'azureAdSsoEnabled' | 'googleSsoEnabled'> {
 
   @Field(type => String, { nullable: true })
   id: string;
@@ -40,11 +40,14 @@ export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteU
 
   @Field(type => Boolean, { nullable: true })
   googleSsoEnabled: boolean;
+
+  @Field(type => Boolean, { nullable: true })
+  passkeysEnabled: boolean;
 }
 
 /** A bunch of more secret properties to render for the app config screen used by developer during quickstart */
 @ObjectType()
-export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'uiUrl' | 'apiUrl' | 'webhookUrl' | 'defaultRole' | 'businessModel' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'emailSenderName' | 'emailSenderEmail' | "stripeEnabled" | "googleSsoEnabled" | "azureAdSsoEnabled" | "azureMarketplaceEnabled" | "defaultCallbackUri" | "redirectUris"> {
+export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'uiUrl' | 'apiUrl' | 'webhookUrl' | 'defaultRole' | 'businessModel' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'emailSenderName' | 'emailSenderEmail' | "stripeEnabled" | 'passkeysEnabled' | "googleSsoEnabled" | "azureAdSsoEnabled" | "azureMarketplaceEnabled" | "defaultCallbackUri" | "redirectUris"> {
 
   @Field(type => String, { nullable: true })
   id: string;
@@ -72,6 +75,9 @@ export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'ui
 
   @Field(type => Boolean, { nullable: true })
   stripeEnabled: boolean;
+
+  @Field(type => Boolean, { nullable: true })
+  passkeysEnabled: boolean;
 
   @Field(type => Boolean, { nullable: true })
   googleSsoEnabled: boolean;

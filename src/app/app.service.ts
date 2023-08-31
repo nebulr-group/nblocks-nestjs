@@ -25,7 +25,8 @@ export class AppService {
       termsOfServiceUrl,
       onboardingFlow,
       azureAdSsoEnabled,
-      googleSsoEnabled
+      googleSsoEnabled,
+      passkeysEnabled
     } = await this.clientService
       .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
       .config.getAppProfile();
@@ -39,7 +40,8 @@ export class AppService {
       termsOfServiceUrl,
       onboardingFlow,
       azureAdSsoEnabled,
-      googleSsoEnabled
+      googleSsoEnabled,
+      passkeysEnabled
     };
   }
 
@@ -62,10 +64,11 @@ export class AppService {
       stripeEnabled,
       azureAdSsoEnabled,
       googleSsoEnabled,
+      passkeysEnabled,
       azureMarketplaceEnabled,
       onboardingFlow,
       redirectUris,
-      defaultCallbackUri,
+      defaultCallbackUri
     } = await this.clientService
       .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
       .config.getAppProfile();
@@ -87,10 +90,11 @@ export class AppService {
       stripeEnabled,
       azureAdSsoEnabled,
       googleSsoEnabled,
+      passkeysEnabled,
       azureMarketplaceEnabled,
       onboardingFlow,
       redirectUris,
-      defaultCallbackUri,
+      defaultCallbackUri
     };
   }
 

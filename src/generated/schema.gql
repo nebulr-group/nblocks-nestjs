@@ -9,6 +9,7 @@ type App {
   logo: String
   name: String
   onboardingFlow: String
+  passkeysEnabled: Boolean
   privacyPolicyUrl: String
   termsOfServiceUrl: String
   uiUrl: String
@@ -29,6 +30,7 @@ type AppConfig {
   logo: String
   name: String
   onboardingFlow: String
+  passkeysEnabled: Boolean
   privacyPolicyUrl: String
   redirectUris: [String!]
   roles: [String!]

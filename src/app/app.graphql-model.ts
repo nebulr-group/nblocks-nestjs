@@ -99,7 +99,7 @@ export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'ui
 @ObjectType()
 export class PriceGraphql implements Price {
   @Field()
-  region: string;
+  key: string;
 
   @Field()
   amount: number;
@@ -119,6 +119,12 @@ export class PlanGraphql implements Plan {
   @Field(() => Number, { nullable: true })
   trialDays?: number;
 
+  @Field()
+  key: string;
+
+  @Field({ nullable: true })
+  description?: string;
+
   @Field(() => [PriceGraphql])
   prices: Price[];
 }
@@ -127,7 +133,7 @@ export class PlanGraphql implements Plan {
 @ObjectType()
 export class TaxGraphql implements Tax {
   @Field()
-  region: string;
+  countryCode: string;
 
   @Field()
   name: string;

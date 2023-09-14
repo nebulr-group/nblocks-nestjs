@@ -96,6 +96,8 @@ type Mutation {
 }
 
 type PlanGraphql {
+  description: String
+  key: String!
   name: String!
   prices: [PriceGraphql!]!
   trialDays: Float
@@ -104,7 +106,7 @@ type PlanGraphql {
 type PriceGraphql {
   amount: Float!
   currency: String!
-  region: String!
+  key: String!
 }
 
 type Query {
@@ -141,9 +143,9 @@ type Query {
 }
 
 type TaxGraphql {
+  countryCode: String!
   name: String!
   percentage: Float!
-  region: String!
 }
 
 type Tenant {

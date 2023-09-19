@@ -1,6 +1,6 @@
 {
   "name": "@nebulr-group/nblocks-nestjs",
-  "version": "3.0.0-payment-beta.2",
+  "version": "3.0.0-payment-alpha.1",
   "description": "Nebulr nblocks plug-n-play plugin for NestJS",
   "author": "Oscar Söderlund",
   "repository": {
@@ -32,7 +32,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "copyfiles": "mkdir -p dist/generated && cp src/generated/schema.gql dist/generated/schema.gql",
     "npm-publish": "npm run build && npm publish --access public",
-    "npm-publish-beta": "npm run build && npm publish --access public --tag beta"
+    "npm-publish-beta": "npm run build && npm publish --access public --tag beta",
+    "npm-publish-local": "npm run build && npm publish --registry http://verdaccio:4873 --tag alpha"
   },
   "config": {
     "mongodbMemoryServer": {
@@ -46,7 +47,7 @@
     }
   },
   "dependencies": {
-    "@nebulr-group/nblocks-ts-client": "2.6.0",
+    "@nebulr-group/nblocks-ts-client": "^3.0.0-payment-beta.1",
     "@nestjs/common": "^7.0.0 || ^8.1.2",
     "@nestjs/config": "^0.5.0 || ^1.0.2",
     "@nestjs/core": "^7.0.0 || ^8.1.2",

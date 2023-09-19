@@ -58,6 +58,7 @@ export class PriceGraphql implements Price {
   @Field()
   currency: string;
 
+  @Field(type => String)
   recurrenceInterval: 'day' | 'month' | 'week' | 'year';
 }
 

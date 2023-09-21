@@ -1,9 +1,8 @@
 import { AppModel } from '@nebulr-group/nblocks-ts-client';
-import { BusinessModel } from '@nebulr-group/nblocks-ts-client/dist/platform/models/business-model';
+import { PlanResponse } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/plan-response';
+import { Price } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/price';
+import { TaxResponse } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/tax-response';
 import { OnboardingFlow } from '@nebulr-group/nblocks-ts-client/dist/platform/models/onboarding-flow';
-import { Plan } from '@nebulr-group/nblocks-ts-client/dist/platform/models/plan';
-import { Price } from '@nebulr-group/nblocks-ts-client/dist/platform/models/price';
-import { Tax } from '@nebulr-group/nblocks-ts-client/dist/platform/models/tax';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 /** A bunch of safe to render app properties for the UI to consume */
@@ -49,8 +48,6 @@ export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteU
 // Only purpose is to add Graphql fields on the existing Business model
 @ObjectType()
 export class PriceGraphql implements Price {
-  @Field()
-  key: string;
 
   @Field()
   amount: number;
@@ -64,26 +61,38 @@ export class PriceGraphql implements Price {
 
 // Only purpose is to add Graphql fields on the existing Business model
 @ObjectType()
-export class PlanGraphql implements Plan {
+export class PlanGraphql implements PlanResponse {
   @Field()
-  name: string;
-
-  @Field(() => Number, { nullable: true })
-  trialDays?: number;
+  id: string;
 
   @Field()
   key: string;
 
+  @Field()
+  name: string;
+
   @Field({ nullable: true })
   description?: string;
 
+  @Field()
+  trial: boolean;
+
+  @Field()
+  trialDays: number;
+
   @Field(() => [PriceGraphql])
   prices: Price[];
+
+  @Field(type => String, { nullable: true })
+  createdAt: Date;
 }
 
 // Only purpose is to add Graphql fields on the existing Business model
 @ObjectType()
-export class TaxGraphql implements Tax {
+export class TaxGraphql implements TaxResponse {
+  @Field()
+  id: string;
+
   @Field()
   countryCode: string;
 
@@ -92,14 +101,16 @@ export class TaxGraphql implements Tax {
 
   @Field()
   percentage: number;
+
+  @Field(type => String, { nullable: true })
+  createdAt: Date;
 }
 
-// Only purpose is to add Graphql fields on the existing Business model
 @ObjectType()
-export class BusinessModelGraphql implements BusinessModel {
-  @Field(() => [PlanGraphql])
-  plans: Plan[];
+export class PaymentOptionsGraphql {
+  @Field(() => [PlanGraphql], { nullable: true })
+  plans: PlanResponse[];
 
-  @Field(() => [TaxGraphql])
-  taxes: Tax[];
+  @Field(() => [TaxGraphql], { nullable: true })
+  taxes: TaxResponse[];
 }

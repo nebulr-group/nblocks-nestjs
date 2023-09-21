@@ -1,5 +1,5 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { App, PlanGraphql } from './app.graphql-model';
+import { App, PaymentOptionsGraphql } from './app.graphql-model';
 import { AppService } from './app.service';
 
 @Resolver((of) => App)
@@ -14,9 +14,9 @@ export class AppResolver {
     return app;
   }
 
-  @Query((returns) => [PlanGraphql], { description: "Gets the apps plan. Use this to display pricing instead of the AppConfig resolver" })
-  async getAppPlans(): Promise<PlanGraphql[]> {
-    const response = await this.appService.getBusinessModel();
-    return response.businessModel.plans;
+  @Query((returns) => PaymentOptionsGraphql)
+  async getPaymentOptionsAnonymous(): Promise<PaymentOptionsGraphql> {
+    const [plans, taxes] = await Promise.all([this.appService.listPlans(), this.appService.listTaxes()]);
+    return { plans, taxes };
   }
 }

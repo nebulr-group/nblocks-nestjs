@@ -63,17 +63,19 @@ type Mutation {
 }
 
 type PlanGraphql {
+  createdAt: String
   description: String
+  id: String!
   key: String!
   name: String!
   prices: [PriceGraphql!]!
-  trialDays: Float
+  trial: Boolean!
+  trialDays: Float!
 }
 
 type PriceGraphql {
   amount: Float!
   currency: String!
-  key: String!
   recurrenceInterval: String!
 }
 
@@ -81,10 +83,11 @@ type Query {
   """Gets useful App configs for the UI to consume"""
   getAppAnonymous: App!
 
-  """
-  Gets the apps plan. Use this to display pricing instead of the AppConfig resolver
-  """
+  """Gets the apps plan"""
   getAppPlans: [PlanGraphql!]!
+
+  """Gets the apps taxes"""
+  getAppTaxes: [TaxGraphql!]!
 
   """
   Obtain an short lived session url to redirect or present the user its Stripe subscription panel for updating payment or subscription data.
@@ -107,6 +110,8 @@ type Query {
 
 type TaxGraphql {
   countryCode: String!
+  createdAt: String
+  id: String!
   name: String!
   percentage: Float!
 }

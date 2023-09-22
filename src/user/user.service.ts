@@ -13,8 +13,9 @@ export class UserService {
   ) { }
 
   async listRoles(): Promise<string[]> {
-    const roles = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest(), this.nebulrAuthService.getOriginalRequest()).config.getAppRoleNames();
-    return roles;
+    const roles = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest(), this.nebulrAuthService.getOriginalRequest()).access.roles.list();
+    const roleKeys = roles.map((r) => r.key)
+    return roleKeys;
   }
 
   /** Lists avaiable roles that the current user are authorized to assign another user (Role Hiarchy) */

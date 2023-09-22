@@ -7,7 +7,7 @@
   },
   "containerEnv": {},
   "runArgs": [
-    // "--network=nblocks-stack_shared-network", Connect into the nblocks stack network
+    "--network=nblocks-stack_shared-network" // Connect into the nblocks stack network
     // "--publish=0.0.0.0:3000:3000" Expose the container to external machines on LAN
   ],
   "customizations": {

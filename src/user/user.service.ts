@@ -21,9 +21,10 @@ export class UserService {
   /** Lists avaiable roles that the current user are authorized to assign another user (Role Hiarchy) */
   async listAvailableRoles(): Promise<string[]> {
     const allRoles = await this.listRoles();
-    const index = allRoles.findIndex(role => role === this.nebulrAuthService.getCurrentAuthContext().userRole);
-
-    return allRoles.splice(-(allRoles.length - index));
+    // Temporarily disabling the role hierarchy
+    // const index = allRoles.findIndex(role => role === this.nebulrAuthService.getCurrentAuthContext().userRole);
+    // return allRoles.splice(-(allRoles.length - index));
+    return allRoles
   }
 
   async list(): Promise<TenantUserResponseDto[]> {

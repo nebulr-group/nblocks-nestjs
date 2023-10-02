@@ -22,7 +22,6 @@ type AppConfig {
   azureMarketplaceEnabled: Boolean
   businessModel: BusinessModelGraphql
   defaultCallbackUri: String
-  defaultRole: String
   emailSenderEmail: String
   emailSenderName: String
   googleSsoEnabled: Boolean
@@ -33,7 +32,6 @@ type AppConfig {
   passkeysEnabled: Boolean
   privacyPolicyUrl: String
   redirectUris: [String!]
-  roles: [String!]
   stripeEnabled: Boolean
   termsOfServiceUrl: String
   uiUrl: String

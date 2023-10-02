@@ -16,7 +16,7 @@
     "build": "tsc && npm run copyfiles",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch",
+    "start:dev": "NBLOCKS_APP_ID=app_1234 NBLOCKS_API_KEY=app_1234_secret nest start --watch",
     "start:dev-sls": "sls offline --noPrependStageInUrl --stage dev",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",

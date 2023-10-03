@@ -13,16 +13,18 @@ export class UserService {
   ) { }
 
   async listRoles(): Promise<string[]> {
-    const roles = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest(), this.nebulrAuthService.getOriginalRequest()).config.getAppRoleNames();
-    return roles;
+    const roles = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest(), this.nebulrAuthService.getOriginalRequest()).config.access.roles.list();
+    const roleKeys = roles.map((r) => r.key)
+    return roleKeys;
   }
 
   /** Lists avaiable roles that the current user are authorized to assign another user (Role Hiarchy) */
   async listAvailableRoles(): Promise<string[]> {
     const allRoles = await this.listRoles();
-    const index = allRoles.findIndex(role => role === this.nebulrAuthService.getCurrentAuthContext().userRole);
-
-    return allRoles.splice(-(allRoles.length - index));
+    // Temporarily disabling the role hierarchy
+    // const index = allRoles.findIndex(role => role === this.nebulrAuthService.getCurrentAuthContext().userRole);
+    // return allRoles.splice(-(allRoles.length - index));
+    return allRoles
   }
 
   async list(): Promise<TenantUserResponseDto[]> {

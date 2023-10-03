@@ -4,10 +4,6 @@ import { ClientService } from '../shared/client/client.service';
 import { App } from './app.graphql-model';
 import { PlanResponse } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/plan-response';
 import { TaxResponse } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/tax-response';
-import { CreateTaxRequest } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/create-tax.request';
-import { UpdateTaxRequest } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/update-tax.request';
-import { CreatePlanRequest } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/create-plan.request';
-import { UpdatePlanRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/update-plan.request';
 
 @Injectable()
 export class AppService {
@@ -55,7 +51,7 @@ export class AppService {
   async listPlans(): Promise<PlanResponse[]> {
     const response = await this.clientService
       .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
-      .config.listPlans();
+      .config.payments.listPlans();
     return response;
   }
 
@@ -63,7 +59,7 @@ export class AppService {
   async listTaxes(): Promise<TaxResponse[]> {
     const response = await this.clientService
       .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
-      .config.listTaxes();
+      .config.payments.listTaxes();
     return response;
   }
 }

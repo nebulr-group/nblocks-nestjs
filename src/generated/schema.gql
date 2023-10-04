@@ -16,26 +16,6 @@ type App {
   websiteUrl: String
 }
 
-type CheckoutResponse {
-  """A checkout ID to create a `Stripe` checkout form"""
-  id: String!
-
-  """
-  Use this key to initiate a Stripe client and use the `id` property to start checkoutSession
-  """
-  publicKey: String!
-}
-
-input CreateCheckoutSessionInput {
-  """The plan the customer which to checkout"""
-  plan: String!
-
-  """
-  If there's multi region plans you need to provide the region to fetch the correct currencies and taxes
-  """
-  region: String
-}
-
 input CreateTenantInput {
   logo: String
   name: String
@@ -44,7 +24,6 @@ input CreateTenantInput {
 }
 
 type Mutation {
-  createCheckoutSession(args: CreateCheckoutSessionInput!): CheckoutResponse!
   createTenantAnonymous(tenant: CreateTenantInput!): Tenant!
 
   """This will create a new user for a tenant."""
@@ -87,11 +66,6 @@ type PriceGraphql {
 type Query {
   """Gets useful App configs for the UI to consume"""
   getAppAnonymous: App!
-
-  """
-  Obtain an short lived session url to redirect or present the user its Stripe subscription panel for updating payment or subscription data.
-  """
-  getCustomerPortal: String!
 
   """Get current user"""
   getMe: User!

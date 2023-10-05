@@ -31,6 +31,9 @@ type Mutation {
   deleteUser(userId: String!): Boolean!
   sendPasswordResetLink(userId: String!): Boolean!
 
+  """Sets a single tenants payment details"""
+  setTenantPaymentDetails(details: SetTenantPlanDetailsInput!): TenantPaymentDetailsGraphql!
+
   """Update current user"""
   updateMe(user: UserInput!): User!
   updateTenant(tenant: TenantInput!): Tenant!
@@ -63,6 +66,11 @@ type PriceGraphql {
   recurrenceInterval: String!
 }
 
+input PriceOfferInput {
+  currency: String!
+  recurrenceInterval: String!
+}
+
 type Query {
   """Gets useful App configs for the UI to consume"""
   getAppAnonymous: App!
@@ -83,6 +91,11 @@ type Query {
 
   """List all users in this tenant."""
   listUsers: [User!]!
+}
+
+input SetTenantPlanDetailsInput {
+  planKey: String!
+  price: PriceOfferInput!
 }
 
 type TaxGraphql {
@@ -114,9 +127,9 @@ type TenantAnonymous {
 
 input TenantInput {
   locale: String
+  logo: String
   mfa: Boolean
   name: String
-  plan: String
 }
 
 input TenantOwnerInput {

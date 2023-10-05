@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
 import { ClientService } from '../shared/client/client.service';
 import { TenantPaymentDetails } from '@nebulr-group/nblocks-ts-client/dist/platform/tenant/models/tenant-payment-details';
+import { SetTenantPlanDetails } from '@nebulr-group/nblocks-ts-client/dist/platform/tenant/models/set-tenant-plan-details';
 
 @Injectable()
 export class TenantService {
@@ -22,6 +23,12 @@ export class TenantService {
   async getTenantPaymentDetails(): Promise<TenantPaymentDetails> {
     const tenantId = this.nebulrAuthService.getCurrentTenantId();
     const resp = await this._getInterceptedClient().tenant(tenantId).getPaymentDetails();
+    return resp;
+  }
+
+  async setTenantPaymentDetails(args: SetTenantPlanDetails): Promise<TenantPaymentDetails> {
+    const tenantId = this.nebulrAuthService.getCurrentTenantId();
+    const resp = await this._getInterceptedClient().tenant(tenantId).setPaymentDetails(args);
     return resp;
   }
 

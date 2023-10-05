@@ -1,7 +1,7 @@
 import { ForbiddenException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
-import { CreateTenantInput, Tenant, TenantAnonymous, TenantInput, TenantPaymentDetailsGraphql } from './tenant.graphql-model';
+import { CreateTenantInput, SetTenantPlanDetailsInput, Tenant, TenantAnonymous, TenantInput, TenantPaymentDetailsGraphql } from './tenant.graphql-model';
 import { TenantService } from './tenant.service';
 
 @Resolver((of) => Tenant)
@@ -20,6 +20,14 @@ export class TenantResolver {
   @Query((returns) => TenantPaymentDetailsGraphql, { description: "Gets a single tenants payment details" })
   async getTenantPaymentDetails(): Promise<TenantPaymentDetailsGraphql> {
     const result = await this.tenantService.getTenantPaymentDetails();
+    return result;
+  }
+
+  @Mutation((returns) => TenantPaymentDetailsGraphql, { description: "Sets a single tenants payment details" })
+  async setTenantPaymentDetails(
+    @Args('details', { type: () => SetTenantPlanDetailsInput }) details: SetTenantPlanDetailsInput,
+  ): Promise<TenantPaymentDetailsGraphql> {
+    const result = await this.tenantService.setTenantPaymentDetails(details);
     return result;
   }
 

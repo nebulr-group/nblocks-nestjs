@@ -75,6 +75,9 @@ type Query {
   getTenant: Tenant!
   getTenantAnonymous: TenantAnonymous!
 
+  """Gets a single tenants payment details"""
+  getTenantPaymentDetails: TenantPaymentDetailsGraphql!
+
   """List all available user roles that the current user can assign others"""
   listUserRoles: [String!]!
 
@@ -120,6 +123,23 @@ input TenantOwnerInput {
   email: String!
   firstName: String
   lastName: String
+}
+
+type TenantPaymentDetailsGraphql {
+  details: TenantPlanDetailsGraphql!
+  status: TenantPaymentStatusGraphql!
+}
+
+type TenantPaymentStatusGraphql {
+  shouldSelectPlan: Boolean!
+  shouldSetupPayments: Boolean!
+}
+
+type TenantPlanDetailsGraphql {
+  plan: PlanGraphql
+  price: PriceGraphql
+  trial: Boolean!
+  trialDaysLeft: Float!
 }
 
 type User {

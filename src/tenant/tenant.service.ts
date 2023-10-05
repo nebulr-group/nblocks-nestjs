@@ -1,9 +1,10 @@
-import { TenantResponseDto } from '@nebulr-group/nblocks-ts-client';
+import { NblocksClient, TenantResponseDto } from '@nebulr-group/nblocks-ts-client';
 import { CreateTenantRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/tenant/models/create-tenant-request.dto';
 import { UpdateTenantRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/tenant/models/update-tenant-request.dto';
 import { Injectable } from '@nestjs/common';
 import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
 import { ClientService } from '../shared/client/client.service';
+import { TenantPaymentDetails } from '@nebulr-group/nblocks-ts-client/dist/platform/tenant/models/tenant-payment-details';
 
 @Injectable()
 export class TenantService {
@@ -14,12 +15,18 @@ export class TenantService {
 
   async getTenant(): Promise<TenantResponseDto> {
     const tenantId = this.nebulrAuthService.getCurrentTenantId();
-    const resp = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest(), this.nebulrAuthService.getOriginalRequest()).tenant(tenantId).get();
+    const resp = await this._getInterceptedClient().tenant(tenantId).get();
+    return resp;
+  }
+
+  async getTenantPaymentDetails(): Promise<TenantPaymentDetails> {
+    const tenantId = this.nebulrAuthService.getCurrentTenantId();
+    const resp = await this._getInterceptedClient().tenant(tenantId).getPaymentDetails();
     return resp;
   }
 
   async listTenants(): Promise<TenantResponseDto[]> {
-    const resp = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest(), this.nebulrAuthService.getOriginalRequest()).tenants.list();
+    const resp = await this._getInterceptedClient().tenants.list();
     return resp;
   }
 
@@ -30,12 +37,16 @@ export class TenantService {
    */
   async updateTenant(args: UpdateTenantRequestDto): Promise<TenantResponseDto> {
     const tenantId = this.nebulrAuthService.getCurrentTenantId();
-    const resp = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest(), this.nebulrAuthService.getOriginalRequest()).tenant(tenantId).update(args);
+    const resp = await this._getInterceptedClient().tenant(tenantId).update(args);
     return resp;
   }
 
   async createTenant(args: CreateTenantRequestDto): Promise<TenantResponseDto> {
-    const resp = await this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest(), this.nebulrAuthService.getOriginalRequest()).tenants.create(args);
+    const resp = await this._getInterceptedClient().tenants.create(args);
     return resp;
+  }
+
+  private _getInterceptedClient(): NblocksClient {
+    return this.clientService.getInterceptedClient(this.nebulrAuthService.getRequest(), this.nebulrAuthService.getOriginalRequest());
   }
 }

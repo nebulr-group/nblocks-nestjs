@@ -26,9 +26,9 @@ export class TenantService {
     return resp;
   }
 
-  async setTenantPaymentDetails(args: SetTenantPlanDetails): Promise<TenantPaymentDetails> {
+  async setTenantPlanDetails(args: SetTenantPlanDetails): Promise<TenantPaymentDetails> {
     const tenantId = this.nebulrAuthService.getCurrentTenantId();
-    const resp = await this._getInterceptedClient().tenant(tenantId).setPaymentDetails(args);
+    const resp = await this._getInterceptedClient().tenant(tenantId).setPlanDetails(args);
     return resp;
   }
 

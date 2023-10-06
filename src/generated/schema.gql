@@ -32,7 +32,7 @@ type Mutation {
   sendPasswordResetLink(userId: String!): Boolean!
 
   """Sets a single tenants payment details"""
-  setTenantPaymentDetails(details: SetTenantPlanDetailsInput!): TenantPaymentDetailsGraphql!
+  setTenantPlanDetails(details: SetTenantPlanDetailsInput!): TenantPaymentDetailsGraphql!
 
   """Update current user"""
   updateMe(user: UserInput!): User!

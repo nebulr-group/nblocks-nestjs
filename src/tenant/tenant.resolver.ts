@@ -24,10 +24,10 @@ export class TenantResolver {
   }
 
   @Mutation((returns) => TenantPaymentDetailsGraphql, { description: "Sets a single tenants payment details" })
-  async setTenantPaymentDetails(
+  async setTenantPlanDetails(
     @Args('details', { type: () => SetTenantPlanDetailsInput }) details: SetTenantPlanDetailsInput,
   ): Promise<TenantPaymentDetailsGraphql> {
-    const result = await this.tenantService.setTenantPaymentDetails(details);
+    const result = await this.tenantService.setTenantPlanDetails(details);
     return result;
   }
 

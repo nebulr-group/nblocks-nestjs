@@ -114,8 +114,7 @@ type Tenant {
   mfa: Boolean
   name: String!
   onboarded: Boolean
-  paymentsEnabled: Boolean
-  paymentsRequired: Boolean
+  paymentStatus: TenantPaymentStatusGraphql
   plan: String
 }
 
@@ -144,6 +143,7 @@ type TenantPaymentDetailsGraphql {
 }
 
 type TenantPaymentStatusGraphql {
+  paymentsEnabled: Boolean!
   shouldSelectPlan: Boolean!
   shouldSetupPayments: Boolean!
 }

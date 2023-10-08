@@ -34,13 +34,12 @@ export class Tenant implements TenantResponseDto {
   mfa: boolean;
 
   @Field(type => Boolean, { nullable: true })
-  paymentsEnabled: boolean;
+  onboarded: boolean;
 
-  @Field(type => Boolean, { nullable: true })
-  paymentsRequired: boolean;
+  @Field(type => TenantPaymentStatusGraphql, { nullable: true })
+  paymentStatus: TenantPaymentStatus;
 
-  @Field(type => Boolean, { nullable: true })
-  onboarded: boolean
+  metadata: Record<string, string>;
 
   @Field(type => String, { nullable: true })
   createdAt: Date;
@@ -133,6 +132,9 @@ export class PriceOfferInput implements PriceOffer {
 
 @ObjectType()
 export class TenantPaymentStatusGraphql implements TenantPaymentStatus {
+  @Field(type => Boolean)
+  paymentsEnabled: boolean;
+
   @Field(type => Boolean)
   shouldSelectPlan: boolean;
 

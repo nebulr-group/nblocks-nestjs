@@ -93,6 +93,9 @@ export class CreateTenantInput implements CreateTenantRequestDto {
   @Field(type => String, { nullable: true })
   plan?: string;
 
+  @Field(type => PriceOfferInput, { nullable: true })
+  priceOffer?: PriceOffer;
+
   @Field(type => TenantOwnerInput)
   owner: TenantOwnerInput;
 
@@ -118,7 +121,7 @@ export class SetTenantPlanDetailsInput implements SetTenantPlanDetails {
   planKey: string;
 
   @Field(type => PriceOfferInput)
-  price: PriceOffer;
+  priceOffer: PriceOffer;
 }
 
 @InputType()

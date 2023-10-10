@@ -21,6 +21,7 @@ input CreateTenantInput {
   name: String
   owner: TenantOwnerInput!
   plan: String
+  priceOffer: PriceOfferInput
 }
 
 type Mutation {
@@ -95,7 +96,7 @@ type Query {
 
 input SetTenantPlanDetailsInput {
   planKey: String!
-  price: PriceOfferInput!
+  priceOffer: PriceOfferInput!
 }
 
 type TaxGraphql {

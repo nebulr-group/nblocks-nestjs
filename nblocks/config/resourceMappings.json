@@ -1,6 +1,5 @@
 {
     "graphql/getAppAnonymous": "ANONYMOUS",
-    "graphql/updateAppCredentials": "TENANT_WRITE",
     "graphql/getAppConfig": "TENANT_WRITE",
     "graphql/getPaymentOptionsAnonymous": "ANONYMOUS",
     "graphql/getTenant": "TENANT_READ",

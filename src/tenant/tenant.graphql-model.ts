@@ -10,6 +10,7 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { PlanGraphql, PriceGraphql } from '../app/app.graphql-model';
 import { UpdateTenantRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/tenant/models/update-tenant-request.dto';
 import { PriceOffer } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/price-offer';
+import { BillingProvider } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/billing-provider.enum';
 
 //TODO This is basically a carbon copy of TenantResponseDto. How can we leverage TS inheritage and annotations?
 @ObjectType()
@@ -143,6 +144,9 @@ export class TenantPaymentStatusGraphql implements TenantPaymentStatus {
 
   @Field(type => Boolean)
   shouldSetupPayments: boolean;
+
+  @Field(type => String)
+  provider: BillingProvider;
 }
 
 @ObjectType()

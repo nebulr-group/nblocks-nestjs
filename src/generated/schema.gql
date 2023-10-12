@@ -145,6 +145,7 @@ type TenantPaymentDetailsGraphql {
 
 type TenantPaymentStatusGraphql {
   paymentsEnabled: Boolean!
+  provider: String!
   shouldSelectPlan: Boolean!
   shouldSetupPayments: Boolean!
 }

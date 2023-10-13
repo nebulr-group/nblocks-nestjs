@@ -22,6 +22,9 @@ export class Tenant implements TenantResponseDto {
   @Field(type => String, { nullable: true })
   plan?: string;
 
+  @Field(type => Boolean, { nullable: true })
+  trial: boolean;
+
   @Field(type => String, { nullable: true })
   locale: string;
 

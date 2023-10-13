@@ -117,6 +117,7 @@ type Tenant {
   onboarded: Boolean
   paymentStatus: TenantPaymentStatusGraphql
   plan: String
+  trial: Boolean
 }
 
 type TenantAnonymous {

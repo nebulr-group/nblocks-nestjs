@@ -1,11 +1,9 @@
 import { AppModel } from '@nebulr-group/nblocks-ts-client';
-import { BusinessModel } from '@nebulr-group/nblocks-ts-client/dist/platform/models/business-model';
+import { PlanResponse } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/plan-response';
+import { Price } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/price';
+import { TaxResponse } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/tax-response';
 import { OnboardingFlow } from '@nebulr-group/nblocks-ts-client/dist/platform/models/onboarding-flow';
-import { Plan } from '@nebulr-group/nblocks-ts-client/dist/platform/models/plan';
-import { Price } from '@nebulr-group/nblocks-ts-client/dist/platform/models/price';
-import { Tax } from '@nebulr-group/nblocks-ts-client/dist/platform/models/tax';
-import { UpdateCredentials } from '@nebulr-group/nblocks-ts-client/dist/platform/models/update-credentials-request.dto';
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 /** A bunch of safe to render app properties for the UI to consume */
 @ObjectType()
@@ -45,55 +43,11 @@ export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteU
   passkeysEnabled: boolean;
 }
 
-/** A bunch of more secret properties to render for the app config screen used by developer during quickstart */
-@ObjectType()
-export class AppConfig extends App implements Pick<AppModel, 'id' | 'name' | 'uiUrl' | 'apiUrl' | 'webhookUrl' | 'businessModel' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'emailSenderName' | 'emailSenderEmail' | "stripeEnabled" | 'passkeysEnabled' | "googleSsoEnabled" | "azureAdSsoEnabled" | "azureMarketplaceEnabled" | "defaultCallbackUri" | "redirectUris"> {
-
-  @Field(type => String, { nullable: true })
-  id: string;
-
-  @Field(type => String, { nullable: true })
-  apiUrl: string;
-
-  @Field(type => String, { nullable: true })
-  webhookUrl: string;
-
-  @Field(type => BusinessModelGraphql, { nullable: true })
-  businessModel: BusinessModel;
-
-  @Field(type => String, { nullable: true })
-  emailSenderName: string;
-
-  @Field(type => String, { nullable: true })
-  emailSenderEmail: string;
-
-  @Field(type => Boolean, { nullable: true })
-  stripeEnabled: boolean;
-
-  @Field(type => Boolean, { nullable: true })
-  passkeysEnabled: boolean;
-
-  @Field(type => Boolean, { nullable: true })
-  googleSsoEnabled: boolean;
-
-  @Field(type => Boolean, { nullable: true })
-  azureAdSsoEnabled: boolean;
-
-  @Field(type => Boolean, { nullable: true })
-  azureMarketplaceEnabled: boolean;
-
-  @Field(type => [String], { nullable: true })
-  redirectUris: string[];
-
-  @Field(type => String, { nullable: true })
-  defaultCallbackUri: string;
-}
+//TODO Should we render the full Business model here?
 
 // Only purpose is to add Graphql fields on the existing Business model
 @ObjectType()
 export class PriceGraphql implements Price {
-  @Field()
-  region: string;
 
   @Field()
   amount: number;
@@ -101,68 +55,62 @@ export class PriceGraphql implements Price {
   @Field()
   currency: string;
 
+  @Field(type => String)
   recurrenceInterval: 'day' | 'month' | 'week' | 'year';
 }
 
 // Only purpose is to add Graphql fields on the existing Business model
 @ObjectType()
-export class PlanGraphql implements Plan {
+export class PlanGraphql implements PlanResponse {
+  @Field()
+  id: string;
+
+  @Field()
+  key: string;
+
   @Field()
   name: string;
 
-  @Field(() => Number, { nullable: true })
-  trialDays?: number;
+  @Field({ nullable: true })
+  description?: string;
+
+  @Field()
+  trial: boolean;
+
+  @Field()
+  trialDays: number;
 
   @Field(() => [PriceGraphql])
   prices: Price[];
+
+  @Field(type => String, { nullable: true })
+  createdAt: Date;
 }
 
 // Only purpose is to add Graphql fields on the existing Business model
 @ObjectType()
-export class TaxGraphql implements Tax {
+export class TaxGraphql implements TaxResponse {
   @Field()
-  region: string;
+  id: string;
+
+  @Field()
+  countryCode: string;
 
   @Field()
   name: string;
 
   @Field()
   percentage: number;
+
+  @Field(type => String, { nullable: true })
+  createdAt: Date;
 }
 
-// Only purpose is to add Graphql fields on the existing Business model
 @ObjectType()
-export class BusinessModelGraphql implements BusinessModel {
-  @Field(() => [PlanGraphql])
-  plans: Plan[];
+export class PaymentOptionsGraphql {
+  @Field(() => [PlanGraphql], { nullable: true })
+  plans: PlanResponse[];
 
-  @Field(() => [TaxGraphql])
-  taxes: Tax[];
-}
-
-@InputType()
-export class UpdateCredentialsInput implements UpdateCredentials {
-  @Field(type => String, { nullable: true })
-  stripeSecretKey?: string;
-
-  @Field(type => String, { nullable: true })
-  stripePublicKey?: string;
-
-  @Field(type => String, { nullable: true })
-  microsoftAzureMarketplaceClientId?: string;
-
-  @Field(type => String, { nullable: true })
-  microsoftAzureMarketplaceClientSecret?: string;
-
-  @Field(type => String, { nullable: true })
-  microsoftAzureMarketplaceTenantId?: string;
-
-  @Field(type => String, { nullable: true })
-  microsoftAzureADClientId?: string;
-
-  @Field(type => String, { nullable: true })
-  microsoftAzureADClientSecret?: string;
-
-  @Field(type => String, { nullable: true })
-  microsoftAzureADTenantId?: string;
+  @Field(() => [TaxGraphql], { nullable: true })
+  taxes: TaxResponse[];
 }

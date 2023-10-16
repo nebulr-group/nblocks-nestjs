@@ -16,63 +16,15 @@ type App {
   websiteUrl: String
 }
 
-type AppConfig {
-  apiUrl: String
-  azureAdSsoEnabled: Boolean
-  azureMarketplaceEnabled: Boolean
-  businessModel: BusinessModelGraphql
-  defaultCallbackUri: String
-  emailSenderEmail: String
-  emailSenderName: String
-  googleSsoEnabled: Boolean
-  id: String
-  logo: String
-  name: String
-  onboardingFlow: String
-  passkeysEnabled: Boolean
-  privacyPolicyUrl: String
-  redirectUris: [String!]
-  stripeEnabled: Boolean
-  termsOfServiceUrl: String
-  uiUrl: String
-  webhookUrl: String
-  websiteUrl: String
-}
-
-type BusinessModelGraphql {
-  plans: [PlanGraphql!]!
-  taxes: [TaxGraphql!]!
-}
-
-type CheckoutResponse {
-  """A checkout ID to create a `Stripe` checkout form"""
-  id: String!
-
-  """
-  Use this key to initiate a Stripe client and use the `id` property to start checkoutSession
-  """
-  publicKey: String!
-}
-
-input CreateCheckoutSessionInput {
-  """The plan the customer which to checkout"""
-  plan: String!
-
-  """
-  If there's multi region plans you need to provide the region to fetch the correct currencies and taxes
-  """
-  region: String
-}
-
 input CreateTenantInput {
   logo: String
   name: String
   owner: TenantOwnerInput!
   plan: String
+  priceOffer: PriceOfferInput
 }
 
 type Mutation {
-  createCheckoutSession(args: CreateCheckoutSessionInput!): CheckoutResponse!
   createTenantAnonymous(tenant: CreateTenantInput!): Tenant!
 
   """This will create a new user for a tenant."""
@@ -80,8 +32,8 @@ type Mutation {
   deleteUser(userId: String!): Boolean!
   sendPasswordResetLink(userId: String!): Boolean!
 
-  """"""
-  updateAppCredentials(credentials: UpdateCredentialsInput!): Boolean!
+  """Sets a single tenants payment details"""
+  setTenantPlanDetails(details: SetTenantPlanDetailsInput!): TenantPaymentDetailsGraphql!
 
   """Update current user"""
   updateMe(user: UserInput!): User!
@@ -93,43 +45,47 @@ type Mutation {
   updateUser(user: UserInput!): User!
 }
 
+type PaymentOptionsGraphql {
+  plans: [PlanGraphql!]
+  taxes: [TaxGraphql!]
+}
+
 type PlanGraphql {
+  createdAt: String
+  description: String
+  id: String!
+  key: String!
   name: String!
   prices: [PriceGraphql!]!
-  trialDays: Float
+  trial: Boolean!
+  trialDays: Float!
 }
 
 type PriceGraphql {
   amount: Float!
   currency: String!
-  region: String!
+  recurrenceInterval: String!
+}
+
+input PriceOfferInput {
+  currency: String!
+  recurrenceInterval: String!
 }
 
 type Query {
   """Gets useful App configs for the UI to consume"""
   getAppAnonymous: App!
 
-  """
-  A bunch of more secret properties to render for the app config screen used by developer during quickstart
-  """
-  getAppConfig: AppConfig!
-
-  """
-  Gets the apps plan. Use this to display pricing instead of the AppConfig resolver
-  """
-  getAppPlans: [PlanGraphql!]!
-
-  """
-  Obtain an short lived session url to redirect or present the user its Stripe subscription panel for updating payment or subscription data.
-  """
-  getCustomerPortal: String!
-
   """Get current user"""
   getMe: User!
+  getPaymentOptionsAnonymous: PaymentOptionsGraphql!
 
   """Gets a single tenant"""
   getTenant: Tenant!
   getTenantAnonymous: TenantAnonymous!
+
+  """Gets a single tenants payment details"""
+  getTenantPaymentDetails: TenantPaymentDetailsGraphql!
 
   """List all available user roles that the current user can assign others"""
   listUserRoles: [String!]!
@@ -138,10 +94,17 @@ type Query {
   listUsers: [User!]!
 }
 
+input SetTenantPlanDetailsInput {
+  planKey: String!
+  priceOffer: PriceOfferInput!
+}
+
 type TaxGraphql {
+  countryCode: String!
+  createdAt: String
+  id: String!
   name: String!
   percentage: Float!
-  region: String!
 }
 
 type Tenant {
@@ -152,9 +115,9 @@ type Tenant {
   mfa: Boolean
   name: String!
   onboarded: Boolean
-  paymentsEnabled: Boolean
-  paymentsRequired: Boolean
+  paymentStatus: TenantPaymentStatusGraphql
   plan: String
+  trial: Boolean
 }
 
 type TenantAnonymous {
@@ -165,9 +128,9 @@ type TenantAnonymous {
 
 input TenantInput {
   locale: String
+  logo: String
   mfa: Boolean
   name: String
-  plan: String
 }
 
 input TenantOwnerInput {
@@ -176,15 +139,23 @@ input TenantOwnerInput {
   lastName: String
 }
 
-input UpdateCredentialsInput {
-  microsoftAzureADClientId: String
-  microsoftAzureADClientSecret: String
-  microsoftAzureADTenantId: String
-  microsoftAzureMarketplaceClientId: String
-  microsoftAzureMarketplaceClientSecret: String
-  microsoftAzureMarketplaceTenantId: String
-  stripePublicKey: String
-  stripeSecretKey: String
+type TenantPaymentDetailsGraphql {
+  details: TenantPlanDetailsGraphql!
+  status: TenantPaymentStatusGraphql!
+}
+
+type TenantPaymentStatusGraphql {
+  paymentsEnabled: Boolean!
+  provider: String!
+  shouldSelectPlan: Boolean!
+  shouldSetupPayments: Boolean!
+}
+
+type TenantPlanDetailsGraphql {
+  plan: PlanGraphql
+  price: PriceGraphql
+  trial: Boolean!
+  trialDaysLeft: Float!
 }
 
 type User {

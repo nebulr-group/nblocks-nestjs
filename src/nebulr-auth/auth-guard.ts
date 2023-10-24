@@ -57,10 +57,11 @@ export class AuthGuard implements CanActivate {
     /** 
      * This is the new JWT based access token that the user obtained from auth.nblocks.cloud 
     */
+    const cookies = parsedRequest.request.cookies || {};
     const acessRawToken = parsedRequest.request.get('Authorization') ||
       parsedRequest.request.get('authorization') ||
-      parsedRequest.request.cookies['Authorization'] ||
-      parsedRequest.request.cookies['authorization'];
+      cookies['Authorization'] ||
+      cookies['authorization'];
 
     if (acessRawToken && acessRawToken.startsWith('Bearer ')) {
       isJwtAvailable = true;

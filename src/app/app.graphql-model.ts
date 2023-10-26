@@ -7,7 +7,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 /** A bunch of safe to render app properties for the UI to consume */
 @ObjectType()
-export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'onboardingFlow' | 'passkeysEnabled' | 'azureAdSsoEnabled' | 'googleSsoEnabled'> {
+export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'onboardingFlow' | 'passkeysEnabled' | 'mfaEnabled' | 'azureAdSsoEnabled' | 'googleSsoEnabled'> {
 
   @Field(type => String, { nullable: true })
   id: string;
@@ -41,6 +41,9 @@ export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteU
 
   @Field(type => Boolean, { nullable: true })
   passkeysEnabled: boolean;
+
+  @Field(type => Boolean, { nullable: true })
+  mfaEnabled: boolean;
 }
 
 //TODO Should we render the full Business model here?

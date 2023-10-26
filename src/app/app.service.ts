@@ -28,7 +28,8 @@ export class AppService {
       onboardingFlow,
       azureAdSsoEnabled,
       googleSsoEnabled,
-      passkeysEnabled
+      passkeysEnabled,
+      mfaEnabled
     } = await this.clientService
       .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
       .config.getAppProfile();
@@ -43,7 +44,8 @@ export class AppService {
       onboardingFlow,
       azureAdSsoEnabled,
       googleSsoEnabled,
-      passkeysEnabled
+      passkeysEnabled,
+      mfaEnabled
     };
   }
 

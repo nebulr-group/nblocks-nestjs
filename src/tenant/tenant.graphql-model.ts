@@ -28,10 +28,10 @@ export class Tenant implements TenantResponseDto {
   @Field(type => String, { nullable: true })
   locale: string;
 
-  @Field(type => String, { nullable: false })
+  @Field(type => String, { nullable: true })
   name?: string;
 
-  @Field(type => String, { nullable: false })
+  @Field(type => String, { nullable: true })
   logo?: string;
 
   @Field(type => Boolean, { nullable: true })

@@ -112,9 +112,9 @@ type Tenant {
   createdAt: String
   id: String!
   locale: String
-  logo: String!
+  logo: String
   mfa: Boolean
-  name: String!
+  name: String
   onboarded: Boolean
   paymentStatus: TenantPaymentStatusGraphql
   plan: String

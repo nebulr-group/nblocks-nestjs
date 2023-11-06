@@ -160,6 +160,7 @@ type TenantPlanDetailsGraphql {
 }
 
 type User {
+  consentsToPrivacyPolicy: Boolean
   createdAt: String
   email: String
   enabled: Boolean
@@ -167,6 +168,7 @@ type User {
   fullName: String
   id: String!
   lastName: String
+  lastSeen: String
   onboarded: Boolean
   role: String
   teams: [String!]

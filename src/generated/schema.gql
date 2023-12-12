@@ -110,6 +110,7 @@ type TaxGraphql {
 
 type Tenant {
   createdAt: String
+  federationConnection: String
   id: String!
   locale: String
   logo: String
@@ -128,6 +129,7 @@ type TenantAnonymous {
 }
 
 input TenantInput {
+  federationConnection: String
   locale: String
   logo: String
   mfa: Boolean

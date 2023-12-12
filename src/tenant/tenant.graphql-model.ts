@@ -43,6 +43,9 @@ export class Tenant implements TenantResponseDto {
   @Field(type => TenantPaymentStatusGraphql, { nullable: true })
   paymentStatus: TenantPaymentStatus;
 
+  @Field(type => String, { nullable: true })
+  federationConnection?: string;
+
   metadata: Record<string, string>;
 
   @Field(type => String, { nullable: true })
@@ -75,6 +78,9 @@ export class TenantInput implements UpdateTenantRequestDto {
 
   @Field(type => Boolean, { nullable: true })
   mfa?: boolean;
+
+  @Field(type => String, { nullable: true })
+  federationConnection?: string;
 }
 
 @InputType()

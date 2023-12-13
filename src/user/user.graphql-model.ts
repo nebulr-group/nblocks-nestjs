@@ -1,8 +1,9 @@
+import { TenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
 //TODO This is basically a carbon copy of TenantUserResponseDto. How can we leverage TS inheritage and annotations?
 @ObjectType()
-export class User {
+export class User implements Omit<TenantUserResponseDto, 'tenant'> {
 
   @Field(type => String)
   id: string;
@@ -33,6 +34,12 @@ export class User {
 
   @Field(type => [String], { nullable: true })
   teams: string[];
+
+  @Field(type => Boolean, { nullable: true })
+  consentsToPrivacyPolicy: boolean;
+
+  @Field(type => String, { nullable: true })
+  lastSeen: Date;
 
   @Field(type => String, { nullable: true })
   createdAt: Date;

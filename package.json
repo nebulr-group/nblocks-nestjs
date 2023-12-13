@@ -1,6 +1,6 @@
 {
   "name": "@nebulr-group/nblocks-nestjs",
-  "version": "2.6.0",
+  "version": "4.0.0",
   "description": "Nebulr nblocks plug-n-play plugin for NestJS",
   "author": "Oscar Söderlund",
   "repository": {
@@ -16,7 +16,7 @@
     "build": "tsc && npm run copyfiles",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch",
+    "start:dev": "NBLOCKS_APP_ID=app_1234 NBLOCKS_API_KEY=app_1234_secret nest start --watch",
     "start:dev-sls": "sls offline --noPrependStageInUrl --stage dev",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -32,7 +32,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "copyfiles": "mkdir -p dist/generated && cp src/generated/schema.gql dist/generated/schema.gql",
     "npm-publish": "npm run build && npm publish --access public",
-    "npm-publish-beta": "npm run build && npm publish --access public --tag beta"
+    "npm-publish-beta": "npm run build && npm publish --access public --tag beta",
+    "npm-publish-local": "npm run build && npm publish --registry http://verdaccio:4873 --tag alpha"
   },
   "config": {
     "mongodbMemoryServer": {
@@ -46,13 +47,13 @@
     }
   },
   "dependencies": {
-    "@nebulr-group/nblocks-ts-client": "2.6.0",
+    "@nebulr-group/nblocks-ts-client": "^4.0.0",
     "@nestjs/common": "^7.0.0 || ^8.1.2",
     "@nestjs/config": "^0.5.0 || ^1.0.2",
     "@nestjs/core": "^7.0.0 || ^8.1.2",
     "@nestjs/graphql": "^7.6.0 || ^8.0.2",
     "@nestjs/mongoose": "^7.2.0 || ^8.0.1",
-    "@sentry/serverless": "^6.3.5",
+    "@sentry/serverless": "^6.19.7",
     "apollo-server-express": "^2.17.0",
     "cache-manager": "^3.4.4",
     "chalk": "^4.1.2",

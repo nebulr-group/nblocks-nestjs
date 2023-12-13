@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
 import { ClientService } from '../shared/client/client.service';
-import { App, AppConfig, UpdateCredentialsInput } from './app.graphql-model';
+import { App } from './app.graphql-model';
+import { PlanResponse } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/plan-response';
+import { TaxResponse } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/tax-response';
 
 @Injectable()
 export class AppService {
@@ -26,7 +28,8 @@ export class AppService {
       onboardingFlow,
       azureAdSsoEnabled,
       googleSsoEnabled,
-      passkeysEnabled
+      passkeysEnabled,
+      mfaEnabled
     } = await this.clientService
       .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
       .config.getAppProfile();
@@ -41,66 +44,24 @@ export class AppService {
       onboardingFlow,
       azureAdSsoEnabled,
       googleSsoEnabled,
-      passkeysEnabled
+      passkeysEnabled,
+      mfaEnabled
     };
   }
 
-  async getAppConfig(): Promise<AppConfig> {
-    const {
-      uiUrl,
-      websiteUrl,
-      logo,
-      name,
-      privacyPolicyUrl,
-      termsOfServiceUrl,
-      apiUrl,
-      webhookUrl,
-      businessModel,
-      defaultRole,
-      emailSenderEmail,
-      emailSenderName,
-      id,
-      roles,
-      stripeEnabled,
-      azureAdSsoEnabled,
-      googleSsoEnabled,
-      passkeysEnabled,
-      azureMarketplaceEnabled,
-      onboardingFlow,
-      redirectUris,
-      defaultCallbackUri
-    } = await this.clientService
+  /** Payment plans */
+  async listPlans(): Promise<PlanResponse[]> {
+    const response = await this.clientService
       .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
-      .config.getAppProfile();
-    return {
-      uiUrl,
-      websiteUrl,
-      logo,
-      name,
-      privacyPolicyUrl,
-      termsOfServiceUrl,
-      apiUrl,
-      webhookUrl,
-      defaultRole,
-      emailSenderEmail,
-      emailSenderName,
-      id,
-      businessModel,
-      roles: Object.keys(roles),
-      stripeEnabled,
-      azureAdSsoEnabled,
-      googleSsoEnabled,
-      passkeysEnabled,
-      azureMarketplaceEnabled,
-      onboardingFlow,
-      redirectUris,
-      defaultCallbackUri
-    };
+      .config.payments.listPlans();
+    return response;
   }
 
-  async updateCredentials(input: UpdateCredentialsInput): Promise<void> {
-    await this.clientService
+  /** Payment Taxes */
+  async listTaxes(): Promise<TaxResponse[]> {
+    const response = await this.clientService
       .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
-      .config.updateCredentials(input);
+      .config.payments.listTaxes();
+    return response;
   }
 }

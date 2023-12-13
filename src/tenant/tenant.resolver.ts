@@ -1,7 +1,7 @@
 import { ForbiddenException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
-import { CheckoutResponse, CreateCheckoutSessionInput, CreateTenantInput, Tenant, TenantAnonymous, TenantInput } from './tenant.graphql-model';
+import { CreateTenantInput, SetTenantPlanDetailsInput, Tenant, TenantAnonymous, TenantInput, TenantPaymentDetailsGraphql } from './tenant.graphql-model';
 import { TenantService } from './tenant.service';
 
 @Resolver((of) => Tenant)
@@ -13,14 +13,23 @@ export class TenantResolver {
 
   @Query((returns) => Tenant, { description: "Gets a single tenant" })
   async getTenant(): Promise<Tenant> {
-    return this.tenantService.getTenant();
+    const result = this.tenantService.getTenant();
+    return result;
   }
 
-  // @Query((returns) => [Tenant], { description: "Lists all tenants" })
-  // async listTenants(): Promise<Tenant[]> {
-  //   return this.tenantService.listTenants();
+  @Query((returns) => TenantPaymentDetailsGraphql, { description: "Gets a single tenants payment details" })
+  async getTenantPaymentDetails(): Promise<TenantPaymentDetailsGraphql> {
+    const result = await this.tenantService.getTenantPaymentDetails();
+    return result;
+  }
 
-  // }
+  @Mutation((returns) => TenantPaymentDetailsGraphql, { description: "Sets a single tenants payment details" })
+  async setTenantPlanDetails(
+    @Args('details', { type: () => SetTenantPlanDetailsInput }) details: SetTenantPlanDetailsInput,
+  ): Promise<TenantPaymentDetailsGraphql> {
+    const result = await this.tenantService.setTenantPlanDetails(details);
+    return result;
+  }
 
   @Query((returns) => TenantAnonymous)
   async getTenantAnonymous(): Promise<TenantAnonymous> {
@@ -30,33 +39,23 @@ export class TenantResolver {
       throw new ForbiddenException();
     }
 
-    return this.tenantService.getTenant();
-  }
-
-  @Query((returns) => String, { description: "Obtain an short lived session url to redirect or present the user its Stripe subscription panel for updating payment or subscription data." })
-  async getCustomerPortal(): Promise<string> {
-    return this.tenantService.getCustomerPortal();
+    const result = this.tenantService.getTenant();
+    return result;
   }
 
   @Mutation((returns) => Tenant)
   async updateTenant(
     @Args('tenant', { type: () => TenantInput }) tenant: TenantInput,
   ): Promise<Tenant> {
-    return this.tenantService.updateTenant(tenant);
+    const result = this.tenantService.updateTenant(tenant);
+    return result;
   }
 
   @Mutation((returns) => Tenant)
   async createTenantAnonymous(
     @Args('tenant', { type: () => CreateTenantInput }) tenant: CreateTenantInput,
   ): Promise<Tenant> {
-    return this.tenantService.createTenant(tenant);
-  }
-
-  @Mutation((returns) => CheckoutResponse)
-  async createCheckoutSession(
-    @Args('args', { type: () => CreateCheckoutSessionInput }) args: CreateCheckoutSessionInput,
-  ): Promise<CheckoutResponse> {
-    const response = this.tenantService.createStripeCheckoutSession(args);
-    return response;
+    const result = this.tenantService.createTenant(tenant);
+    return result;
   }
 }

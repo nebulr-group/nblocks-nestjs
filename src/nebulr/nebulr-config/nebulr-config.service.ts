@@ -19,7 +19,7 @@ export class NebulrConfigService {
   }
 
   getNebulrPlatformCoreUrl(): string {
-    return this.getConfig('NBLOCKS_CORE_API_URL');
+    return this.getConfig('NBLOCKS_ACCOUNT_API_URL');
   }
 
   getNebulrPlatformApiKey(): string {

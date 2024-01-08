@@ -1,6 +1,6 @@
 {
   "name": "@nebulr-group/nblocks-nestjs",
-  "version": "4.1.0-beta.1",
+  "version": "4.1.0-beta.2",
   "description": "Nebulr nblocks plug-n-play plugin for NestJS",
   "author": "Oscar Söderlund",
   "repository": {
@@ -35,12 +35,6 @@
     "npm-publish-beta": "npm run build && npm publish --access public --tag beta",
     "npm-publish-local": "npm run build && npm publish --registry http://verdaccio:4873 --tag alpha"
   },
-  "config": {
-    "mongodbMemoryServer": {
-      "version": "4.4.6",
-      "DownloadUrl": "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-debian10-4.4.6.tgz"
-    }
-  },
   "husky": {
     "hooks": {
       "pre-commit": "npm run format && npm run lint"
@@ -58,7 +52,7 @@
     "cache-manager": "^3.4.4",
     "chalk": "^4.1.2",
     "graphql": "^15.3.0",
-    "mongoose": "^5.11.9",
+    "mongoose": "^5.13.22",
     "node-emoji": "^1.11.0",
     "ora": "^3.4.0",
     "reflect-metadata": "^0.1.13",

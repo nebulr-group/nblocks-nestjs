@@ -28,6 +28,7 @@ export class AppService {
       onboardingFlow,
       azureAdSsoEnabled,
       googleSsoEnabled,
+      linkedinSsoEnabled,
       passkeysEnabled,
       mfaEnabled
     } = await this.clientService
@@ -44,6 +45,7 @@ export class AppService {
       onboardingFlow,
       azureAdSsoEnabled,
       googleSsoEnabled,
+      linkedinSsoEnabled,
       passkeysEnabled,
       mfaEnabled
     };

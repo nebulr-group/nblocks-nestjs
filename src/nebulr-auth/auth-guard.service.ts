@@ -112,6 +112,9 @@ export class AuthGuardService {
             tenantPlan: AuthGuardService.ANONYMOUS,
             privileges: [],
             userRole: AuthGuardService.ANONYMOUS,
+            shouldSelectPlan: false, // Should we be more precise?
+            shouldSetupPayments: false, // Should we be more precise?
+            trial: false, // Should we be more precise?
         }
     }
 

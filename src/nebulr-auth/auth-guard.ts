@@ -69,7 +69,7 @@ export class AuthGuard implements CanActivate {
 
       try {
         // We do not need to get the intercepted client since we're only going to use AuthContext helper
-        authContext = await this.clientService.getClient().auth.getAuthContext(acessToken);
+        authContext = await this.clientService.getClient().auth.contextHelper.getAuthContextVerified(acessToken);
         this._debugger.log('canActivate token verification result: ', authContext)
         appId = authContext.appId;
         tenantId = authContext.tenantId;

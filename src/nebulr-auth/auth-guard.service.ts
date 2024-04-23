@@ -107,9 +107,9 @@ export class AuthGuardService {
     buildAnonymousAuthContext(appId?: string, tenantId?: string): AuthContext {
         return {
             appId,
-            userId: undefined,
+            userId: AuthGuardService.ANONYMOUS,
             tenantId,
-            tenantPlan: '',
+            tenantPlan: AuthGuardService.ANONYMOUS,
             privileges: [],
             userRole: AuthGuardService.ANONYMOUS,
         }

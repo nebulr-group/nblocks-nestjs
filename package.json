@@ -1,6 +1,6 @@
 {
   "name": "@nebulr-group/nblocks-nestjs",
-  "version": "5.0.0-alpha.1",
+  "version": "5.0.0-alpha.2",
   "description": "Nebulr nblocks plug-n-play plugin for NestJS",
   "author": "Oscar Söderlund",
   "repository": {
@@ -41,7 +41,7 @@
     }
   },
   "dependencies": {
-    "@nebulr-group/nblocks-ts-client": "^5.0.0-alpha.6",
+    "@nebulr-group/nblocks-ts-client": "^5.0.0-alpha.9",
     "@nestjs/common": "^7.0.0 || ^8.1.2",
     "@nestjs/config": "^0.5.0 || ^1.0.2",
     "@nestjs/core": "^7.0.0 || ^8.1.2",

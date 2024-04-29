@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Request } from 'express';
 import { AuthGuardService } from './auth-guard.service';
@@ -42,6 +42,7 @@ export class AuthGuard implements CanActivate {
     this._debugger.log("constructor");
   }
 
+  // Return false for 403, throw UnauthorizedException for 401
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const parsedRequest = this.parseRequest(context);
     this._debugger.log(`canActivate parsedRequest resource`, parsedRequest.resource);
@@ -76,7 +77,7 @@ export class AuthGuard implements CanActivate {
         tenantUserId = authContext.userId;
       } catch (error) {
         console.error(error);
-        throw error;
+        throw new UnauthorizedException();;
       }
     } else {
       /** These are legacy headers and non JWT based auth token */

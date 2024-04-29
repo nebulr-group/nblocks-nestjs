@@ -58,18 +58,18 @@ export class AuthGuard implements CanActivate {
      * This is the new JWT based access token that the user obtained from auth.nblocks.cloud 
     */
     const cookies = parsedRequest.request.cookies || {};
-    const acessRawToken = parsedRequest.request.get('Authorization') ||
+    const rawAcessToken = parsedRequest.request.get('Authorization') ||
       parsedRequest.request.get('authorization') ||
       cookies['Authorization'] ||
       cookies['authorization'];
 
-    if (acessRawToken && acessRawToken.startsWith('Bearer ')) {
+    if (rawAcessToken && rawAcessToken.startsWith('Bearer ')) {
       isJwtAvailable = true;
-      const acessToken = acessRawToken.substring(7, acessRawToken.length);
+      const acessToken = rawAcessToken.substring(7, rawAcessToken.length);
 
       try {
         // We do not need to get the intercepted client since we're only going to use AuthContext helper
-        authContext = await this.clientService.getClient().auth.getAuthContext(acessToken);
+        authContext = await this.clientService.getClient().auth.contextHelper.getAuthContextVerified(acessToken);
         this._debugger.log('canActivate token verification result: ', authContext)
         appId = authContext.appId;
         tenantId = authContext.tenantId;

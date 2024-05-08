@@ -1,18 +1,63 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthGuard } from './auth-guard';
+// import { AuthGuard } from './auth-guard';
+// import { Request } from 'express';
 
-describe('AuthGuard', () => {
-  //   let provider: AuthGuard;
+// describe('AuthGuard', () => {
 
-  // beforeEach(async () => {
-  //   const module: TestingModule = await Test.createTestingModule({
-  //     providers: [AuthGuard],
-  //   }).compile();
+//   it('can extract JWT from header', () => {
+//     expect(AuthGuard['_extractJWTFromRequest']({
+//       graphql: false,
+//       resource: "/foo/bar",
+//       request: {
+//         get(name: string) {
+//           if (name == "authorization")
+//             return "headerToken";
+//           else
+//             return undefined;
+//         },
+//         cookies: {}
+//       } as Request
+//     })).toEqual({
+//       rawAcessToken: "headerToken",
+//       authHeader: "headerToken",
+//       authCookie: undefined
+//     });
+//   });
 
-  //   provider = module.get<AuthGuard>(AuthGuard);
-  // });
+//   it('can extract JWT from cookie', () => {
+//     expect(AuthGuard['_extractJWTFromRequest']({
+//       graphql: false,
+//       resource: "/foo/bar",
+//       request: {
+//         get(name: string) {
+//           return undefined;
+//         },
+//         cookies: { "authorization": "cookieToken" }
+//       } as Request
+//     })).toEqual({
+//       rawAcessToken: "cookieToken",
+//       authHeader: undefined,
+//       authCookie: "cookieToken"
+//     });
 
-  it('should be defined', () => {
-    expect(true).toBe(true);
-  });
-});
+//   });
+
+//   it('header token takes precense over cookie token', () => {
+//     expect(AuthGuard['_extractJWTFromRequest']({
+//       graphql: false,
+//       resource: "/foo/bar",
+//       request: {
+//         get(name: string) {
+//           if (name == "authorization")
+//             return "headerToken";
+//           else
+//             return undefined;
+//         },
+//         cookies: { "authorization": "cookieToken" }
+//       } as Request
+//     })).toEqual({
+//       rawAcessToken: "headerToken",
+//       authHeader: "headerToken",
+//       authCookie: "cookieToken"
+//     });
+//   });
+// });

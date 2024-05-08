@@ -101,11 +101,8 @@ export class UserService {
   async updateMe(user: MeInput): Promise<TenantUserResponseDto> {
     const currentUserId = this.nebulrAuthService.getCurrentAuthContext().userId;
 
-    if (user.id != currentUserId)
-      throw Error("Trying to update me for another user");
-
     const { consentsToPrivacyPolicy, firstName, lastName, onboarded } = user;
-    const result = await this._getInterceptedClient().tenant(this.nebulrAuthService.getCurrentTenantId()).user(user.id).update({ consentsToPrivacyPolicy, firstName, lastName, onboarded });
+    const result = await this._getInterceptedClient().tenant(this.nebulrAuthService.getCurrentTenantId()).user(currentUserId).update({ consentsToPrivacyPolicy, firstName, lastName, onboarded });
     return { ...user, ...result };
   }
 

@@ -63,9 +63,6 @@ export class UserInput {
 @InputType()
 export class MeInput implements Pick<UpdateUserRequestDto, 'consentsToPrivacyPolicy' | 'onboarded' | 'firstName' | 'lastName'> {
 
-  @Field(type => String)
-  id: string;
-
   @Field(type => Boolean, { nullable: true })
   consentsToPrivacyPolicy?: boolean;
 

@@ -6,6 +6,7 @@ type App {
   azureAdSsoEnabled: Boolean
   googleSsoEnabled: Boolean
   id: String
+  linkedinSsoEnabled: Boolean
   logo: String
   mfaEnabled: Boolean
   name: String

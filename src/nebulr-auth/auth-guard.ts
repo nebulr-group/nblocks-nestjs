@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Request } from 'express';
 import { AuthGuardService } from './auth-guard.service';
@@ -42,6 +42,7 @@ export class AuthGuard implements CanActivate {
     this._debugger.log("constructor");
   }
 
+  // Return false for 403, throw UnauthorizedException for 401
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const parsedRequest = this.parseRequest(context);
     this._debugger.log(`canActivate parsedRequest resource`, parsedRequest.resource);
@@ -58,25 +59,25 @@ export class AuthGuard implements CanActivate {
      * This is the new JWT based access token that the user obtained from auth.nblocks.cloud 
     */
     const cookies = parsedRequest.request.cookies || {};
-    const acessRawToken = parsedRequest.request.get('Authorization') ||
+    const rawAcessToken = parsedRequest.request.get('Authorization') ||
       parsedRequest.request.get('authorization') ||
       cookies['Authorization'] ||
       cookies['authorization'];
 
-    if (acessRawToken && acessRawToken.startsWith('Bearer ')) {
+    if (rawAcessToken && rawAcessToken.startsWith('Bearer ')) {
       isJwtAvailable = true;
-      const acessToken = acessRawToken.substring(7, acessRawToken.length);
+      const acessToken = rawAcessToken.substring(7, rawAcessToken.length);
 
       try {
         // We do not need to get the intercepted client since we're only going to use AuthContext helper
-        authContext = await this.clientService.getClient().auth.getAuthContext(acessToken);
+        authContext = await this.clientService.getClient().auth.contextHelper.getAuthContextVerified(acessToken);
         this._debugger.log('canActivate token verification result: ', authContext)
         appId = authContext.appId;
         tenantId = authContext.tenantId;
         tenantUserId = authContext.userId;
       } catch (error) {
         console.error(error);
-        throw error;
+        throw new UnauthorizedException();;
       }
     } else {
       /** These are legacy headers and non JWT based auth token */

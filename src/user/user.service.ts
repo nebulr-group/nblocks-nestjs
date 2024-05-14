@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
 import { ClientService } from '../shared/client/client.service';
 import { DefaultRoles } from './default-role.enum';
-import { User, UserInput } from './user.graphql-model';
+import { MeInput, User, UserInput } from './user.graphql-model';
 
 @Injectable()
 export class UserService {
@@ -98,13 +98,11 @@ export class UserService {
     return { ...user, ...result };
   }
 
-  async updateMe(user: UserInput): Promise<TenantUserResponseDto> {
+  async updateMe(user: MeInput): Promise<TenantUserResponseDto> {
     const currentUserId = this.nebulrAuthService.getCurrentAuthContext().userId;
 
-    if (user.id != currentUserId)
-      throw Error("Trying to update me for another user");
-
-    const result = await this._getInterceptedClient().tenant(this.nebulrAuthService.getCurrentTenantId()).user(user.id).update({ enabled: user.enabled, role: user.role });
+    const { consentsToPrivacyPolicy, firstName, lastName, onboarded } = user;
+    const result = await this._getInterceptedClient().tenant(this.nebulrAuthService.getCurrentTenantId()).user(currentUserId).update({ consentsToPrivacyPolicy, firstName, lastName, onboarded });
     return { ...user, ...result };
   }
 

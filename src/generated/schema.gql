@@ -26,6 +26,14 @@ input CreateTenantInput {
   priceOffer: PriceOfferInput
 }
 
+input MeInput {
+  consentsToPrivacyPolicy: Boolean
+  firstName: String
+  id: String!
+  lastName: String
+  onboarded: Boolean
+}
+
 type Mutation {
   createTenantAnonymous(tenant: CreateTenantInput!): Tenant!
 
@@ -38,7 +46,7 @@ type Mutation {
   setTenantPlanDetails(details: SetTenantPlanDetailsInput!): TenantPaymentDetailsGraphql!
 
   """Update current user"""
-  updateMe(user: UserInput!): User!
+  updateMe(user: MeInput!): User!
   updateTenant(tenant: TenantInput!): Tenant!
 
   """

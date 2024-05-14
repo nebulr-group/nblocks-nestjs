@@ -1,6 +1,6 @@
 {
   "name": "@nebulr-group/nblocks-nestjs",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "Nebulr nblocks plug-n-play plugin for NestJS",
   "author": "Oscar Söderlund",
   "repository": {
@@ -16,7 +16,7 @@
     "build": "tsc && npm run copyfiles",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "NBLOCKS_APP_ID=app_1234 NBLOCKS_API_KEY=app_1234_secret nest start --watch",
+    "start:dev": "NBLOCKS_DEBUG=* NBLOCKS_APP_ID=app_1234 NBLOCKS_API_KEY=app_1234_secret nest start --watch",
     "start:dev-sls": "sls offline --noPrependStageInUrl --stage dev",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -41,7 +41,7 @@
     }
   },
   "dependencies": {
-    "@nebulr-group/nblocks-ts-client": "^5.0.0-beta.1",
+    "@nebulr-group/nblocks-ts-client": "^5.1.0",
     "@nestjs/common": "^7.0.0 || ^8.1.2",
     "@nestjs/config": "^0.5.0 || ^1.0.2",
     "@nestjs/core": "^7.0.0 || ^8.1.2",

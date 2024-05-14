@@ -58,17 +58,15 @@ export class AuthGuard implements CanActivate {
     /** 
      * This is the new JWT based access token that the user obtained from auth.nblocks.cloud 
     */
-    const cookies = parsedRequest.request.cookies || {};
-    const rawAcessToken = parsedRequest.request.get('Authorization') ||
-      parsedRequest.request.get('authorization') ||
-      cookies['Authorization'] ||
-      cookies['authorization'];
+    const { rawAcessToken, authHeader, authCookie } = AuthGuard._extractJWTFromRequest(parsedRequest);
 
     if (rawAcessToken && rawAcessToken.startsWith('Bearer ')) {
       isJwtAvailable = true;
       const acessToken = rawAcessToken.substring(7, rawAcessToken.length);
 
       try {
+        this._debugger.log(`Found JWT in ${!!authHeader ? "HTTP header" : ""} ${!!authCookie ? "Cookie" : ""}`);
+
         // We do not need to get the intercepted client since we're only going to use AuthContext helper
         authContext = await this.clientService.getClient().auth.contextHelper.getAuthContextVerified(acessToken);
         this._debugger.log('canActivate token verification result: ', authContext)
@@ -132,6 +130,21 @@ export class AuthGuard implements CanActivate {
 
       return hasRequiredPlan;
     }
+  }
+
+  // This method has been tested but due to a module resolution error the tests are disabled
+  private static _extractJWTFromRequest(parsedRequest: { graphql: boolean, request: Request, resource: string }): { rawAcessToken?: string, authHeader?: string, authCookie?: string } {
+    /** 
+     * This is the new JWT based access token that the user obtained from auth.nblocks.cloud 
+    */
+    const authHeader = parsedRequest.request.get('Authorization') || parsedRequest.request.get('authorization');
+
+    const cookies = parsedRequest.request.cookies || {};
+    const authCookie = cookies['Authorization'] || cookies['authorization'];
+
+    const rawAcessToken = authHeader || authCookie;
+
+    return { rawAcessToken, authHeader, authCookie };
   }
 
   /**

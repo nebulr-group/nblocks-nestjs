@@ -3,11 +3,15 @@
 # ------------------------------------------------------
 
 type App {
+  appleSsoEnabled: Boolean
   azureAdSsoEnabled: Boolean
+  facebookSsoEnabled: Boolean
+  githubSsoEnabled: Boolean
   googleSsoEnabled: Boolean
   id: String
   linkedinSsoEnabled: Boolean
   logo: String
+  magicLinkEnabled: Boolean
   mfaEnabled: Boolean
   name: String
   onboardingFlow: String
@@ -29,7 +33,6 @@ input CreateTenantInput {
 input MeInput {
   consentsToPrivacyPolicy: Boolean
   firstName: String
-  id: String!
   lastName: String
   onboarded: Boolean
 }

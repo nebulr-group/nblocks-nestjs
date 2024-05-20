@@ -30,7 +30,11 @@ export class AppService {
       googleSsoEnabled,
       linkedinSsoEnabled,
       passkeysEnabled,
-      mfaEnabled
+      mfaEnabled,
+      magicLinkEnabled,
+      facebookSsoEnabled,
+      githubSsoEnabled,
+      appleSsoEnabled
     } = await this.clientService
       .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
       .config.getAppProfile();
@@ -47,7 +51,11 @@ export class AppService {
       googleSsoEnabled,
       linkedinSsoEnabled,
       passkeysEnabled,
-      mfaEnabled
+      mfaEnabled,
+      magicLinkEnabled,
+      facebookSsoEnabled,
+      githubSsoEnabled,
+      appleSsoEnabled
     };
   }
 

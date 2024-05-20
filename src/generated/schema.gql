@@ -17,6 +17,7 @@ type App {
   onboardingFlow: String
   passkeysEnabled: Boolean
   privacyPolicyUrl: String
+  tenantSelfSignup: Boolean
   termsOfServiceUrl: String
   uiUrl: String
   websiteUrl: String

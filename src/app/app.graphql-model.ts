@@ -7,7 +7,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 /** A bunch of safe to render app properties for the UI to consume */
 @ObjectType()
-export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'onboardingFlow' | 'passkeysEnabled' | 'mfaEnabled' | 'magicLinkEnabled' | 'azureAdSsoEnabled' | 'googleSsoEnabled' | 'linkedinSsoEnabled' | 'facebookSsoEnabled' | 'githubSsoEnabled' | 'appleSsoEnabled'> {
+export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'tenantSelfSignup' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'onboardingFlow' | 'passkeysEnabled' | 'mfaEnabled' | 'magicLinkEnabled' | 'azureAdSsoEnabled' | 'googleSsoEnabled' | 'linkedinSsoEnabled' | 'facebookSsoEnabled' | 'githubSsoEnabled' | 'appleSsoEnabled'> {
 
   @Field(type => String, { nullable: true })
   id: string;
@@ -20,6 +20,9 @@ export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'websiteU
 
   @Field(type => String, { nullable: true })
   logo: string;
+
+  @Field(type => Boolean, { nullable: true })
+  tenantSelfSignup: boolean;
 
   @Field(type => String, { nullable: true })
   websiteUrl: string;

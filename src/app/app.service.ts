@@ -22,6 +22,7 @@ export class AppService {
       uiUrl,
       websiteUrl,
       logo,
+      tenantSelfSignup,
       name,
       privacyPolicyUrl,
       termsOfServiceUrl,
@@ -30,7 +31,11 @@ export class AppService {
       googleSsoEnabled,
       linkedinSsoEnabled,
       passkeysEnabled,
-      mfaEnabled
+      mfaEnabled,
+      magicLinkEnabled,
+      facebookSsoEnabled,
+      githubSsoEnabled,
+      appleSsoEnabled
     } = await this.clientService
       .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
       .config.getAppProfile();
@@ -39,6 +44,7 @@ export class AppService {
       uiUrl,
       websiteUrl,
       logo,
+      tenantSelfSignup,
       name,
       privacyPolicyUrl,
       termsOfServiceUrl,
@@ -47,7 +53,11 @@ export class AppService {
       googleSsoEnabled,
       linkedinSsoEnabled,
       passkeysEnabled,
-      mfaEnabled
+      mfaEnabled,
+      magicLinkEnabled,
+      facebookSsoEnabled,
+      githubSsoEnabled,
+      appleSsoEnabled
     };
   }
 

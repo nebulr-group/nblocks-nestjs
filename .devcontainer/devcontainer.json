@@ -26,12 +26,6 @@
       }
     }
   },
-  //this improves container performance
-  "mounts": [
-    "target=${containerWorkspaceFolder}/node_modules,type=volume",
-    "target=${containerWorkspaceFolder}/dist,type=volume"
-    // "source=serverless,target=${containerWorkspaceFolder}/.serverless,type=volume",  Docker complains that resource is busy or locked when running sls deploy
-  ],
   "workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind",
   "workspaceFolder": "/app",
   "postCreateCommand": "bash .devcontainer/init.sh ${containerWorkspaceFolder}"

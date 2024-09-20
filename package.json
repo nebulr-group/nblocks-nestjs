@@ -1,6 +1,6 @@
 {
   "name": "@nebulr-group/nblocks-nestjs",
-  "version": "5.2.0-beta.1",
+  "version": "5.2.0-beta.2",
   "description": "Nebulr nblocks plug-n-play plugin for NestJS",
   "author": "Oscar Söderlund",
   "repository": {
@@ -15,7 +15,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc && npm run copyfiles",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "NBLOCKS_DEBUG=* NBLOCKS_APP_ID=app_1234 NBLOCKS_API_KEY=app_1234_secret nest start",
     "start:dev": "NBLOCKS_DEBUG=* NBLOCKS_APP_ID=app_1234 NBLOCKS_API_KEY=app_1234_secret nest start --watch",
     "start:dev-sls": "sls offline --noPrependStageInUrl --stage dev",
     "start:debug": "nest start --debug --watch",
@@ -42,18 +42,18 @@
     }
   },
   "dependencies": {
-    "@nebulr-group/nblocks-ts-client": "^5.2.0-beta.1",
+    "@nebulr-group/nblocks-ts-client": "^5.4.0",
     "@nestjs/common": "^7.0.0 || ^8.1.2",
     "@nestjs/config": "^0.5.0 || ^1.0.2",
     "@nestjs/core": "^7.0.0 || ^8.1.2",
     "@nestjs/graphql": "^7.6.0 || ^8.0.2",
-    "@nestjs/mongoose": "^7.2.0 || ^8.0.1",
+    "@nestjs/mongoose": "^7.2.0 || ^8.0.1 || ^9.2.0",
     "@sentry/serverless": "^6.19.7",
     "apollo-server-express": "^2.17.0",
     "cache-manager": "^3.4.4",
     "chalk": "^4.1.2",
     "graphql": "^15.3.0",
-    "mongoose": "^5.13.22",
+    "mongoose": "^5.13.22 || ^7.6.13",
     "node-emoji": "^1.11.0",
     "ora": "^3.4.0",
     "reflect-metadata": "^0.1.13",

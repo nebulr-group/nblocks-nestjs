@@ -19,13 +19,13 @@ export class User implements Omit<TenantUserResponseDto, 'tenant'> {
   username: string;
 
   @Field({ nullable: true })
-  firstName: string;
+  firstName?: string;
 
   @Field({ nullable: true })
-  lastName: string;
+  lastName?: string;
 
   @Field({ nullable: true })
-  fullName: string;
+  fullName?: string;
 
   @Field(type => Boolean, { nullable: true })
   onboarded: boolean;

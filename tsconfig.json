@@ -12,6 +12,6 @@
     "outDir": "dist",
     "incremental": true,   
     "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,  
   }
 }

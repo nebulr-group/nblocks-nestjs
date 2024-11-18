@@ -29,6 +29,6 @@ import { NebulrConfigModule } from '../nebulr/nebulr-config/nebulr-config.module
     AuthGuardService,
   ],
   exports: [NebulrAuthService],
-  controllers: [AuthController]
+  controllers: [AuthController],
 })
-export class AuthModule { }
+export class AuthModule {}

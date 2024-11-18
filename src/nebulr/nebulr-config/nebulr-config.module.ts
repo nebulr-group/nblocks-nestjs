@@ -27,7 +27,6 @@ export class NebulrConfigModule {
   }
 
   static forRoot(options: NebulrConfigModuleOptions): DynamicModule {
-
     const ENV = NebulrConfigService.parseEnvironmentFromProcess();
 
     const graphqlOptions: Partial<GqlModuleOptions> = {};
@@ -87,7 +86,6 @@ export class NebulrConfigModule {
         GraphQLModule.forRoot({
           debug: true,
           formatError: (error: GraphQLError) => {
-
             console.error(
               `Gracefully handling graphql error with Sentry`,
               error,

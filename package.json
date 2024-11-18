@@ -1,6 +1,6 @@
 {
   "name": "@nebulr-group/nblocks-nestjs",
-  "version": "5.2.0-beta.2",
+  "version": "5.2.1",
   "description": "Nebulr nblocks plug-n-play plugin for NestJS",
   "author": "Oscar Söderlund",
   "repository": {
@@ -12,7 +12,7 @@
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "rm -rf dist/*",
     "build": "tsc && npm run copyfiles",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "NBLOCKS_DEBUG=* NBLOCKS_APP_ID=app_1234 NBLOCKS_API_KEY=app_1234_secret nest start",
@@ -34,15 +34,11 @@
     "install-ts-client-local": "npm i @nebulr-group/nblocks-ts-client@alpha --registry http://verdaccio:4873",
     "npm-publish": "npm run build && npm publish --access public",
     "npm-publish-beta": "npm run build && npm publish --access public --tag beta",
-    "npm-publish-local": "npm run build && npm publish --registry http://verdaccio:4873 --tag alpha"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run format && npm run lint"
-    }
+    "npm-publish-local": "npm run build && npm publish --registry http://verdaccio:4873 --tag alpha",
+    "build:watch": "concurrently \"tsc --watch\" \"chokidar 'src/generated/schema.gql' -c 'npm run copyfiles'\""    
   },
   "dependencies": {
-    "@nebulr-group/nblocks-ts-client": "^5.4.0",
+    "@nebulr-group/nblocks-ts-client": "^5.4.1",
     "@nestjs/common": "^7.0.0 || ^8.1.2",
     "@nestjs/config": "^0.5.0 || ^1.0.2",
     "@nestjs/core": "^7.0.0 || ^8.1.2",
@@ -87,7 +83,9 @@
     "ts-loader": "^8.0.8",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.0.5"
+    "typescript": "^4.0.5",
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^8.0.0"
   },
   "jest": {
     "moduleFileExtensions": [

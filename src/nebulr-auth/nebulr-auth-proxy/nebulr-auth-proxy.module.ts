@@ -9,4 +9,4 @@ import { NebulrAuthProxyService } from './nebulr-auth-proxy.service';
   controllers: [NebulrAuthProxyController],
   providers: [NebulrAuthProxyService],
 })
-export class NebulrAuthProxyModule { }
+export class NebulrAuthProxyModule {}

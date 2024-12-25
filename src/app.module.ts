@@ -5,10 +5,8 @@ import { NBlocksModule } from './nblocks.module';
  * For internal testing, Should not be published in plugin
  */
 @Module({
-  imports: [
-    NBlocksModule
-  ],
+  imports: [NBlocksModule],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

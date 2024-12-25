@@ -16,7 +16,8 @@ export class TenantFilterPlugin {
     schema.pre('save', function (next) {
       if (this.isNew) {
         try {
-          const nebulrAuthService = MoongooseAuthUtils.resolveAuthServiceFromDocument(this);
+          const nebulrAuthService =
+            MoongooseAuthUtils.resolveAuthServiceFromDocument(this);
           //TODO property should be named tenantId instead for future proof lingo
           const tenantId = nebulrAuthService.getCurrentTenantId();
           this[fieldName] = new Types.ObjectId(tenantId);
@@ -25,7 +26,6 @@ export class TenantFilterPlugin {
           Sentry.captureException(error);
           throw error;
         }
-
       }
       next();
     });
@@ -38,13 +38,17 @@ export class TenantFilterPlugin {
       'findOneAndDelete',
       'findOneAndRemove',
       'findOneAndUpdate',
-    ];
+    ] as const;
+    type QueryAction = (typeof actions)[number];
     for (const action of actions) {
-      schema.pre(action, async function () {
+      schema.pre(action as QueryAction, async function () {
         try {
-          const nebulrAuthService = MoongooseAuthUtils.resolveAuthServiceFromQuery(this);
+          const nebulrAuthService =
+            MoongooseAuthUtils.resolveAuthServiceFromQuery(this);
           this.where(fieldName).equals(
-            new Types.ObjectId(nebulrAuthService.getCurrentTenantId()) as unknown as ObjectId
+            new Types.ObjectId(
+              nebulrAuthService.getCurrentTenantId(),
+            ) as unknown as ObjectId,
           );
         } catch (error) {
           console.error(error);

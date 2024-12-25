@@ -1,4 +1,11 @@
-import { AuthenticateRequestDto, AuthenticateResponseDto, AuthenticatedResponse, UpdatePasswordRequestDto, UpdateUserInfoRequestDto, AuthTenantUserResponseDto } from '@nebulr-group/nblocks-ts-client';
+import {
+  AuthenticateRequestDto,
+  AuthenticateResponseDto,
+  AuthenticatedResponse,
+  UpdatePasswordRequestDto,
+  UpdateUserInfoRequestDto,
+  AuthTenantUserResponseDto,
+} from '@nebulr-group/nblocks-ts-client';
 import { CommitMfaCodeRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/auth/models/commit-mfa-code-request.dto';
 import { CommitMfaCodeResponseDto } from '@nebulr-group/nblocks-ts-client/dist/platform/auth/models/commit-mfa-code-response.dto';
 import { FinishUserMfaSetupRequestDto } from '@nebulr-group/nblocks-ts-client/dist/platform/auth/models/finish-user-mfa-setup-request.dto';
@@ -11,7 +18,7 @@ import { NebulrAuthProxyService } from './nebulr-auth-proxy.service';
 
 @Controller('auth-proxy')
 export class NebulrAuthProxyController {
-  constructor(private readonly proxyService: NebulrAuthProxyService) { }
+  constructor(private readonly proxyService: NebulrAuthProxyService) {}
 
   @Post('authenticate')
   async authenticate(
@@ -24,34 +31,46 @@ export class NebulrAuthProxyController {
   @Post('commitMfaCode')
   async commitMfaCode(
     @Headers('x-auth-token') authToken: string,
-    @Body() request: Pick<CommitMfaCodeRequestDto, 'mfaCode'>
+    @Body() request: Pick<CommitMfaCodeRequestDto, 'mfaCode'>,
   ): Promise<CommitMfaCodeResponseDto> {
-    const result = await this.proxyService.commitMfaCode({ mfaCode: request.mfaCode, authToken });
+    const result = await this.proxyService.commitMfaCode({
+      mfaCode: request.mfaCode,
+      authToken,
+    });
     return result;
   }
 
   @Post('startMfaUserSetup')
   async startMfaUserSetup(
     @Headers('x-auth-token') authToken: string,
-    @Body() request: Pick<StartUserMfaSetupRequestDto, 'phoneNumber'>
+    @Body() request: Pick<StartUserMfaSetupRequestDto, 'phoneNumber'>,
   ): Promise<void> {
-    await this.proxyService.startMfaUserSetup({ phoneNumber: request.phoneNumber, authToken });
+    await this.proxyService.startMfaUserSetup({
+      phoneNumber: request.phoneNumber,
+      authToken,
+    });
   }
 
   @Post('finishMfaUserSetup')
   async finishMfaUserSetup(
     @Headers('x-auth-token') authToken: string,
-    @Body() request: Pick<FinishUserMfaSetupRequestDto, 'mfaCode'>
+    @Body() request: Pick<FinishUserMfaSetupRequestDto, 'mfaCode'>,
   ): Promise<FinishUserMfaSetupResponseDto> {
-    return this.proxyService.finishMfaUserSetup({ mfaCode: request.mfaCode, authToken });
+    return this.proxyService.finishMfaUserSetup({
+      mfaCode: request.mfaCode,
+      authToken,
+    });
   }
 
   @Post('resetUserMfaSetup')
   async resetUserMfaSetup(
     @Headers('x-auth-token') authToken: string,
-    @Body() request: Pick<ResetUserMfaSetupRequestDto, 'backupCode'>
+    @Body() request: Pick<ResetUserMfaSetupRequestDto, 'backupCode'>,
   ): Promise<void> {
-    await this.proxyService.resetUserMfaSetup({ backupCode: request.backupCode, authToken });
+    await this.proxyService.resetUserMfaSetup({
+      backupCode: request.backupCode,
+      authToken,
+    });
   }
 
   @Get('authenticated')
@@ -72,9 +91,7 @@ export class NebulrAuthProxyController {
   async sendResetPasswordLink(
     @Body() request: ForgotPasswordRequestDto,
   ): Promise<void> {
-    await this.proxyService.forgotPassword(
-      request.username,
-    );
+    await this.proxyService.forgotPassword(request.username);
   }
 
   @Put('password')

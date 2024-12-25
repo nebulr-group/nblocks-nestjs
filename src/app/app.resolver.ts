@@ -1,14 +1,18 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { App, PaymentOptionsGraphql } from './app.graphql-model';
+import {
+  App,
+  CustomParamsConfigGraphql,
+  PaymentOptionsGraphql,
+} from './app.graphql-model';
 import { AppService } from './app.service';
 
 @Resolver((of) => App)
 export class AppResolver {
-  constructor(
-    private readonly appService: AppService,
-  ) { }
+  constructor(private readonly appService: AppService) {}
 
-  @Query((returns) => App, { description: "Gets useful App configs for the UI to consume" })
+  @Query((returns) => App, {
+    description: 'Gets useful App configs for the UI to consume',
+  })
   async getAppAnonymous(): Promise<App> {
     const app = await this.appService.getApp();
     return app;
@@ -16,7 +20,16 @@ export class AppResolver {
 
   @Query((returns) => PaymentOptionsGraphql)
   async getPaymentOptionsAnonymous(): Promise<PaymentOptionsGraphql> {
-    const [plans, taxes] = await Promise.all([this.appService.listPlans(), this.appService.listTaxes()]);
+    const [plans, taxes] = await Promise.all([
+      this.appService.listPlans(),
+      this.appService.listTaxes(),
+    ]);
     return { plans, taxes };
+  }
+
+  @Query((returns) => CustomParamsConfigGraphql)
+  async getTenantUserCustomParamsConfigAnonymous(): Promise<CustomParamsConfigGraphql> {
+    const config = await this.appService.getTenantUserCustomParamsConfig();
+    return config;
   }
 }

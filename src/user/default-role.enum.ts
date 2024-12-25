@@ -1,3 +1,3 @@
 export enum DefaultRoles {
-  OWNER = 'OWNER'
+  OWNER = 'OWNER',
 }

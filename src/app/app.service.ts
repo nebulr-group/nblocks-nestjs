@@ -4,17 +4,17 @@ import { ClientService } from '../shared/client/client.service';
 import { App } from './app.graphql-model';
 import { PlanResponse } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/plan-response';
 import { TaxResponse } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/tax-response';
-
+import { CustomParamsConfig } from '@nebulr-group/nblocks-ts-client/dist/platform/models/custom-params-config.model';
 @Injectable()
 export class AppService {
   constructor(
     private readonly clientService: ClientService,
     private readonly authService: NebulrAuthService,
-  ) { }
+  ) {}
 
   /**
    * Gets app. Used by getAppAnonymous so no sensitive information is added
-   * @returns 
+   * @returns
    */
   async getApp(): Promise<App> {
     const {
@@ -35,9 +35,12 @@ export class AppService {
       magicLinkEnabled,
       facebookSsoEnabled,
       githubSsoEnabled,
-      appleSsoEnabled
+      appleSsoEnabled,
     } = await this.clientService
-      .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
+      .getInterceptedClient(
+        this.authService.getRequest(),
+        this.authService.getOriginalRequest(),
+      )
       .config.getAppProfile();
     return {
       id,
@@ -57,14 +60,17 @@ export class AppService {
       magicLinkEnabled,
       facebookSsoEnabled,
       githubSsoEnabled,
-      appleSsoEnabled
+      appleSsoEnabled,
     };
   }
 
   /** Payment plans */
   async listPlans(): Promise<PlanResponse[]> {
     const response = await this.clientService
-      .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
+      .getInterceptedClient(
+        this.authService.getRequest(),
+        this.authService.getOriginalRequest(),
+      )
       .config.payments.listPlans();
     return response;
   }
@@ -72,8 +78,21 @@ export class AppService {
   /** Payment Taxes */
   async listTaxes(): Promise<TaxResponse[]> {
     const response = await this.clientService
-      .getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest())
+      .getInterceptedClient(
+        this.authService.getRequest(),
+        this.authService.getOriginalRequest(),
+      )
       .config.payments.listTaxes();
+    return response;
+  }
+
+  async getTenantUserCustomParamsConfig(): Promise<CustomParamsConfig> {
+    const response = await this.clientService
+      .getInterceptedClient(
+        this.authService.getRequest(),
+        this.authService.getOriginalRequest(),
+      )
+      .config.getTenantUserCustomParamsConfig();
     return response;
   }
 }

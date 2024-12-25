@@ -4,11 +4,11 @@ import { ENVIRONMENT } from './nebulr-config.module';
 
 @Injectable()
 export class NebulrConfigService {
-  constructor(private configService: ConfigService) { }
+  constructor(private configService: ConfigService) {}
 
   /**
-   * Get the current `ENVIRONMENT` 
-   * @returns Returns current `ENVIRONMENT` 
+   * Get the current `ENVIRONMENT`
+   * @returns Returns current `ENVIRONMENT`
    */
   getEnvironment(): ENVIRONMENT {
     return NebulrConfigService.parseEnvironmentFromProcess();
@@ -48,10 +48,12 @@ export class NebulrConfigService {
    * @returns The current `ENVIRONMENT`
    */
   static parseEnvironmentFromProcess(): ENVIRONMENT {
-    let ENV = process.env.NODE_ENV || process.env.APP_ENV || process.env.npm_lifecycle_event;
+    let ENV =
+      process.env.NODE_ENV ||
+      process.env.APP_ENV ||
+      process.env.npm_lifecycle_event;
     ENV = ENV.toLowerCase();
-    if (ENV.startsWith("start:"))
-      ENV = ENV.split(":")[1];
+    if (ENV.startsWith('start:')) ENV = ENV.split(':')[1];
 
     if (!ENV) {
       throw new Error(
@@ -59,7 +61,14 @@ export class NebulrConfigService {
       );
     }
 
-    if (![ENVIRONMENT.PROD, ENVIRONMENT.STAGE, ENVIRONMENT.DEV, ENVIRONMENT.TEST].includes(ENV as ENVIRONMENT)) {
+    if (
+      ![
+        ENVIRONMENT.PROD,
+        ENVIRONMENT.STAGE,
+        ENVIRONMENT.DEV,
+        ENVIRONMENT.TEST,
+      ].includes(ENV as ENVIRONMENT)
+    ) {
       ENV = ENVIRONMENT.DEV;
     }
 

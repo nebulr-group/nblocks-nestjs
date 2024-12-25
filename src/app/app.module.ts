@@ -5,14 +5,8 @@ import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 
 @Module({
-  imports: [
-    AuthModule,
-    SharedModule
-  ],
-  providers: [
-    AppService,
-    AppResolver
-  ],
+  imports: [AuthModule, SharedModule],
+  providers: [AppService, AppResolver],
   exports: [],
 })
-export class AppModule { }
+export class AppModule {}

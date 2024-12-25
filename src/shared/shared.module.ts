@@ -4,14 +4,8 @@ import { ClientService } from './client/client.service';
 import { CacheService } from './cache/cache.service';
 
 @Module({
-    imports: [
-        NebulrConfigModule,
-        CacheModule.register(),
-    ],
-    providers: [
-        ClientService,
-        CacheService,
-    ],
-    exports: [ClientService, CacheService]
+  imports: [NebulrConfigModule, CacheModule.register()],
+  providers: [ClientService, CacheService],
+  exports: [ClientService, CacheService],
 })
-export class SharedModule { }
+export class SharedModule {}

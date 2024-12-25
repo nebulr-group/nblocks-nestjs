@@ -4,10 +4,7 @@ import { NebulrAuthService } from './nebulr-auth.service';
 
 @Controller('auth')
 export class AuthController {
-
-  constructor(
-    private readonly nebulrAuthService: NebulrAuthService
-  ) { }
+  constructor(private readonly nebulrAuthService: NebulrAuthService) {}
 
   @Get('currentUser')
   async currentUser(): Promise<AuthTenantUserResponseDto> {

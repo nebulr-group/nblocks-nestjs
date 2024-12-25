@@ -4,7 +4,7 @@ import { NebulrRequestData } from './dto/request-data';
 import { NebulrAuthService } from './nebulr-auth.service';
 
 /**
- * 
+ *
  */
 /**
  * @deprecated The functionality is not proven for this class. Data has shown to be shared between requests. Use on own risk
@@ -13,8 +13,8 @@ import { NebulrAuthService } from './nebulr-auth.service';
  * See https://gitlab.com/nebulrgroup/devops/-/blob/main/README.md#using-request-scoped-data-like-authentication-data-or-currentuser-from-authservice
  */
 export class RequestAwareNebulrAuthHelper {
-  private static readonly namespace = "nebulr-request";
-  private static readonly dataVariableName = "data"
+  private static readonly namespace = 'nebulr-request';
+  private static readonly dataVariableName = 'data';
   private static readonly timeWarningMs = 5000;
 
   /**
@@ -22,7 +22,7 @@ export class RequestAwareNebulrAuthHelper {
    * @returns AuthUser
    */
   static getCurrenAuthContext(): AuthContext {
-    return this.getRequestData().auth.authContext
+    return this.getRequestData().auth.authContext;
   }
 
   /**
@@ -63,22 +63,31 @@ export class RequestAwareNebulrAuthHelper {
    * @param data NebulrRequestData
    */
   static storeRequestData(data: NebulrRequestData): void {
-    ContextService.set(`${RequestAwareNebulrAuthHelper.namespace}:${RequestAwareNebulrAuthHelper.dataVariableName}`, data);
+    ContextService.set(
+      `${RequestAwareNebulrAuthHelper.namespace}:${RequestAwareNebulrAuthHelper.dataVariableName}`,
+      data,
+    );
   }
 
   // Should be used to register the request-context middleware globally for the whole app.
   static getMiddleware(): any {
-    return ContextService.middleware(RequestAwareNebulrAuthHelper.namespace)
+    return ContextService.middleware(RequestAwareNebulrAuthHelper.namespace);
   }
 
   private static getRequestData(): NebulrRequestData {
-    const data: NebulrRequestData = ContextService.get(`${RequestAwareNebulrAuthHelper.namespace}:${RequestAwareNebulrAuthHelper.dataVariableName}`);
+    const data: NebulrRequestData = ContextService.get(
+      `${RequestAwareNebulrAuthHelper.namespace}:${RequestAwareNebulrAuthHelper.dataVariableName}`,
+    );
     if (!data)
-      throw new Error("RequestData is Undefined. Either the middleware of RequestAwareNebulrAuthHelper has not been properly configured for app, no auth guard has resolved the user from request yet or it has been reset prior to this call.");
+      throw new Error(
+        'RequestData is Undefined. Either the middleware of RequestAwareNebulrAuthHelper has not been properly configured for app, no auth guard has resolved the user from request yet or it has been reset prior to this call.',
+      );
 
     const requestExecution = new Date().getTime() - data.timestamp.getTime();
     if (requestExecution > RequestAwareNebulrAuthHelper.timeWarningMs)
-      console.error(`WARNING: The request used to resolve this authentication data is ${requestExecution} ms old! Either you're debugging the code, the execution is extremely slow or something dangerous is happening like shared data between requests!`);
+      console.error(
+        `WARNING: The request used to resolve this authentication data is ${requestExecution} ms old! Either you're debugging the code, the execution is extremely slow or something dangerous is happening like shared data between requests!`,
+      );
 
     return data;
   }

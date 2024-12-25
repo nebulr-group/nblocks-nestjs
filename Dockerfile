@@ -2,7 +2,7 @@
 
 # Supports ARM + x86-64
 # 'as base' allows us to refer to this build stage in other build stages
-FROM node:14-buster AS base
+FROM node:16 as base
 SHELL ["/bin/bash", "-c"]
 
 # Set the root working dir inside container
@@ -32,7 +32,7 @@ RUN npm install
 # Copy rest of the projects source code to container env
 COPY . .
 # Run build with installed dep
-#RUN npm run build
+RUN npm run build
 
 
 # Refering to base, and adding new build stage label 'prod'

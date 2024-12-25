@@ -38,7 +38,7 @@
     "build:watch": "concurrently \"tsc --watch\" \"chokidar 'src/generated/schema.gql' -c 'npm run copyfiles'\""
   },
   "dependencies": {
-    "@nebulr-group/nblocks-ts-client": "^5.4.2",
+    "@nebulr-group/nblocks-ts-client": "^5.4.3-beta.1",
     "@nestjs/common": "^8.4.7",
     "@nestjs/config": "^1.0.2",
     "@nestjs/core": "^8.4.7",

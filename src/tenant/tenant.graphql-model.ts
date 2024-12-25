@@ -101,7 +101,7 @@ export class TenantOwnerInput implements TenantOwnerRequestDto {
   lastName?: string;
 
   @Field((type) => [CustomParamGraphqlInput], { nullable: true })
-  customParams: CustomParamGraphqlInput[];
+  customParams?: CustomParamGraphqlInput[];
 }
 
 @InputType()

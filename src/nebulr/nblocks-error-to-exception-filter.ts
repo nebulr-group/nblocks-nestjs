@@ -1,5 +1,13 @@
-import { ForbiddenError, UnauthenticatedError } from '@nebulr-group/nblocks-ts-client';
-import { Catch, ArgumentsHost, UnauthorizedException, ForbiddenException } from '@nestjs/common';
+import {
+  ForbiddenError,
+  UnauthenticatedError,
+} from '@nebulr-group/nblocks-ts-client';
+import {
+  Catch,
+  ArgumentsHost,
+  UnauthorizedException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 
 /**
@@ -8,7 +16,6 @@ import { BaseExceptionFilter } from '@nestjs/core';
 @Catch(UnauthenticatedError, ForbiddenError)
 export class NBlocksErrorToExceptionFilter extends BaseExceptionFilter {
   catch(exception: UnauthenticatedError | ForbiddenError, host: ArgumentsHost) {
-
     if (exception instanceof UnauthenticatedError) {
       // Let graphql calls smoothly pass and be picked up by GraphQLModule
       if (host.getType() === 'http')

@@ -2,65 +2,90 @@ import { AppModel } from '@nebulr-group/nblocks-ts-client';
 import { PlanResponse } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/plan-response';
 import { Price } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/price';
 import { TaxResponse } from '@nebulr-group/nblocks-ts-client/dist/platform/config/payments/tax-response';
+import {
+  ParamConfig,
+  ParamType,
+} from '@nebulr-group/nblocks-ts-client/dist/platform/models/custom-params-config.model';
 import { OnboardingFlow } from '@nebulr-group/nblocks-ts-client/dist/platform/models/onboarding-flow';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 /** A bunch of safe to render app properties for the UI to consume */
 @ObjectType()
-export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'tenantSelfSignup' | 'websiteUrl' | 'privacyPolicyUrl' | 'termsOfServiceUrl' | 'onboardingFlow' | 'passkeysEnabled' | 'mfaEnabled' | 'magicLinkEnabled' | 'azureAdSsoEnabled' | 'googleSsoEnabled' | 'linkedinSsoEnabled' | 'facebookSsoEnabled' | 'githubSsoEnabled' | 'appleSsoEnabled'> {
-
-  @Field(type => String, { nullable: true })
+export class App
+  implements
+    Pick<
+      AppModel,
+      | 'name'
+      | 'uiUrl'
+      | 'logo'
+      | 'tenantSelfSignup'
+      | 'websiteUrl'
+      | 'privacyPolicyUrl'
+      | 'termsOfServiceUrl'
+      | 'onboardingFlow'
+      | 'passkeysEnabled'
+      | 'mfaEnabled'
+      | 'magicLinkEnabled'
+      | 'azureAdSsoEnabled'
+      | 'googleSsoEnabled'
+      | 'linkedinSsoEnabled'
+      | 'facebookSsoEnabled'
+      | 'githubSsoEnabled'
+      | 'appleSsoEnabled'
+    >
+{
+  @Field((type) => String, { nullable: true })
   id: string;
 
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   name: string;
 
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   uiUrl: string;
 
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   logo: string;
 
-  @Field(type => Boolean, { nullable: true })
+  @Field((type) => Boolean, { nullable: true })
   tenantSelfSignup: boolean;
 
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   websiteUrl: string;
 
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   privacyPolicyUrl: string;
 
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   termsOfServiceUrl: string;
 
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   onboardingFlow: OnboardingFlow;
 
-  @Field(type => Boolean, { nullable: true })
+  @Field((type) => Boolean, { nullable: true })
   azureAdSsoEnabled: boolean;
 
-  @Field(type => Boolean, { nullable: true })
+  @Field((type) => Boolean, { nullable: true })
   googleSsoEnabled: boolean;
 
-  @Field(type => Boolean, { nullable: true })
+  @Field((type) => Boolean, { nullable: true })
   linkedinSsoEnabled: boolean;
 
-  @Field(type => Boolean, { nullable: true })
+  @Field((type) => Boolean, { nullable: true })
   passkeysEnabled: boolean;
 
-  @Field(type => Boolean, { nullable: true })
+  @Field((type) => Boolean, { nullable: true })
   mfaEnabled: boolean;
 
-  @Field(type => Boolean, { nullable: true })
+  @Field((type) => Boolean, { nullable: true })
   magicLinkEnabled: boolean;
 
-  @Field(type => Boolean, { nullable: true })
+  @Field((type) => Boolean, { nullable: true })
   facebookSsoEnabled: boolean;
 
-  @Field(type => Boolean, { nullable: true })
+  @Field((type) => Boolean, { nullable: true })
   githubSsoEnabled: boolean;
 
-  @Field(type => Boolean, { nullable: true })
+  @Field((type) => Boolean, { nullable: true })
   appleSsoEnabled: boolean;
 }
 
@@ -69,14 +94,13 @@ export class App implements Pick<AppModel, 'name' | 'uiUrl' | 'logo' | 'tenantSe
 // Only purpose is to add Graphql fields on the existing Business model
 @ObjectType()
 export class PriceGraphql implements Price {
-
   @Field()
   amount: number;
 
   @Field()
   currency: string;
 
-  @Field(type => String)
+  @Field((type) => String)
   recurrenceInterval: 'day' | 'month' | 'week' | 'year';
 }
 
@@ -104,7 +128,7 @@ export class PlanGraphql implements PlanResponse {
   @Field(() => [PriceGraphql])
   prices: Price[];
 
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   createdAt: Date;
 }
 
@@ -123,7 +147,7 @@ export class TaxGraphql implements TaxResponse {
   @Field()
   percentage: number;
 
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   createdAt: Date;
 }
 
@@ -134,4 +158,33 @@ export class PaymentOptionsGraphql {
 
   @Field(() => [TaxGraphql], { nullable: true })
   taxes: TaxResponse[];
+}
+
+@ObjectType()
+export class ParamConfigGraphql implements ParamConfig {
+  @Field()
+  label: string;
+
+  @Field()
+  userLabel: string;
+
+  @Field(() => String)
+  type: ParamType;
+
+  @Field(() => String, { nullable: true })
+  regex: string
+}
+
+// @ObjectType()
+// export class CustomParamsConfigGraphql implements CustomParamsConfig {
+//   @Field()
+//   id: string;
+//   @Field(() => [ParamConfigGraphql])
+//   params: ParamConfig[];
+// }
+
+@ObjectType()
+export class CustomParamsConfigGraphql {
+  @Field(() => [ParamConfigGraphql])
+  params: ParamConfig[];
 }

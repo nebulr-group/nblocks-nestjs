@@ -6,14 +6,9 @@ import { SharedModule } from '../shared/shared.module';
 import { AuthModule } from '../nebulr-auth/nebulr-auth.module';
 
 @Module({
-  imports: [
-    HttpModule,
-    NebulrConfigModule,
-    AuthModule,
-    SharedModule,
-  ],
+  imports: [HttpModule, NebulrConfigModule, AuthModule, SharedModule],
   providers: [FileService],
   controllers: [FileController],
   exports: [FileService],
 })
-export class FileModule { }
+export class FileModule {}

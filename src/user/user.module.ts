@@ -5,16 +5,8 @@ import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 
 @Module({
-  imports: [
-    AuthModule,
-    SharedModule
-  ],
-  providers: [
-    UserService,
-    UserResolver
-  ],
-  exports: [
-    UserService
-  ]
+  imports: [AuthModule, SharedModule],
+  providers: [UserService, UserResolver],
+  exports: [UserService],
 })
-export class UserModule { }
+export class UserModule {}

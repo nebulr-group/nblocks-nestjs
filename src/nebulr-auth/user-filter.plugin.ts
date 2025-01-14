@@ -11,7 +11,6 @@ export class UserFilterPlugin {
     schema: MongooseSchema<Document>,
     opts: Record<string, any>,
   ): void {
-
     const handler: IUserFilter = opts.handler;
 
     const preActions = [
@@ -20,21 +19,31 @@ export class UserFilterPlugin {
       'findOneAndDelete',
       'findOneAndRemove',
       'findOneAndUpdate',
-    ];
+    ] as const;
+    type QueryAction = (typeof preActions)[number];
     for (const action of preActions) {
-      schema.pre(action, async function () {
+      schema.pre(action as QueryAction, async function () {
         try {
           const entityName = this['model']['modelName'];
-          const nebulrAuthService = MoongooseAuthUtils.resolveAuthServiceFromQuery(this);
-          if (handler.shouldApplyFilter(nebulrAuthService.getCurrentAuthContext(), entityName)) {
-            await handler.applyPreFilter(this, nebulrAuthService.getCurrentAuthContext(), entityName);
+          const nebulrAuthService =
+            MoongooseAuthUtils.resolveAuthServiceFromQuery(this);
+          if (
+            handler.shouldApplyFilter(
+              nebulrAuthService.getCurrentAuthContext(),
+              entityName,
+            )
+          ) {
+            await handler.applyPreFilter(
+              this,
+              nebulrAuthService.getCurrentAuthContext(),
+              entityName,
+            );
           }
         } catch (error) {
           console.error(error);
           Sentry.captureException(error);
           throw error;
         }
-
       });
     }
 

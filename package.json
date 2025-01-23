@@ -1,6 +1,6 @@
 {
   "name": "@nebulr-group/nblocks-nestjs",
-  "version": "5.2.1",
+  "version": "5.2.3",
   "description": "Nebulr nblocks plug-n-play plugin for NestJS",
   "author": "Oscar Söderlund",
   "repository": {
@@ -38,7 +38,7 @@
     "build:watch": "concurrently \"tsc --watch\" \"chokidar 'src/generated/schema.gql' -c 'npm run copyfiles'\""
   },
   "dependencies": {
-    "@nebulr-group/nblocks-ts-client": "^5.4.2",
+    "@nebulr-group/nblocks-ts-client": "file:../nblocks-ts-client",
     "@nestjs/common": "^8.4.7",
     "@nestjs/config": "^1.0.2",
     "@nestjs/core": "^8.4.7",
@@ -69,8 +69,10 @@
     "@types/supertest": "^2.0.10",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
     "@typescript-eslint/parser": "^4.6.1",
+    "chokidar-cli": "^3.0.0",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
+    "concurrently": "^8.0.0",
     "eslint": "^7.12.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -83,9 +85,7 @@
     "ts-loader": "^8.0.8",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.9.0",
-    "chokidar-cli": "^3.0.0",
-    "concurrently": "^8.0.0"
+    "typescript": "^4.9.0"
   },
   "jest": {
     "moduleFileExtensions": [

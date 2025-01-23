@@ -8,52 +8,57 @@ import { NebulrConfigService } from '../../nebulr/nebulr-config/nebulr-config.se
 import { Request } from 'express';
 
 export interface ClientServiceInterceptor {
-    intercept(client: NblocksClient, data: NebulrRequestData, request: Request): NblocksClient;
+  intercept(
+    client: NblocksClient,
+    data: NebulrRequestData,
+    request: Request,
+  ): NblocksClient;
 }
 
 @Injectable()
 export class ClientService {
+  /** A ready made client instance loaded with your credentials */
+  protected readonly _client: NblocksClient;
+  private logger: Debugger;
+  private _interceptor: ClientServiceInterceptor;
 
-    /** A ready made client instance loaded with your credentials */
-    protected readonly _client: NblocksClient;
-    private logger: Debugger;
-    private _interceptor: ClientServiceInterceptor;
+  constructor(private readonly nebulrConfigService: NebulrConfigService) {
+    this.logger = new Debugger('ClientService');
+    this.logger.log('constructor');
+    this._client = new NblocksClient({
+      appId: nebulrConfigService.getNblocksAppId(),
+      apiKey: nebulrConfigService.getNebulrPlatformApiKey(),
+      debug: process.env.NBLOCKS_DEBUG === '*' ? true : false,
+      stage: this._getEnvironment(nebulrConfigService),
+    });
+  }
 
-    constructor(private readonly nebulrConfigService: NebulrConfigService) {
-        this.logger = new Debugger("ClientService");
-        this.logger.log("constructor");
-        this._client = new NblocksClient(
-            {
-                appId: nebulrConfigService.getNblocksAppId(),
-                apiKey: nebulrConfigService.getNebulrPlatformApiKey(),
-                debug: process.env.NBLOCKS_DEBUG === '*' ? true : false,
-                stage: this._getEnvironment(nebulrConfigService)
-            });
+  private _getEnvironment(nebulrConfigService: NebulrConfigService): Stage {
+    switch (nebulrConfigService.getEnvironment()) {
+      case ENVIRONMENT.DEV:
+        return process.env.NBLOCKS_FORCE_DEV ? 'DEV' : 'STAGE';
+
+      default:
+        return 'PROD';
     }
+  }
 
-    private _getEnvironment(nebulrConfigService: NebulrConfigService): Stage {
-        switch (nebulrConfigService.getEnvironment()) {
-            case ENVIRONMENT.DEV:
-                return process.env.NBLOCKS_FORCE_DEV ? 'DEV' : 'STAGE';
+  setInterceptor(interceptor: ClientServiceInterceptor): void {
+    this._interceptor = interceptor;
+  }
 
-            default:
-                return 'PROD';
-        }
+  getClient(): NblocksClient {
+    return this._client;
+  }
+
+  getInterceptedClient(
+    data: NebulrRequestData,
+    request: Request,
+  ): NblocksClient {
+    if (!!this._interceptor) {
+      return this._interceptor.intercept(this._client, data, request);
+    } else {
+      return this.getClient();
     }
-
-    setInterceptor(interceptor: ClientServiceInterceptor): void {
-        this._interceptor = interceptor;
-    }
-
-    getClient(): NblocksClient {
-        return this._client;
-    }
-
-    getInterceptedClient(data: NebulrRequestData, request: Request): NblocksClient {
-        if (!!this._interceptor) {
-            return this._interceptor.intercept(this._client, data, request);
-        } else {
-            return this.getClient();
-        }
-    }
+  }
 }

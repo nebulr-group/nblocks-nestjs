@@ -24,9 +24,6 @@ import { AppModule } from './app/app.module';
   ],
   controllers: [],
   providers: [],
-  exports: [
-    SharedModule,
-    AuthModule
-  ],
+  exports: [SharedModule, AuthModule],
 })
-export class NBlocksModule { }
+export class NBlocksModule {}

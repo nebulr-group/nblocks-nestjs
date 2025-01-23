@@ -6,7 +6,6 @@ import * as Sentry from '@sentry/serverless';
  * @deprecated The lingo is wrong here. Use TenantFilterPlugin for same functionality
  */
 export class OrganizationPlugin {
-
   /**
    * @deprecated The lingo is wrong here. Use TenantFilterPlugin for same functionality
    */
@@ -23,7 +22,8 @@ export class OrganizationPlugin {
     schema.pre('save', function (next) {
       if (this.isNew) {
         try {
-          const nebulrAuthService = MoongooseAuthUtils.resolveAuthServiceFromDocument(this);
+          const nebulrAuthService =
+            MoongooseAuthUtils.resolveAuthServiceFromDocument(this);
           const organizationId = nebulrAuthService.getCurrentTenantId();
           this[parameter] = organizationId;
         } catch (error) {
@@ -41,11 +41,15 @@ export class OrganizationPlugin {
       'findOneAndDelete',
       'findOneAndRemove',
       'findOneAndUpdate',
-    ];
+    ] as const;
+
+    type QueryAction = (typeof actions)[number];
+
     for (const action of actions) {
-      schema.pre(action, async function () {
+      schema.pre(action as QueryAction, async function () {
         try {
-          const nebulrAuthService = MoongooseAuthUtils.resolveAuthServiceFromQuery(this);
+          const nebulrAuthService =
+            MoongooseAuthUtils.resolveAuthServiceFromQuery(this);
           this.where('organizationId').equals(
             nebulrAuthService.getCurrentTenantId(),
           );

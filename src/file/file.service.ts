@@ -8,16 +8,16 @@ import { NebulrAuthService } from '../nebulr-auth/nebulr-auth.service';
 
 @Injectable()
 export class FileService {
-
   constructor(
     private readonly httpService: HttpService,
     private readonly clientService: ClientService,
     private readonly authService: NebulrAuthService,
-  ) {
-  }
+  ) {}
 
   async downloadToFs(url: string, extension: string): Promise<string> {
-    const httpRes = await this.httpService.get(url, { responseType: 'arraybuffer' }).toPromise();
+    const httpRes = await this.httpService
+      .get(url, { responseType: 'arraybuffer' })
+      .toPromise();
     const location = path.join('/tmp', `${uuidv4()}.${extension}`);
     fs.writeFileSync(location, httpRes.data);
     return location;
@@ -28,9 +28,9 @@ export class FileService {
   }
 
   removeFromFs(paths: string[]): void {
-    paths.forEach(path => {
+    paths.forEach((path) => {
       fs.unlinkSync(path);
-    })
+    });
   }
 
   async createUploadSession(
@@ -38,10 +38,16 @@ export class FileService {
     contentType: string,
     tenantId: string,
   ): Promise<PrepareUploadResponseDto> {
-    const data = await this.clientService.getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest()).tenant(tenantId).fileClient.startUploadSession({
-      fileName: name,
-      contentType,
-    });
+    const data = await this.clientService
+      .getInterceptedClient(
+        this.authService.getRequest(),
+        this.authService.getOriginalRequest(),
+      )
+      .tenant(tenantId)
+      .fileClient.startUploadSession({
+        fileName: name,
+        contentType,
+      });
     return data.session;
   }
 
@@ -56,7 +62,13 @@ export class FileService {
     uploadKey: string,
     tenantId: string,
   ): Promise<string> {
-    const remoteSignedGetUrl = await this.clientService.getInterceptedClient(this.authService.getRequest(), this.authService.getOriginalRequest()).tenant(tenantId).fileClient.finishUploadSession({ key: uploadKey, persist: true });
+    const remoteSignedGetUrl = await this.clientService
+      .getInterceptedClient(
+        this.authService.getRequest(),
+        this.authService.getOriginalRequest(),
+      )
+      .tenant(tenantId)
+      .fileClient.finishUploadSession({ key: uploadKey, persist: true });
     return remoteSignedGetUrl;
   }
 }

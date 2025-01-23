@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
-import { EventWebhookDto } from '@nebulr-group/nblocks-ts-client'
+import { EventWebhookDto } from '@nebulr-group/nblocks-ts-client';
 
 @Controller('webhook')
 export class WebhookController {

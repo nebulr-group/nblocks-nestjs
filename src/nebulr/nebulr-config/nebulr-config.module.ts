@@ -7,6 +7,7 @@ import * as Sentry from '@sentry/serverless';
 
 import { join } from 'path';
 import { NebulrConfigService } from './nebulr-config.service';
+import { ApolloDriver } from '@nestjs/apollo';
 
 // Needed so that webpack bundles necessary packages
 require('apollo-server-express'); // Required by @nestjs/graphql
@@ -51,6 +52,38 @@ export class NebulrConfigModule {
         expandVariables: true,
         isGlobal: true,
       }),
+      // GraphQLModule.forRoot({
+      //   driver: ApolloDriver,
+      //   debug: true,
+      //   playground: ENV != ENVIRONMENT.PROD ? true : false,
+      //   sortSchema: true,
+      //   context: ({ req }) => {
+      //     return { req };
+      //   },
+      //   cors: {
+      //     credentials: true,
+      //     origin: true,
+      //   },
+      //   ...graphqlOptions,
+      // }) as DynamicModule,
+      MongooseModule.forRootAsync({
+        imports: [ConfigModule],
+        useFactory: async (configService: ConfigService) => {
+          return {
+            uri: this.getMongooseUri(
+              {
+                appName: configService.get<string>('APP_NAME'),
+                host: configService.get<string>('DB_URL'),
+                password: configService.get<string>('DB_PASSWORD'),
+              },
+              ENV as ENVIRONMENT,
+            ),
+            ...mongooseOptions,
+          };
+        },
+        inject: [ConfigService],
+      }),
+
     ];
 
     if (options.db)
@@ -60,52 +93,16 @@ export class NebulrConfigModule {
         imports.push(
           inMemoryTestModule.rootMongooseTestModule(mongooseOptions),
         );
-      } else
-        imports.push(
-          MongooseModule.forRootAsync({
-            imports: [ConfigModule],
-            useFactory: async (configService: ConfigService) => {
-              return {
-                uri: this.getMongooseUri(
-                  {
-                    appName: configService.get<string>('APP_NAME'),
-                    host: configService.get<string>('DB_URL'),
-                    password: configService.get<string>('DB_PASSWORD'),
-                  },
-                  ENV as ENVIRONMENT,
-                ),
-                ...mongooseOptions,
-              };
-            },
-            inject: [ConfigService],
-          }),
-        );
+      }
+    //   } else
+    //     imports.push(
+         
+    //     );
 
-    if (options.graphql)
-      imports.push(
-        GraphQLModule.forRoot({
-          debug: true,
-          formatError: (error: GraphQLError) => {
-            console.error(
-              `Gracefully handling graphql error with Sentry`,
-              error,
-            );
-            Sentry.captureException(error);
-
-            return error;
-          },
-          playground: ENV != ENVIRONMENT.PROD ? true : false,
-          sortSchema: true,
-          context: ({ req }) => {
-            return { req };
-          },
-          cors: {
-            credentials: true,
-            origin: true,
-          },
-          ...graphqlOptions,
-        }),
-      );
+    // if (options.graphql)
+    //   imports.push(
+       
+    //   );
 
     return {
       module: NebulrConfigModule,

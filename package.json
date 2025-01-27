@@ -38,7 +38,7 @@
     "build:watch": "concurrently \"tsc --watch\" \"chokidar 'src/generated/schema.gql' -c 'npm run copyfiles'\""
   },
   "dependencies": {
-    "@nebulr-group/nblocks-ts-client": "^5.4.2",      
+    "@nebulr-group/nblocks-ts-client": "workspace:*",      
     "@sentry/serverless": "^6.19.7",
     "apollo-server-express": "^3.13.0",
     "cache-manager": "^3.4.4",
@@ -50,7 +50,10 @@
     "reflect-metadata": "^0.1.13",
     "request-context": "^2.0.0",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "@nestjs/axios": "^3.0.1",
+    "uuid": "^11.0.0"
+    
   },
   "devDependencies": {
     "@nestjs/cli": "^9.5.0",

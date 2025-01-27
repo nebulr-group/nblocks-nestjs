@@ -1,4 +1,5 @@
-import { HttpModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { FileService } from './file.service';
 import { FileController } from './file.controller';
 import { NebulrConfigModule } from '../nebulr/nebulr-config/nebulr-config.module';

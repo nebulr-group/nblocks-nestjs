@@ -31,11 +31,11 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "copyfiles": "mkdir -p dist/generated && cp src/generated/schema.gql dist/generated/schema.gql",
-    "install-ts-client-local": "npm i @nebulr-group/nblocks-ts-client@alpha --registry http://host.docker.internal:4873",
+    "install-ts-client-local": "npm i @nebulr-group/nblocks-ts-client@alpha --registry http://host.docker.internal:4873",    
     "npm-publish": "npm run build && npm publish --access public",
     "npm-publish-beta": "npm run build && npm publish --access public --tag beta",
     "npm-publish-local": "npm run build && npm publish --registry http://host.docker.internal:4873 --tag alpha",
-    "build:watch": "concurrently \"tsc --watch\" \"chokidar 'src/generated/schema.gql' -c 'npm run copyfiles'\""
+    "build:watch": "concurrently \"tsc --watch\" \"chokidar 'src/generated/schema.gql' -c 'npm run copyfiles'\""        
   },
   "dependencies": {
     "@nebulr-group/nblocks-ts-client": "5.4.3-beta.1",      
@@ -119,6 +119,11 @@
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1"
     }
+  },
+  "overrides": {
+    "typescript": "^4.9.0",
+    "@nestjs/core": "^8.4.7",
+    "@nestjs/common": "^8.4.7"
   }
 
 }

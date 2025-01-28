@@ -61,15 +61,23 @@ input MeInput {
 type Mutation {
   createTenantAnonymous(tenant: CreateTenantInput!): Tenant!
 
-  """This will create a new user for a tenant."""
+  """
+  This will create a new user for a tenant.
+  """
   createUsers(userNames: [String!]!): [User!]!
   deleteUser(userId: String!): Boolean!
   sendPasswordResetLink(userId: String!): Boolean!
 
-  """Sets a single tenants payment details"""
-  setTenantPlanDetails(details: SetTenantPlanDetailsInput!): TenantPaymentDetailsGraphql!
+  """
+  Sets a single tenants payment details
+  """
+  setTenantPlanDetails(
+    details: SetTenantPlanDetailsInput!
+  ): TenantPaymentDetailsGraphql!
 
-  """Update current user"""
+  """
+  Update current user
+  """
   updateMe(user: MeInput!): User!
   updateTenant(tenant: TenantInput!): Tenant!
 
@@ -81,7 +89,7 @@ type Mutation {
 
 type ParamConfigGraphql {
   label: String!
-  regex: String
+  regex: String!
   type: String!
   userLabel: String!
 }
@@ -114,25 +122,37 @@ input PriceOfferInput {
 }
 
 type Query {
-  """Gets useful App configs for the UI to consume"""
+  """
+  Gets useful App configs for the UI to consume
+  """
   getAppAnonymous: App!
 
-  """Get current user"""
+  """
+  Get current user
+  """
   getMe: User!
   getPaymentOptionsAnonymous: PaymentOptionsGraphql!
 
-  """Gets a single tenant"""
+  """
+  Gets a single tenant
+  """
   getTenant: Tenant!
   getTenantAnonymous: TenantAnonymous!
 
-  """Gets a single tenants payment details"""
+  """
+  Gets a single tenants payment details
+  """
   getTenantPaymentDetails: TenantPaymentDetailsGraphql!
   getTenantUserCustomParamsConfigAnonymous: CustomParamsConfigGraphql!
 
-  """List all available user roles that the current user can assign others"""
+  """
+  List all available user roles that the current user can assign others
+  """
   listUserRoles: [String!]!
 
-  """List all users in this tenant."""
+  """
+  List all users in this tenant.
+  """
   listUsers: [User!]!
 }
 

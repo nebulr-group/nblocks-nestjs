@@ -1,16 +1,36 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
-import { GraphQLError } from 'graphql';
+import { GqlModuleOptions } from '@nestjs/graphql';
+import { GraphQLModule } from '@nestjs/graphql/dist/graphql.module';
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
-import * as Sentry from '@sentry/serverless';
 
 import { join } from 'path';
 import { NebulrConfigService } from './nebulr-config.service';
-import { ApolloDriver } from '@nestjs/apollo';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 // Needed so that webpack bundles necessary packages
 require('apollo-server-express'); // Required by @nestjs/graphql
+
+/**
+ * 
+  MongoDB Server ->	Mongoose
+  7.x	-> ^7.4.0 | ^8.0.0
+  6.x	-> ^6.5.0 | ^7.0.0 | ^8.0.0
+  5.x	-> ^5.13.0 | ^6.0.0 | ^7.0.0 | ^8.0.0
+  4.4.x	-> ^5.10.0 | ^6.0.0 | ^7.0.0 | ^8.0.0
+ */
+
+// We're running with useUnifiedTopology, hense the use of correct variables
+// The configuration has been tweeked for serverless usage. If running on dedicated servers you should probably fall back to defaults
+// https://mongoosejs.com/docs/7.x/docs/deprecations.html
+// https://mongoosejs.com/docs/7.x/docs/connections.html
+// https://www.mongodb.com/docs/atlas/manage-connections-aws-lambda
+export const mongooseOptions: MongooseModuleOptions = {
+  // Below are some tweeks that are optimized for Serverless.
+  maxPoolSize: 5, // Defaults to 100
+  serverSelectionTimeoutMS: 10000, // Defaults to 30000
+  socketTimeoutMS: 28000, // Just before severless max execution, defaults to 360000
+};
 
 @Module({
   imports: [ConfigModule.forRoot()],
@@ -18,18 +38,30 @@ require('apollo-server-express'); // Required by @nestjs/graphql
   exports: [NebulrConfigService],
 })
 export class NebulrConfigModule {
-  private static getMongooseUri(
-    args: { host: string; appName: string; password: string },
-    env: ENVIRONMENT,
-  ): string {
-    const db = `${args.appName}-db-${env}`;
-    const username = db;
-    return `mongodb+srv://${username}:${args.password}@${args.host}/${db}`;
+  private static getDatabaseOptions(configService: ConfigService): {
+    pass: string;
+    user: string;
+    dbName: string;
+    uri: string;
+  } {
+    const connObj = {
+      pass: configService.get<string>('DB_PASSWORD'),
+      user: configService.get<string>('DB_USER'),
+      dbName: configService.get<string>('DB_SCHEMA'),
+      uri: `${configService.get<string>(
+        'DB_PROTOCOL',
+      )}${configService.get<string>('DB_HOST')}`,
+    };
+    return connObj;
   }
 
   static forRoot(options: NebulrConfigModuleOptions): DynamicModule {
-    const ENV = NebulrConfigService.parseEnvironmentFromProcess();
-
+    const ENV = process.env.APP_ENV;
+    if (!ENV) {
+      throw new Error(
+        'ENV is not set. application configs will not load properly',
+      );
+    }
     const graphqlOptions: Partial<GqlModuleOptions> = {};
 
     if (ENV == ENVIRONMENT.DEV) {
@@ -41,68 +73,50 @@ export class NebulrConfigModule {
       graphqlOptions.typePaths = ['src/generated/schema.gql'];
     }
 
-    const mongooseOptions: MongooseModuleOptions = {
-      useFindAndModify: false,
-      useNewUrlParser: true,
-    };
-
     const imports = [
       ConfigModule.forRoot({
-        envFilePath: ['nblocks/config/main.env', `nblocks/config/${ENV}.env`],
+        envFilePath: [
+          'nebulr/config/main.env',
+          `nebulr/config/${ENV}.env`,
+          'nblocks/config/main.env',
+          `nblocks/config/${ENV}.env`,
+        ],
         expandVariables: true,
         isGlobal: true,
+        cache: true,
       }),
-      // GraphQLModule.forRoot({
-      //   driver: ApolloDriver,
-      //   debug: true,
-      //   playground: ENV != ENVIRONMENT.PROD ? true : false,
-      //   sortSchema: true,
-      //   context: ({ req }) => {
-      //     return { req };
-      //   },
-      //   cors: {
-      //     credentials: true,
-      //     origin: true,
-      //   },
-      //   ...graphqlOptions,
-      // }) as DynamicModule,
-      MongooseModule.forRootAsync({
-        imports: [ConfigModule],
-        useFactory: async (configService: ConfigService) => {
-          return {
-            uri: this.getMongooseUri(
-              {
-                appName: configService.get<string>('APP_NAME'),
-                host: configService.get<string>('DB_URL'),
-                password: configService.get<string>('DB_PASSWORD'),
-              },
-              ENV as ENVIRONMENT,
-            ),
-            ...mongooseOptions,
-          };
+      GraphQLModule.forRoot<ApolloDriverConfig>({
+        driver: ApolloDriver,
+        debug: true,
+        playground: ENV != ENVIRONMENT.PROD ? true : false,
+        sortSchema: true,
+        context: ({ req }) => {
+          return { req };
         },
-        inject: [ConfigService],
-      }),
-
+        ...graphqlOptions,
+      }) as DynamicModule,
+      
+        MongooseModule.forRootAsync({
+          imports: [ConfigModule],
+          useFactory: async (configService: ConfigService) => {            
+            return {
+              ...NebulrConfigModule.getDatabaseOptions(configService),
+              ...mongooseOptions,
+            };
+          },
+          inject: [ConfigService],
+        }) as DynamicModule
+      
     ];
 
-    if (options.db)
-      if (options.devInMemoryDb && ENV == ENVIRONMENT.DEV) {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const inMemoryTestModule = require('../nebulr-test/mongoose-in-memory-test.module');
-        imports.push(
-          inMemoryTestModule.rootMongooseTestModule(mongooseOptions),
-        );
-      }
-    //   } else
-    //     imports.push(
-         
-    //     );
-
-    // if (options.graphql)
-    //   imports.push(
-       
-    //   );
+    //So why do we do it this way? because typescript 4.9.0 is stricter with adding elements of different types to an array, ConfigModule.forRoot() returns a promise<DynamicModule>, and MongooseModule.forRootAsync returns a DynamicModule. Adding both typs to the array directly will not cause an error but pushing them will. Thus we added all of necessary configs and then removed the ones that are not needed.
+    if (!options.db) {
+      imports.splice(2, 1);
+    }
+    if (!options.graphql) {
+      
+      imports.splice(1, 1);
+    }
 
     return {
       module: NebulrConfigModule,

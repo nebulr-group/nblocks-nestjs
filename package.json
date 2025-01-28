@@ -52,7 +52,9 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.8.1",
     "@nestjs/axios": "^3.0.1",
-    "uuid": "^11.0.0"
+    "uuid": "^11.0.0",
+    "@nestjs/apollo": "^12.2.1",
+    "@apollo/server": "^4.11.3"
     
   },
   "devDependencies": {

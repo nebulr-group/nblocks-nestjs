@@ -1,4 +1,5 @@
-import { HttpService, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import * as fs from 'fs';
 import * as path from 'path';
 import { PrepareUploadResponseDto } from './dto/PrepareUploadResponse.dto';

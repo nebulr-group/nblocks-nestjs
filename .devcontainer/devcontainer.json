@@ -1,4 +1,4 @@
-{
+ouch {
   "name": "nblocks-nestjs",
   "build": {
     "dockerfile": "../Dockerfile",
